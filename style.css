@@ -1,0 +1,110 @@
+
+/*
+Color Palette
+Head/foot bg:   #9bb0d1
+Main bg:        #F8F8F8
+Head/foot text: #ffffff
+Main text:      #444444
+Link normal:    #0645AD
+Link hover:     #0B0080
+Input hover:    #F0F0F0
+Concept:        #ffb121
+*/
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+header {
+  display: grid;
+  grid-template-columns: 777fr 1fr;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header, footer {
+  background-color: #9bb0d1;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+header a, footer a {
+  color: #FFFFFF;
+}
+
+header ul, footer {
+  font-size: 16px;
+}
+
+header div, main div, nav, ul, footer {
+  padding: 16px;
+}
+
+main {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  background-color: #F8F8F8;
+  color: #444444;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+main li, h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 16px 0;
+}
+
+main a, main a:visited {
+  color: #0645AD;
+}
+
+main li a:hover, a:hover {
+  color: #0B0080;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  list-style-type: none;
+}
+
+input {
+  border: 2px solid #444444;
+  border-radius: 1px;
+  background: none;
+  padding: 4px;
+  font-size: 1em;
+}
+
+input:hover {
+  background-color: #F0F0F0;
+}
+
+footer {
+  text-align: center;
+}
+
+/* For computer viewing */
+@media only screen and (min-width: 1024px) {
+
+}
+
+/* For tablet and mobile viewing */
+@media only screen and (max-width: 1024px) {
+
+}
+
+/* For mobile viewing */
+@media only screen and (max-width: 768px) {
+
+}
