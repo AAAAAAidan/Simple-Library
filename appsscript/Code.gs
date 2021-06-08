@@ -29,11 +29,12 @@ function fetchBooks()
     for (i in responseJson.items) {
 
       var item = responseJson.items[i];
-      var bookTitle = item.volumeInfo.title;
       var bookId = item.id;
+      var bookTitle = item.volumeInfo.title;
+      var subtitle = item.volumeInfo.subtitle;
 
-      if (item.volumeInfo.subTitle) {
-        bookTitle += ": " + item.volumeInfo.subTitle;
+      if (subtitle) {
+        bookTitle += ": " + subtitle;
       }
 
       var ids = bookSheet.getRange("A2:A").getValues();
@@ -163,7 +164,7 @@ function fetchBooks()
       additionCount++;
     }
 
-    startIndex++;
+    startIndex += 10;
     var currentTime = new Date();
 
   } while (responseJson.items && currentTime.getTime() - startTime.getTime() < 300000);
