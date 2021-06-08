@@ -18,7 +18,7 @@ function fetchBooks()
 
   do {
 
-    var parameters = "?q=b&country=US&download=epub&filter=full&maxResults=40&orderBy=newest&printType=books&projection=full&startIndex=" + startIndex;
+    var parameters = "?q=a&country=US&download=epub&filter=full&maxResults=40&orderBy=newest&printType=books&projection=full&startIndex=" + startIndex;
     var url = "https://www.googleapis.com/books/v1/volumes" + parameters;
     var responseText = UrlFetchApp.fetch(url).getContentText();
     var responseJson = JSON.parse(responseText);
@@ -30,13 +30,14 @@ function fetchBooks()
 
       var item = responseJson.items[i];
       var bookTitle = item.volumeInfo.title;
+      var bookId = item.id;
 
       if (item.volumeInfo.subTitle) {
         bookTitle += ": " + item.volumeInfo.subTitle;
       }
 
-      var titles = bookSheet.getRange("B2:B").getValues();
-      var index = titles.findIndex(titles => {return titles[0] == bookTitle});
+      var ids = bookSheet.getRange("A2:A").getValues();
+      var index = ids.findIndex(ids => {return ids[0] == bookId});
 
       if (index != -1) {
         Logger.log("Skipping " + bookTitle);
@@ -51,7 +52,7 @@ function fetchBooks()
 
       // Book - 10 columns
 
-      var bookId = item.id;
+      var bookId = bookId;
       var bookTitle = bookTitle;
       var bookIdentifiers = JSON.stringify(item.volumeInfo.industryIdentifiers);
       var bookDescription = item.volumeInfo.description;
