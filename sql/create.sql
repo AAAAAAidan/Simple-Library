@@ -1,5 +1,4 @@
-# Aidan Zamboni
-# Closed Library table building queries
+# Database and table create statements
 
 DROP DATABASE IF EXISTS `closedlibrary`;
 
@@ -9,8 +8,8 @@ USE `closedlibrary`;
 
 CREATE TABLE IF NOT EXISTS `account` (
 	`accountId`							INT NOT NULL AUTO_INCREMENT,
-	`accountFirstName`				VARCHAR(300) NOT NULL,
-	`accountLastName`					VARCHAR(300) NOT NULL,
+	`accountFirstName`				VARCHAR(320) NOT NULL,
+	`accountLastName`					VARCHAR(320) NOT NULL,
 	`accountPassword`					VARCHAR(32) NOT NULL,
 	`accountEmail`						VARCHAR(320) DEFAULT NULL,
 	`accountActiveBorrows`			INT DEFAULT 0,
@@ -47,9 +46,9 @@ CREATE TABLE IF NOT EXISTS `card` (
 
 CREATE TABLE IF NOT EXISTS `book` (
 	`bookId`								VARCHAR(12) NOT NULL,
-	`bookTitle`							VARCHAR(300) NOT NULL,
-	`bookIdentifiers`					VARCHAR(300) DEFAULT NULL,
-	`bookDescription`					VARCHAR(900) DEFAULT NULL,
+	`bookTitle`							VARCHAR(320) NOT NULL,
+	`bookIdentifiers`					VARCHAR(320) DEFAULT NULL,
+	`bookDescription`					VARCHAR(3200) DEFAULT NULL,
 	`bookPublishDate` 				DATE DEFAULT NULL,
 	`bookPageCount`					INT DEFAULT NULL,
 	`bookAvailability`				ENUM('Available', 'Unavailable') DEFAULT 'Available',
@@ -76,8 +75,8 @@ CREATE TABLE IF NOT EXISTS `borrow` (
 
 CREATE TABLE IF NOT EXISTS `list` (
 	`listId`								INT NOT NULL AUTO_INCREMENT,
-	`listName`							VARCHAR(300) NOT NULL,
-	`listDescription`					VARCHAR(900) DEFAULT NULL,
+	`listName`							VARCHAR(320) NOT NULL,
+	`listDescription`					VARCHAR(3200) DEFAULT NULL,
 	`listPrivacy`						ENUM('Public', 'Private') DEFAULT 'Private',
 	`listLastUpdate`					TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`listStatus`						ENUM('Active', 'Inactive') DEFAULT 'Active',
@@ -91,9 +90,9 @@ CREATE TABLE IF NOT EXISTS `list` (
 
 CREATE TABLE IF NOT EXISTS `category` (
 	`categoryId`						INT NOT NULL AUTO_INCREMENT,
-	`categoryName`						VARCHAR(300) NOT NULL,
+	`categoryName`						VARCHAR(320) NOT NULL,
 	`categoryType`						ENUM('Author', 'Publisher', 'Subject') NOT NULL,
-	`categoryDescription`			VARCHAR(900) DEFAULT NULL,
+	`categoryDescription`			VARCHAR(3200) DEFAULT NULL,
 	`categoryStatus`					ENUM('Active', 'Inactive') DEFAULT 'Active',
 	`categoryAddDate`					TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`categoryId`)

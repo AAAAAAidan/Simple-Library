@@ -1,10 +1,11 @@
+// Build a spreadsheet with data from Google Books
 function fetchBooks()
 {
   var startTime = new Date();
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var bookSheet = spreadsheet.getSheetByName("Book");
-  var keySheet = spreadsheet.getSheetByName("Key");
-  var categorySheet = spreadsheet.getSheetByName("Category");
+  var bookSheet = spreadsheet.getSheetByName("book");
+  var keySheet = spreadsheet.getSheetByName("key");
+  var categorySheet = spreadsheet.getSheetByName("category");
 
   var keyId = 0;
   var categoryId = 0;
@@ -167,7 +168,51 @@ function fetchBooks()
     startIndex += 10;
     var currentTime = new Date();
 
-  } while (responseJson.items && currentTime.getTime() - startTime.getTime() < 300000);
+  } while (responseJson.items && currentTime.getTime() - startTime.getTime() < 320000);
 
   Logger.log("Added " + additionCount + " books");
+}
+
+
+
+// Build an insert query from the spreadsheet values
+function buildInsert() {
+
+  var inserts = [];
+  var names = ["book", "category", "key"];
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
+  for (var i in names) {
+
+    var sheet = spreadsheet.getSheetByName(names[i]);
+    var values = sheet.getDataRange().getDisplayValues();
+    var columns = "`" + values[0].join("`,`") + "`";
+
+    values.shift(); // Remove the column names
+
+    for (var j in values) {
+
+      for (var k in values[j]) {
+        values[j][k] = "'" + values[j][k].toString().replace(/'/g, "''") + "'";
+      }
+
+      values[j] = "(" + values[j] + ")";
+    }
+
+    values = values.join(",\n\t");
+
+    inserts.push("INSERT INTO `" + names[i] + "`\n\t(" + columns + ")\nVALUES\n\t" + values + ";");
+  }
+
+  var insert = inserts.join("\n\n").replace(/'NULL'/g, "NULL");
+
+  return insert;
+}
+
+
+
+// Return an insert query for the database
+function doGet(e)
+{
+  return ContentService.createTextOutput(buildInsert());
 }
