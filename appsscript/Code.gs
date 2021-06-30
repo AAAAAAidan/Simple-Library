@@ -101,7 +101,7 @@ function fetchBooks()
       var keyAddDate = new Date();
       var bookId = bookId;
       var keyCategoryId = categoryId;
-      var listId = "NULL";
+      var catalogId = "NULL";
 
       // Category - 6 columns
 
@@ -157,7 +157,7 @@ function fetchBooks()
           keyAddDate,
           bookId,
           keyCategoryId,
-          listId
+          catalogId
         ]]);
 
       }

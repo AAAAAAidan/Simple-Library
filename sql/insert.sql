@@ -24,7 +24,7 @@ VALUES
 	('11','Travel','Subject',NULL,'Active','2021-06-09  16:22:55');
 
 INSERT INTO `key`
-	(`keyId`,`keyStatus`,`keyAddDate`,`bookId`,`categoryId`,`listId`)
+	(`keyId`,`keyStatus`,`keyAddDate`,`bookId`,`categoryId`,`catalogId`)
 VALUES
 	('1','Active','2021-06-09  16:22:52','FEgFEAAAQBAJ','1',NULL),
 	('2','Active','2021-06-09  16:22:52','FEgFEAAAQBAJ','2',NULL),

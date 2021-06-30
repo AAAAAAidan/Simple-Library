@@ -73,17 +73,17 @@ CREATE TABLE IF NOT EXISTS `borrow` (
 );
 
 
-CREATE TABLE IF NOT EXISTS `list` (
-	`listId` INT NOT NULL AUTO_INCREMENT,
-	`listName` VARCHAR(320) NOT NULL,
-	`listDescription`	VARCHAR(3200) DEFAULT NULL,
-	`listPrivacy` ENUM('Public', 'Private') DEFAULT 'Private',
-	`listLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`listStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-	`listAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS `catalog` (
+	`catalogId` INT NOT NULL AUTO_INCREMENT,
+	`catalogName` VARCHAR(320) NOT NULL,
+	`catalogDescription`	VARCHAR(3200) DEFAULT NULL,
+	`catalogPrivacy` ENUM('Public', 'Private') DEFAULT 'Private',
+	`catalogLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`catalogStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
+	`catalogAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`bookId` VARCHAR(12) NOT NULL,
 	`accountId` INT NOT NULL,
-	PRIMARY KEY (`listId`),
+	PRIMARY KEY (`catalogId`),
 	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
 );
@@ -104,9 +104,9 @@ CREATE TABLE IF NOT EXISTS `key` (
 	`keyAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`bookId` VARCHAR(12) NOT NULL,
 	`categoryId` INT DEFAULT NULL,
-	`listId` INT DEFAULT NULL,
+	`catalogId` INT DEFAULT NULL,
 	PRIMARY KEY (`keyId`),
 	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`categoryId`) REFERENCES category(`categoryId`),
-	FOREIGN KEY (`listId`) REFERENCES list(`listId`)
+	FOREIGN KEY (`catalogId`) REFERENCES catalog(`catalogId`)
 );
