@@ -2,7 +2,6 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -17,10 +16,8 @@ public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int accountId;
-
-	//@Column(name="ACCOUNT_ID")
-	//private int accountId;
 
 	private int accountActiveBorrows;
 
@@ -39,38 +36,6 @@ public class Account implements Serializable {
 	private String accountStatus;
 
 	private int accountTotalBorrows;
-
-	@Column(name="AVAIL_BALANCE")
-	private float availBalance;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="CLOSE_DATE")
-	private Date closeDate;
-
-	@Column(name="CUST_ID")
-	private int custId;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="LAST_ACTIVITY_DATE")
-	private Date lastActivityDate;
-
-	@Column(name="OPEN_BRANCH_ID")
-	private int openBranchId;
-
-	@Temporal(TemporalType.DATE)
-	@Column(name="OPEN_DATE")
-	private Date openDate;
-
-	@Column(name="OPEN_EMP_ID")
-	private int openEmpId;
-
-	@Column(name="PENDING_BALANCE")
-	private float pendingBalance;
-
-	@Column(name="PRODUCT_CD")
-	private String productCd;
-
-	private String status;
 
 	//bi-directional many-to-one association to Borrow
 	@OneToMany(mappedBy="account")
@@ -91,7 +56,6 @@ public class Account implements Serializable {
 	public Account() {
 	}
 
-	/*
 	public int getAccountId() {
 		return this.accountId;
 	}
@@ -99,15 +63,6 @@ public class Account implements Serializable {
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
 	}
-
-	public int getAccountId() {
-		return this.accountId;
-	}
-
-	public void setAccountId(int accountId) {
-		this.accountId = accountId;
-	}
-	*/
 
 	public int getAccountActiveBorrows() {
 		return this.accountActiveBorrows;
@@ -179,86 +134,6 @@ public class Account implements Serializable {
 
 	public void setAccountTotalBorrows(int accountTotalBorrows) {
 		this.accountTotalBorrows = accountTotalBorrows;
-	}
-
-	public float getAvailBalance() {
-		return this.availBalance;
-	}
-
-	public void setAvailBalance(float availBalance) {
-		this.availBalance = availBalance;
-	}
-
-	public Date getCloseDate() {
-		return this.closeDate;
-	}
-
-	public void setCloseDate(Date closeDate) {
-		this.closeDate = closeDate;
-	}
-
-	public int getCustId() {
-		return this.custId;
-	}
-
-	public void setCustId(int custId) {
-		this.custId = custId;
-	}
-
-	public Date getLastActivityDate() {
-		return this.lastActivityDate;
-	}
-
-	public void setLastActivityDate(Date lastActivityDate) {
-		this.lastActivityDate = lastActivityDate;
-	}
-
-	public int getOpenBranchId() {
-		return this.openBranchId;
-	}
-
-	public void setOpenBranchId(int openBranchId) {
-		this.openBranchId = openBranchId;
-	}
-
-	public Date getOpenDate() {
-		return this.openDate;
-	}
-
-	public void setOpenDate(Date openDate) {
-		this.openDate = openDate;
-	}
-
-	public int getOpenEmpId() {
-		return this.openEmpId;
-	}
-
-	public void setOpenEmpId(int openEmpId) {
-		this.openEmpId = openEmpId;
-	}
-
-	public float getPendingBalance() {
-		return this.pendingBalance;
-	}
-
-	public void setPendingBalance(float pendingBalance) {
-		this.pendingBalance = pendingBalance;
-	}
-
-	public String getProductCd() {
-		return this.productCd;
-	}
-
-	public void setProductCd(String productCd) {
-		this.productCd = productCd;
-	}
-
-	public String getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public List<Borrow> getBorrows() {

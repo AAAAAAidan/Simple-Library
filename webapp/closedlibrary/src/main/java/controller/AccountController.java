@@ -12,53 +12,45 @@ public class AccountController {
 	private static EntityManager em = emfactory.createEntityManager();  
 	
 	public static void main( String[ ] args ) {
-		
-		// Create
-		
+		int id = createAccount();
+		updateAccount(id);
+		selectAccount(id);
+		deleteAccount(id);
+		em.close();
+		emfactory.close();
+	}
+	
+	public static int createAccount() {
 		em.getTransaction().begin();  
-		
-		Account account1 = new Account(); 
-		account1.setAccountEmail("aaaa");;
-		
-		em.persist(account1);
+		Account account = new Account();
+		account.setAccountFirstName("Hee");
+		account.setAccountLastName("Ho");
+		account.setAccountPassword("Word");
+		em.persist(account);
 		em.getTransaction().commit();
-		em.close();
-		
-		// Update
-		
-		em.getTransaction( ).begin( );
-		Account account = em.find(Account.class,1056);
-		
-		System.out.println("Before Updation");
-		System.out.println("account email = " + account.getAccountEmail());
-		
-		System.out.println("After Updation");
-		account.setAccountEmail("xyz01@prscholas.org");
-		em.getTransaction().commit( );
-		
-		System.out.println("employee EMAIL = " + account.getAccountEmail());
-		em.close();
-		emfactory.close( );
-		
-		// Find
-		
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "jpa" );
-		EntityManager entitymanager = emfactory.createEntityManager();
-		Account account3 = entitymanager.find(Account.class,1056);
+		System.out.println("Added account");
+		return account.getAccountId();
+	}
 
-		System.out.println("employee ID = " + account3.getAccountEmail());
-		
-		// Delete
-		
-		entitymanager.getTransaction( ).begin( );
-		  
-		Account account4 = entitymanager.find( Account.class, 24 );
-		entitymanager.remove( account4 );
-		entitymanager.getTransaction( ).commit( );
-		
-		entitymanager.close( );
-		emfactory.close( );
-		
+	public static void updateAccount(int id) {
+		em.getTransaction().begin();
+		Account account = em.find(Account.class, id);
+		account.setAccountEmail("bufula@mega.ten");
+		em.getTransaction().commit( );
+		System.out.println("Updated account");
+	}
+
+	public static void selectAccount(int id) {
+		Account account = em.find(Account.class, id);
+		System.out.println("Selected account");
+	}
+
+	public static void deleteAccount(int id) {
+		em.getTransaction().begin();
+		Account account = em.find(Account.class, id);
+		em.remove(account);
+		em.getTransaction().commit();
+		System.out.println("Deleted account");
 	}
 
 }

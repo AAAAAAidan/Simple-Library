@@ -16,6 +16,7 @@ public class Catalog implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int catalogId;
 
 	private Timestamp catalogAddDate;
@@ -30,15 +31,15 @@ public class Catalog implements Serializable {
 
 	private String catalogStatus;
 
-	//bi-directional many-to-one association to Book
-	@ManyToOne
-	@JoinColumn(name="bookId")
-	private Book book;
-
 	//bi-directional many-to-one association to Account
 	@ManyToOne
 	@JoinColumn(name="accountId")
 	private Account account;
+
+	//bi-directional many-to-one association to Book
+	@ManyToOne
+	@JoinColumn(name="bookId")
+	private Book book;
 
 	//bi-directional many-to-one association to Key
 	@OneToMany(mappedBy="catalog")
@@ -103,20 +104,20 @@ public class Catalog implements Serializable {
 		this.catalogStatus = catalogStatus;
 	}
 
-	public Book getBook() {
-		return this.book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
 	public Account getAccount() {
 		return this.account;
 	}
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	public Book getBook() {
+		return this.book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 	public List<Key> getKeys() {

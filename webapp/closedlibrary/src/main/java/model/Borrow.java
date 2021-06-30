@@ -15,6 +15,7 @@ public class Borrow implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int borrowId;
 
 	private Timestamp borrowAddDate;
@@ -27,15 +28,15 @@ public class Borrow implements Serializable {
 
 	private String borrowStatus;
 
-	//bi-directional many-to-one association to Book
-	@ManyToOne
-	@JoinColumn(name="bookId")
-	private Book book;
-
 	//bi-directional many-to-one association to Account
 	@ManyToOne
 	@JoinColumn(name="accountId")
 	private Account account;
+
+	//bi-directional many-to-one association to Book
+	@ManyToOne
+	@JoinColumn(name="bookId")
+	private Book book;
 
 	public Borrow() {
 	}
@@ -88,20 +89,20 @@ public class Borrow implements Serializable {
 		this.borrowStatus = borrowStatus;
 	}
 
-	public Book getBook() {
-		return this.book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
 	public Account getAccount() {
 		return this.account;
 	}
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	public Book getBook() {
+		return this.book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 }
