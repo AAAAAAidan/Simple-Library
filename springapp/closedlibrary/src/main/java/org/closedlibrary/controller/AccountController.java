@@ -1,11 +1,12 @@
-package controller;
+package org.closedlibrary.controller;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import model.Account;
+import org.closedlibrary.model.Account;
 
+// I will eventually turn this into a real controller
 public class AccountController {
 	
 	private static EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("closedlibrary");  

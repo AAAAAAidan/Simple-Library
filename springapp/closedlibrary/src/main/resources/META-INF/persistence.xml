@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 	<persistence-unit name="closedlibrary">
-		<class>model.Account</class>
-		<class>model.Book</class>
-		<class>model.Borrow</class>
-		<class>model.Card</class>
-		<class>model.Catalog</class>
-		<class>model.Category</class>
-		<class>model.Key</class>
-		<class>model.Setting</class>
+		<class>org.closedlibrary.model.Account</class>
+		<class>org.closedlibrary.model.Book</class>
+		<class>org.closedlibrary.model.Borrow</class>
+		<class>org.closedlibrary.model.Card</class>
+		<class>org.closedlibrary.model.Catalog</class>
+		<class>org.closedlibrary.model.Category</class>
+		<class>org.closedlibrary.model.Key</class>
+		<class>org.closedlibrary.model.Setting</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/closedlibrary"/>
