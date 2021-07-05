@@ -4,16 +4,14 @@ function fetchBooks()
   var startTime = new Date();
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var bookSheet = spreadsheet.getSheetByName("book");
-  var keySheet = spreadsheet.getSheetByName("key");
+  var mapSheet = spreadsheet.getSheetByName("bookcategorymap");
   var categorySheet = spreadsheet.getSheetByName("category");
 
-  var keyId = 0;
   var categoryId = 0;
   var startIndex = 0;
   var additionCount = 0;
 
   if (bookSheet.getRange("A2").getValue() != "") {
-    keyId = keySheet.getLastRow() - 1;
     categoryId = categorySheet.getLastRow() - 1;
   }
 
@@ -46,11 +44,11 @@ function fetchBooks()
         continue;
       }
 
-      var row = bookSheet.getLastRow() + 1;
-      var keyRow = keyId + 1;
+      var bookRow = bookSheet.getLastRow() + 1;
+      var mapRow = mapSheet.getLastRow() + 1;
       var categoryRow = categoryId + 1;
 
-      Logger.log("Row " + row + ": " + bookTitle);
+      Logger.log("Row " + bookRow + ": " + bookTitle);
 
       // Book - 10 columns
 
@@ -81,7 +79,7 @@ function fetchBooks()
         bookPageCount = "NULL";
       }
 
-      bookSheet.getRange(row, 1, 1, 10).setValues([[
+      bookSheet.getRange(bookRow, 1, 1, 10).setValues([[
         bookId,
         bookTitle,
         bookIdentifiers,
@@ -94,14 +92,10 @@ function fetchBooks()
         bookAddDate
       ]]);
 
-      // Key - 6 columns
+      // BookCategoryMap - 2 columns
 
-      var keyId = keyId;
-      var keyStatus = "Active";
-      var keyAddDate = new Date();
       var bookId = bookId;
-      var keyCategoryId = categoryId;
-      var catalogId = "NULL";
+      var mapCategoryId = categoryId;
 
       // Category - 6 columns
 
@@ -144,20 +138,16 @@ function fetchBooks()
             categoryAddDate
           ]]);
 
-          keyCategoryId = categoryId;
+          mapCategoryId = categoryId;
 
         } else {
           Logger.log("Found an existing category for " + categoryName[i]);
-          keyCategoryId = categorySheet.getRange(index + 2, 1).getValue();
+          mapCategoryId = categorySheet.getRange(index + 2, 1).getValue();
         }
 
-        keySheet.getRange(++keyRow, 1, 1, 6).setValues([[
-          ++keyId,
-          keyStatus,
-          keyAddDate,
+        mapSheet.getRange(mapRow++, 1, 1, 2).setValues([[
           bookId,
-          keyCategoryId,
-          catalogId
+          mapCategoryId
         ]]);
 
       }
@@ -179,7 +169,7 @@ function fetchBooks()
 function buildInsert() {
 
   var inserts = [];
-  var names = ["book", "category", "key"];
+  var names = ["book", "category", "bookcategorymap"];
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
   for (var i in names) {

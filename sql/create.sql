@@ -98,15 +98,16 @@ CREATE TABLE IF NOT EXISTS `category` (
 	PRIMARY KEY (`categoryId`)
 );
 
-CREATE TABLE IF NOT EXISTS `key` (
-	`keyId` INT NOT NULL AUTO_INCREMENT,
-	`keyStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-	`keyAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE IF NOT EXISTS `bookcategorymap` (
 	`bookId` VARCHAR(12) NOT NULL,
 	`categoryId` INT DEFAULT NULL,
-	`catalogId` INT DEFAULT NULL,
-	PRIMARY KEY (`keyId`),
 	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
-	FOREIGN KEY (`categoryId`) REFERENCES category(`categoryId`),
+	FOREIGN KEY (`categoryId`) REFERENCES category(`categoryId`)
+);
+
+CREATE TABLE IF NOT EXISTS `bookcatalogmap` (
+	`bookId` VARCHAR(12) NOT NULL,
+	`catalogId` INT DEFAULT NULL,
+	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`catalogId`) REFERENCES catalog(`catalogId`)
 );
