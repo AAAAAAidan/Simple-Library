@@ -7,7 +7,6 @@
 		<class>org.closedlibrary.model.Card</class>
 		<class>org.closedlibrary.model.Catalog</class>
 		<class>org.closedlibrary.model.Category</class>
-		<class>org.closedlibrary.model.Key</class>
 		<class>org.closedlibrary.model.Setting</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

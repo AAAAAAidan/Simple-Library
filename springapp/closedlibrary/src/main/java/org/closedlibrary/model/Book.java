@@ -17,6 +17,7 @@ public class Book implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private String bookId;
 
 	private Timestamp bookAddDate;
@@ -42,13 +43,13 @@ public class Book implements Serializable {
 	@OneToMany(mappedBy="book")
 	private List<Borrow> borrows;
 
-	//bi-directional many-to-one association to Catalog
-	@OneToMany(mappedBy="book")
+	//bi-directional many-to-many association to Catalog
+	@ManyToMany(mappedBy="books")
 	private List<Catalog> catalogs;
 
-	//bi-directional many-to-one association to Key
-	@OneToMany(mappedBy="book")
-	private List<Key> keys;
+	//bi-directional many-to-many association to Category
+	@ManyToMany(mappedBy="books")
+	private List<Category> categories;
 
 	public Book() {
 	}
@@ -163,40 +164,12 @@ public class Book implements Serializable {
 		this.catalogs = catalogs;
 	}
 
-	public Catalog addCatalog(Catalog catalog) {
-		getCatalogs().add(catalog);
-		catalog.setBook(this);
-
-		return catalog;
+	public List<Category> getCategories() {
+		return this.categories;
 	}
 
-	public Catalog removeCatalog(Catalog catalog) {
-		getCatalogs().remove(catalog);
-		catalog.setBook(null);
-
-		return catalog;
-	}
-
-	public List<Key> getKeys() {
-		return this.keys;
-	}
-
-	public void setKeys(List<Key> keys) {
-		this.keys = keys;
-	}
-
-	public Key addKey(Key key) {
-		getKeys().add(key);
-		key.setBook(this);
-
-		return key;
-	}
-
-	public Key removeKey(Key key) {
-		getKeys().remove(key);
-		key.setBook(null);
-
-		return key;
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 
 }

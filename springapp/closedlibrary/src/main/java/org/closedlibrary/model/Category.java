@@ -29,9 +29,18 @@ public class Category implements Serializable {
 
 	private String categoryType;
 
-	//bi-directional many-to-one association to Key
-	@OneToMany(mappedBy="category")
-	private List<Key> keys;
+	//bi-directional many-to-many association to Book
+	@ManyToMany
+	@JoinTable(
+		name="bookcategorymap"
+		, joinColumns={
+			@JoinColumn(name="categoryId")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="bookId")
+			}
+		)
+	private List<Book> books;
 
 	public Category() {
 	}
@@ -84,26 +93,12 @@ public class Category implements Serializable {
 		this.categoryType = categoryType;
 	}
 
-	public List<Key> getKeys() {
-		return this.keys;
+	public List<Book> getBooks() {
+		return this.books;
 	}
 
-	public void setKeys(List<Key> keys) {
-		this.keys = keys;
-	}
-
-	public Key addKey(Key key) {
-		getKeys().add(key);
-		key.setCategory(this);
-
-		return key;
-	}
-
-	public Key removeKey(Key key) {
-		getKeys().remove(key);
-		key.setCategory(null);
-
-		return key;
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
 }

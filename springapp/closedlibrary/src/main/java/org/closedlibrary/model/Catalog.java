@@ -36,14 +36,18 @@ public class Catalog implements Serializable {
 	@JoinColumn(name="accountId")
 	private Account account;
 
-	//bi-directional many-to-one association to Book
-	@ManyToOne
-	@JoinColumn(name="bookId")
-	private Book book;
-
-	//bi-directional many-to-one association to Key
-	@OneToMany(mappedBy="catalog")
-	private List<Key> keys;
+	//bi-directional many-to-many association to Book
+	@ManyToMany
+	@JoinTable(
+		name="bookcatalogmap"
+		, joinColumns={
+			@JoinColumn(name="catalogId")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="bookId")
+			}
+		)
+	private List<Book> books;
 
 	public Catalog() {
 	}
@@ -112,34 +116,12 @@ public class Catalog implements Serializable {
 		this.account = account;
 	}
 
-	public Book getBook() {
-		return this.book;
+	public List<Book> getBooks() {
+		return this.books;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
-	public List<Key> getKeys() {
-		return this.keys;
-	}
-
-	public void setKeys(List<Key> keys) {
-		this.keys = keys;
-	}
-
-	public Key addKey(Key key) {
-		getKeys().add(key);
-		key.setCatalog(this);
-
-		return key;
-	}
-
-	public Key removeKey(Key key) {
-		getKeys().remove(key);
-		key.setCatalog(null);
-
-		return key;
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
 }
