@@ -21,14 +21,14 @@ CREATE TABLE IF NOT EXISTS `account` (
 );
 
 CREATE TABLE IF NOT EXISTS `setting` (
-	`settingId`	INT NOT NULL AUTO_INCREMENT,
-	`settingProfileImage`	VARCHAR(12) DEFAULT NULL,
-	`settingSearchResultsPerPage`	INT DEFAULT 30,
-	`settingSearchDisplayType` 	ENUM('Compact', 'Normal', 'Comfortable') DEFAULT 'Normal',
-	`settingLastUpdate`TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`settingStatus`	ENUM('Active', 'Inactive') DEFAULT 'Active',
-	`settingAddDate`	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`accountId`	INT NOT NULL,
+	`settingId` INT NOT NULL AUTO_INCREMENT,
+	`accountId` INT UNIQUE NOT NULL,
+	`settingProfileImage` VARCHAR(12) DEFAULT NULL,
+	`settingSearchResultsPerPage` INT DEFAULT 30,
+	`settingSearchDisplayType` ENUM('Compact', 'Normal', 'Comfortable') DEFAULT 'Normal',
+	`settingLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`settingStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
+	`settingAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`settingId`),
 	FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
 );
@@ -76,15 +76,13 @@ CREATE TABLE IF NOT EXISTS `borrow` (
 CREATE TABLE IF NOT EXISTS `catalog` (
 	`catalogId` INT NOT NULL AUTO_INCREMENT,
 	`catalogName` VARCHAR(320) NOT NULL,
-	`catalogDescription`	VARCHAR(3200) DEFAULT NULL,
+	`catalogDescription` VARCHAR(3200) DEFAULT NULL,
 	`catalogPrivacy` ENUM('Public', 'Private') DEFAULT 'Private',
 	`catalogLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`catalogStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
 	`catalogAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`bookId` VARCHAR(12) NOT NULL,
 	`accountId` INT NOT NULL,
 	PRIMARY KEY (`catalogId`),
-	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
 );
 
