@@ -100,14 +100,14 @@ CREATE TABLE IF NOT EXISTS `category` (
 
 CREATE TABLE IF NOT EXISTS `bookcategorymap` (
 	`bookId` VARCHAR(12) NOT NULL,
-	`categoryId` INT DEFAULT NULL,
+	`categoryId` INT NOT NULL,
 	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`categoryId`) REFERENCES category(`categoryId`)
 );
 
 CREATE TABLE IF NOT EXISTS `bookcatalogmap` (
 	`bookId` VARCHAR(12) NOT NULL,
-	`catalogId` INT DEFAULT NULL,
+	`catalogId` INT NOT NULL,
 	FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
 	FOREIGN KEY (`catalogId`) REFERENCES catalog(`catalogId`)
 );
