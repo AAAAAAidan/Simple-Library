@@ -1,56 +1,78 @@
 package org.closedlibrary.controller;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.closedlibrary.model.Account;
+import org.closedlibrary.util.JPQL;
+import org.closedlibrary.util.Table;
+import org.springframework.stereotype.Controller;
 
 // I will eventually turn this into a real controller
+@Controller
 public class AccountController {
 	
-	private static EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("closedlibrary");  
-	private static EntityManager em = emfactory.createEntityManager();  
+	private static final EntityManager EM = JPQL.getEntityManager();  
 	
-	public static void main( String[ ] args ) {
+	public static void main( String[ ] args ) throws SQLException {
+		
+		// Example usage of Table.java and JDBC
+		
+		Table table = new Table("Book");
+		table.insert(new String[] {"bookId", "bookTitle"}, new String[] {"ID", "Title"});
+		table = table.filter("bookId = 'ID'");
+		table.update("bookTitle", "New Title");
+		ResultSet result = table.select("bookTitle");
+		result.next();
+		System.out.println(result.getString(1));
+		table.delete();
+		
+		// Example usage of JPA (TODO REMOVE)
+		
 		int id = createAccount();
 		updateAccount(id);
 		selectAccount(id);
 		deleteAccount(id);
-		em.close();
-		emfactory.close();
+		
+		// Example usage of Entity.java and JPQL (TODO ADD)
+		
+		
+		
+		EM.close();
 	}
 	
 	public static int createAccount() {
-		em.getTransaction().begin();  
+		EM.getTransaction().begin();
 		Account account = new Account();
 		account.setAccountFirstName("Hee");
 		account.setAccountLastName("Ho");
 		account.setAccountPassword("Word");
-		em.persist(account);
-		em.getTransaction().commit();
+		EM.persist(account);
+		EM.getTransaction().commit();
 		System.out.println("Added account");
 		return account.getAccountId();
 	}
 
 	public static void updateAccount(int id) {
-		em.getTransaction().begin();
-		Account account = em.find(Account.class, id);
+		EM.getTransaction().begin();
+		Account account = EM.find(Account.class, id);
 		account.setAccountEmail("bufula@mega.ten");
-		em.getTransaction().commit( );
+		EM.getTransaction().commit( );
 		System.out.println("Updated account");
 	}
 
 	public static void selectAccount(int id) {
-		Account account = em.find(Account.class, id);
+		EM.find(Account.class, id);
 		System.out.println("Selected account");
 	}
 
 	public static void deleteAccount(int id) {
-		em.getTransaction().begin();
-		Account account = em.find(Account.class, id);
-		em.remove(account);
-		em.getTransaction().commit();
+		EM.getTransaction().begin();
+		Account account = EM.find(Account.class, id);
+		EM.remove(account);
+		EM.getTransaction().commit();
 		System.out.println("Deleted account");
 	}
 
