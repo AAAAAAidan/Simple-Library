@@ -10,7 +10,7 @@ public class Table {
 	
 	// Fields
 	
-	private Connection connection = null;
+	private static final Connection CONNECTION = JDBC.getConnection();
 	private String tableName = null;
 	private String primaryKey = null;
 	private String[] filters = null;
@@ -24,14 +24,12 @@ public class Table {
 	public Table() {
 	}
 	
-	public Table(Connection connection, String tableName) {
-		this.connection = connection;
+	public Table(String tableName) {
 		this.tableName = tableName;
 	}
 	
-	public Table(Connection connection, String tableName, String primaryKey, String[] filters, String[] sorters,
+	public Table(String tableName, String primaryKey, String[] filters, String[] sorters,
 			String order, Integer limit, Integer offset) {
-		this.connection = connection;
 		this.tableName = tableName;
 		this.primaryKey = primaryKey;
 		this.filters = filters;
@@ -43,14 +41,6 @@ public class Table {
 
 	// Standard getters and setters
 	
-	public Connection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(Connection connection) {
-		this.connection = connection;
-	}
-
 	public String getTableName() {
 		return tableName;
 	}
@@ -63,15 +53,21 @@ public class Table {
 		return primaryKey;
 	}
 
-	public void setPrimaryKey() throws SQLException {
+	public void setPrimaryKey() {
 		String sql = String.format("""
 				SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
 				WHERE TABLE_NAME = '%s' and COLUMN_KEY = 'PRI'
 				""", tableName);
-		Statement statement = connection.createStatement();
-		ResultSet result = statement.executeQuery(sql);
-		result.next();
-		primaryKey = result.getString(1);
+		
+		try {
+			Statement statement = CONNECTION.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			result.next();
+			primaryKey = result.getString(1);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setPrimaryKey(String primaryKey) {
@@ -133,11 +129,11 @@ public class Table {
 	
 	// Select methods
 	
-	public String getSelect() throws SQLException {
+	public String getSelect() {
 		return getSelect("*");
 	}
 	
-	public String getSelect(String...columns) throws SQLException {
+	public String getSelect(String...columns) {
 		String column = String.join(", ", columns);
 		String sql = String.format("SELECT %s FROM %s", column, tableName);
 		
@@ -164,22 +160,28 @@ public class Table {
 		return sql;
 	}
 	
-	public ResultSet select() throws SQLException {
+	public ResultSet select() {
 		return select("*");
 	}
 	
-	public ResultSet select(String...columns) throws SQLException {
-		Statement statement = connection.createStatement();
-		return statement.executeQuery(getSelect(columns));
+	public ResultSet select(String...columns) {
+		try {
+			Statement statement = CONNECTION.createStatement();
+			return statement.executeQuery(getSelect(columns));
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	// Insert methods
 	
-	public int insert(String column, String value) throws SQLException {
+	public int insert(String column, String value) {
 		return insert(new String[] {column}, new String[] {value});
 	}
 	
-	public int insert(String[] columns, String[] values) throws SQLException {
+	public int insert(String[] columns, String[] values) {
 		if (columns.length != values.length) {
 			return 0;
 		}
@@ -187,17 +189,24 @@ public class Table {
 		String column = String.join(", ", columns);
 		String value = String.join("', '", values);
 		String sql = String.format("INSERT INTO %s ( %s ) VALUES ( '%s' )", tableName, column, value);
-		Statement statement = connection.createStatement();
-		return (int) statement.executeUpdate(sql);
+		
+		try {
+			Statement statement = CONNECTION.createStatement();
+			return (int) statement.executeUpdate(sql);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	// Update methods
 	
-	public int update(String column, String value) throws SQLException {
+	public int update(String column, String value) {
 		return update(new String[] {column}, new String[] {value});
 	}
 	
-	public int update(String[] columns, String[] values) throws SQLException {
+	public int update(String[] columns, String[] values) {
 		if (columns.length != values.length) {
 			return 0;
 		}
@@ -215,20 +224,33 @@ public class Table {
 		columnsToValues = columnsToValues.substring(0, columnsToValues.length() - 2);
 		String sql = String.format("UPDATE %s SET %s WHERE %s IN ( %s )", tableName, columnsToValues, primaryKey, 
 				getSelect(primaryKey));
-		Statement statement = connection.createStatement();
-		return (int) statement.executeUpdate(sql);
+		
+		try {
+			Statement statement = CONNECTION.createStatement();
+			return (int) statement.executeUpdate(sql);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	// Delete methods
 	
-	public int delete() throws SQLException {
+	public int delete() {
 		if (primaryKey == null) {
 			setPrimaryKey();
 		}
 		
 		String sql = String.format("DELETE FROM %s WHERE %s IN ( %s )", tableName, primaryKey, getSelect(primaryKey));
-		Statement statement = connection.createStatement();
-		return (int) statement.executeUpdate(sql);
+		try {
+			Statement statement = CONNECTION.createStatement();
+			return (int) statement.executeUpdate(sql);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 	
 	// Filter methods
@@ -238,7 +260,7 @@ public class Table {
 	}
 	
 	public Table filter(String[] filters) {
-		return new Table(connection, tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Sort methods
@@ -248,14 +270,14 @@ public class Table {
 	}
 	
 	public Table sort(String[] sorters) {
-		return new Table(connection, tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Order methods
 	
 	public Table order(String order) {
 		order = Pattern.matches("(?i)(-|d|desc|descending)", order) ? "DESC" : "ASC";
-		return new Table(connection, tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Range methods
@@ -267,7 +289,7 @@ public class Table {
 	public Table range(Integer start, Integer end) {
 		Integer limit = end - start + 1;
 		Integer offset = start - 1;
-		return new Table(connection, tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 }
