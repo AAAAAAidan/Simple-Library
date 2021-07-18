@@ -54,10 +54,10 @@ public class Table {
 	}
 
 	public void setPrimaryKey() {
-		String sql = String.format("""
-				SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-				WHERE TABLE_NAME = '%s' and COLUMN_KEY = 'PRI'
-				""", tableName);
+		String sql = String.format(
+				"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS" +
+				"WHERE TABLE_NAME = '%s' and COLUMN_KEY = 'PRI'",
+				tableName);
 		
 		try {
 			Statement statement = CONNECTION.createStatement();

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 // I will eventually turn this into a real controller
 @Controller
 public class AccountController {
-	
+	/*
 	private static final EntityManager EM = JPQL.getEntityManager();  
 	
 	public static void main( String[ ] args ) throws SQLException {
@@ -75,5 +75,6 @@ public class AccountController {
 		EM.getTransaction().commit();
 		System.out.println("Deleted account");
 	}
+	*/
 
 }
