@@ -1,1 +1,1 @@
-SQL files for creating and querying the database tables.
+SQL files for setting up the database.

@@ -1,3 +1,7 @@
+# Row insert statements
+
+USE `library`;
+
 INSERT INTO `book`
 	(`bookId`,`bookTitle`,`bookIdentifiers`,`bookDescription`,`bookPublishDate`,`bookPageCount`,`bookAvailability`,`bookTotalBorrows`,`bookStatus`,`bookAddDate`)
 VALUES

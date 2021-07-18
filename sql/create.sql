@@ -1,10 +1,10 @@
 # Database and table create statements
 
-DROP DATABASE IF EXISTS `closedlibrary`;
+DROP DATABASE IF EXISTS `library`;
 
-CREATE DATABASE `closedlibrary`;
+CREATE DATABASE `library`;
 
-USE `closedlibrary`;
+USE `library`;
 
 CREATE TABLE IF NOT EXISTS `account` (
 	`accountId` INT NOT NULL AUTO_INCREMENT,
