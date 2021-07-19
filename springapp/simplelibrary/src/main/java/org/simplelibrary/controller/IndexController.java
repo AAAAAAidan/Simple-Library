@@ -2,15 +2,32 @@ package org.simplelibrary.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
 	
-	@RequestMapping("/")
-	public ModelAndView index() {
-		ModelAndView index = new ModelAndView("index");
-		return index;
+	// Home page
+	
+	@RequestMapping(value={"", "/", "index"})
+	public String index() {
+		return "index";
+	}
+	
+	// Sidebar links
+	
+	@RequestMapping("/search")
+	public String search() {
+		return "search";
+	}
+	
+	@RequestMapping("/about")
+	public String about() {
+		return "about";
+	}
+	
+	@RequestMapping("/help")
+	public String help() {
+		return "help";
 	}
 	
 }

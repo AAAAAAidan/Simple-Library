@@ -1,52 +1,15 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Simple Library</title>
-    <!-- Icon by Good Ware - https://www.flaticon.com/free-icon/book_864685 -->
-    <link rel="shortcut icon" type="image/png" href="<c:url value="/resources/images/favicon.ico" />"/>
-    <link href="<c:url value="/resources/style.css" />" rel="stylesheet">
-    <script src="<c:url value="/resources/script.js" />"></script>
-  </head>
-  <body>
-    <header class="wrapper">
-      <div>
-        <h1><a href="index.html">Simple Library</a></h1>
-      </div>
-      <ul>
-        <li><a href="#">Signup</a></li>
-        <li><a href="#">Login</a></li>
-      </ul>
-    </header>
-    <main>
-      <nav>
-        <ul>
-          <li><a href="#">Search</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="help.html">Help</a></li>
-        </ul>
-      </nav>
-      <div class="wrapper">
-        <div>
-          <h2>It's the library!</h2>
-          <form action="#" method="post">
-            <input type="text" placeholder="Search the library"/>
-            <input type="submit" value="Search"/>
-          </form>
-        </div>
-        <div>
-          <h2>Browse the books!</h2>
-          <h4>(Sorry, we're all out of books)</h4>
-        </div>
-        <div>
-          <h2>Browse the lists!</h2>
-          <h4>(Sorry, we're all out of lists)</h4>
-        </div>
-      </div>
-    </main>
-    <footer>
-      <a target="_blank" href="https://github.com/AAAAAAidan/">&copy;Aidan Zamboni</a>
-    </footer>
-  </body>
-</html>
+ <div>
+   <h2>It's the library!</h2>
+   <form action="#" method="post">
+     <input type="text" placeholder="Search the library"/>
+     <input type="submit" value="Search"/>
+   </form>
+ </div>
+ <div>
+   <h2>Browse the books!</h2>
+   <h4>(Sorry, we're all out of books)</h4>
+ </div>
+ <div>
+   <h2>Browse the lists!</h2>
+   <h4>(Sorry, we're all out of lists)</h4>
+ </div>
