@@ -11,7 +11,10 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Catalog.findAll", query="SELECT c FROM Catalog c")
+@NamedQueries({
+	@NamedQuery(name="Catalog.findAll", query="SELECT c FROM Catalog c"),
+	@NamedQuery(name="Catalog.findById", query="SELECT c FROM Catalog c WHERE c.catalogId = :id")
+})
 public class Catalog implements Serializable {
 	private static final long serialVersionUID = 1L;
 

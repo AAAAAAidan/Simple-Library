@@ -10,7 +10,10 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQuery(name="Setting.findAll", query="SELECT s FROM Setting s")
+@NamedQueries({
+	@NamedQuery(name="Setting.findAll", query="SELECT s FROM Setting s"),
+	@NamedQuery(name="Setting.findById", query="SELECT s FROM Setting s WHERE s.settingId = :id")
+})
 public class Setting implements Serializable {
 	private static final long serialVersionUID = 1L;
 

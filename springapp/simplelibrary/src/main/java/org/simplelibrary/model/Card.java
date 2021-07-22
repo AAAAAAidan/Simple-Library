@@ -11,7 +11,10 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQuery(name="Card.findAll", query="SELECT c FROM Card c")
+@NamedQueries({
+	@NamedQuery(name="Card.findAll", query="SELECT c FROM Card c"),
+	@NamedQuery(name="Card.findById", query="SELECT c FROM Card c WHERE c.cardId = :id")
+})
 public class Card implements Serializable {
 	private static final long serialVersionUID = 1L;
 

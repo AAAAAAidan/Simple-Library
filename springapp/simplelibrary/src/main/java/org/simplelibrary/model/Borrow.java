@@ -10,7 +10,10 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQuery(name="Borrow.findAll", query="SELECT b FROM Borrow b")
+@NamedQueries({
+	@NamedQuery(name="Borrow.findAll", query="SELECT b FROM Borrow b"),
+	@NamedQuery(name="Borrow.findById", query="SELECT b FROM Borrow b WHERE b.borrowId = :id")
+})
 public class Borrow implements Serializable {
 	private static final long serialVersionUID = 1L;
 

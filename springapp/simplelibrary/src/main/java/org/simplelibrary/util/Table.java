@@ -1,16 +1,20 @@
 package org.simplelibrary.util;
 
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class Table {
+import javax.persistence.Query;
+
+// Hasn't yet been thoroughly tested; errors may occur
+public class Table<T> extends DatabaseConnection {
 	
-	// Fields
+    // Table fields
 	
-	private static final Connection CONNECTION = JDBC.getConnection();
+	private Class<T> tableClass;
 	private String tableName = null;
 	private String primaryKey = null;
 	private String[] filters = null;
@@ -24,13 +28,13 @@ public class Table {
 	public Table() {
 	}
 	
-	public Table(String tableName) {
-		this.tableName = tableName;
+	public Table(Class<T> tableClass) {
+		this.tableClass = tableClass;
 	}
 	
-	public Table(String tableName, String primaryKey, String[] filters, String[] sorters,
-			String order, Integer limit, Integer offset) {
-		this.tableName = tableName;
+	public Table(Class<T> tableClass, String primaryKey, String[] filters, 
+			String[] sorters, String order, Integer limit, Integer offset) {
+		this.tableClass = tableClass;
 		this.primaryKey = primaryKey;
 		this.filters = filters;
 		this.sorters = sorters;
@@ -40,8 +44,20 @@ public class Table {
 	}
 
 	// Standard getters and setters
+
+	public Class<T> getTableClass() {
+		return tableClass;
+	}
+
+	public void setTableClass(Class<T> tableClass) {
+		this.tableClass = tableClass;
+	}
 	
 	public String getTableName() {
+		if (tableName == null) {
+			tableName = tableClass.getSimpleName();
+		}
+		
 		return tableName;
 	}
 
@@ -50,26 +66,27 @@ public class Table {
 	}
 
 	public String getPrimaryKey() {
+		if (primaryKey == null) {
+			String sql = String.format(
+					"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS" +
+					"WHERE TABLE_NAME = '%s' and COLUMN_KEY = 'PRI'",
+					tableName);
+			
+			try {
+				this.connect();
+				Statement statement = connection.createStatement();
+				this.disconnect();
+				ResultSet results = statement.executeQuery(sql);
+				results.next();
+				primaryKey = results.getString(1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return primaryKey;
 	}
 
-	public void setPrimaryKey() {
-		String sql = String.format(
-				"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS" +
-				"WHERE TABLE_NAME = '%s' and COLUMN_KEY = 'PRI'",
-				tableName);
-		
-		try {
-			Statement statement = CONNECTION.createStatement();
-			ResultSet result = statement.executeQuery(sql);
-			result.next();
-			primaryKey = result.getString(1);
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void setPrimaryKey(String primaryKey) {
 		this.primaryKey = primaryKey;
 	}
@@ -129,50 +146,64 @@ public class Table {
 	
 	// Select methods
 	
-	public String getSelect() {
-		return getSelect("*");
-	}
-	
-	public String getSelect(String...columns) {
-		String column = String.join(", ", columns);
-		String sql = String.format("SELECT %s FROM %s", column, tableName);
-		
-		if (filters != null) {
-			sql += String.format(" WHERE %s", String.join(", ", filters));
-		}
-		
-		if (sorters != null) {
-			sql += String.format(" ORDER BY %s", String.join(", ", sorters));
-		}
-		
-		if (order != null) {
-			sql += " " + order;
-		}
-		
-		if (offset != null) {
-			sql += String.format(" LIMIT %S", limit);
-		}
-		
-		if (limit != null) {
-			sql += String.format(" OFFSET %s", offset);
-		}
-		
-		return sql;
-	}
-	
-	public ResultSet select() {
+	public List<T> select() {
 		return select("*");
 	}
 	
-	public ResultSet select(String...columns) {
-		try {
-			Statement statement = CONNECTION.createStatement();
-			return statement.executeQuery(getSelect(columns));
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public List<T> select(String...columns) {
+//		String sql = String.format("SELECT :columns FROM %s t", getTableName());
+//		
+//		if (filters != null) {
+//			sql += " WHERE t.:filters";
+//		}
+//		
+//		if (sorters != null) {
+//			sql += " ORDER BY t.:sorters";
+//		}
+//		
+//		if (order != null) {
+//			sql += " :order";
+//		}
+//		
+//		if (offset != null) {
+//			sql += " OFFSET :offset";
+//		}
+//		
+//		if (limit != null) {
+//			sql += " LIMIT :limit";
+//		}
+		
+		// TODO - Fix this crap!!!!
+		this.connect();
+		String sql = String.format("SELECT * FROM %s", getTableName());
+		Query query = entityManager.createNativeQuery(sql, tableClass);
+		
+//		query.setParameter("columns", String.join(", t.", columns));
+//		
+//		if (filters != null) {
+//			query.setParameter("filters", String.join(", t.", filters));
+//		}
+//		
+//		if (sorters != null) {
+//			query.setParameter("sorters", String.join(", t.", sorters));
+//		}
+//		
+//		if (order != null) {
+//			query.setParameter("order", order);
+//		}
+//		
+//		if (offset != null) {
+//			query.setParameter("offset", offset);
+//		}
+//		
+//		if (limit != null) {
+//			query.setParameter("limit", limit);
+//		}
+		
+		@SuppressWarnings("unchecked")
+		List<T> results = query.getResultList();
+		this.disconnect();
+		return results;
 	}
 	
 	// Insert methods
@@ -186,13 +217,17 @@ public class Table {
 			return 0;
 		}
 		
-		String column = String.join(", ", columns);
-		String value = String.join("', '", values);
-		String sql = String.format("INSERT INTO %s ( %s ) VALUES ( '%s' )", tableName, column, value);
+		String sql = "INSERT INTO ? ( ? ) VALUES ( '?' )";
 		
 		try {
-			Statement statement = CONNECTION.createStatement();
-			return (int) statement.executeUpdate(sql);
+			this.connect();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(0, getTableName());
+			preparedStatement.setString(1, String.join(", ", columns));
+			preparedStatement.setString(2, String.join("', '", values));
+			int result = preparedStatement.executeUpdate();
+			this.disconnect();
+			return result;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -211,85 +246,78 @@ public class Table {
 			return 0;
 		}
 		
-		if (primaryKey == null) {
-			setPrimaryKey();
-		}
-		
 		String columnsToValues = "";
 		
 		for (int i = 0; i < columns.length; i++) {
-			columnsToValues += String.format("%s = '%s', ", columns[i], values[i]);
+			columnsToValues += String.format("t.%s = '%s', ", columns[i], values[i]);
 		}
 		
 		columnsToValues = columnsToValues.substring(0, columnsToValues.length() - 2);
-		String sql = String.format("UPDATE %s SET %s WHERE %s IN ( %s )", tableName, columnsToValues, primaryKey, 
-				getSelect(primaryKey));
-		
-		try {
-			Statement statement = CONNECTION.createStatement();
-			return (int) statement.executeUpdate(sql);
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return 0;
-		}
+		this.connect();
+		String sql = "UPDATE :table t SET :columnsToValues WHERE t.:primaryKey IN ( :selectPrimaryKeys )";
+		String selectPrimaryKey = String.format("SELECT keyt.%s FROM %s keyt", getPrimaryKey(), getTableName());
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("table", getTableName());
+		query.setParameter("columnsToValues", columnsToValues);
+		query.setParameter("primaryKey", getPrimaryKey());
+		query.setParameter("selectPrimaryKey", selectPrimaryKey);
+		int result = query.executeUpdate();
+		this.disconnect();
+		return result;
 	}
 	
 	// Delete methods
 	
 	public int delete() {
-		if (primaryKey == null) {
-			setPrimaryKey();
-		}
-		
-		String sql = String.format("DELETE FROM %s WHERE %s IN ( %s )", tableName, primaryKey, getSelect(primaryKey));
-		try {
-			Statement statement = CONNECTION.createStatement();
-			return (int) statement.executeUpdate(sql);
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			return 0;
-		}
+		this.connect();
+		String sql = "DELETE FROM :table t WHERE t.:primaryKey IN :selectPrimaryKeys";
+		String selectPrimaryKey = String.format("SELECT keyt.%s FROM %s keyt", getPrimaryKey(), getTableName());
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("table", getTableName());
+		query.setParameter("primaryKey", getPrimaryKey());
+		query.setParameter("selectPrimaryKey", selectPrimaryKey);
+		int result = query.executeUpdate();
+		this.disconnect();
+		return result;
 	}
 	
 	// Filter methods
 	
-	public Table filter(String filter) {
+	public Table<T> filter(String filter) {
 		return filter(new String[] {filter});
 	}
 	
-	public Table filter(String[] filters) {
-		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
+	public Table<T> filter(String[] filters) {
+		return new Table<T>(tableClass, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Sort methods
 	
-	public Table sort(String sorter) {
+	public Table<T> sort(String sorter) {
 		return sort(new String[] {sorter});
 	}
 	
-	public Table sort(String[] sorters) {
-		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
+	public Table<T> sort(String[] sorters) {
+		return new Table<T>(tableClass, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Order methods
 	
-	public Table order(String order) {
+	public Table<T> order(String order) {
 		order = Pattern.matches("(?i)(-|d|desc|descending)", order) ? "DESC" : "ASC";
-		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table<T>(tableClass, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 	// Range methods
 	
-	public Table limit(Integer limit) {
+	public Table<T> limit(Integer limit) {
 		return range(0, limit);
 	}
 	
-	public Table range(Integer start, Integer end) {
+	public Table<T> range(Integer start, Integer end) {
 		Integer limit = end - start + 1;
 		Integer offset = start - 1;
-		return new Table(tableName, primaryKey, filters, sorters, order, limit, offset);
+		return new Table<T>(tableClass, primaryKey, filters, sorters, order, limit, offset);
 	}
 	
 }

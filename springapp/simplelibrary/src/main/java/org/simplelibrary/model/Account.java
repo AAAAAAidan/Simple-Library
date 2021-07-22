@@ -11,7 +11,10 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Account.findAll", query="SELECT a FROM Account a")
+@NamedQueries({
+	@NamedQuery(name="Account.findAll", query="SELECT a FROM Account a"),
+	@NamedQuery(name="Account.findById", query="SELECT a FROM Account a WHERE a.accountId = :id")
+})
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
