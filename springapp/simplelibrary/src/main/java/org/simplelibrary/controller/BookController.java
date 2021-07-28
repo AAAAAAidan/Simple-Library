@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class BookController {
 	
-	private static Table<Book> table = new Table<Book>(Book.class);
+	private static final Table<Book> TABLE = new Table<>(Book.class);
 	
     @RequestMapping("/books")
 	public String books() {
@@ -21,7 +21,7 @@ public class BookController {
 	
     @RequestMapping("/books/{id}")
 	public String book(Model model, @PathVariable String id) {
-    	List<Book> books = table.select();
+    	List<Book> books = TABLE.filter("bookId="+id).select();
 		Book book = books.size() == 0 ? null : books.get(0);
     	model.addAttribute("book", book);
 		return "book";

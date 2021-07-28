@@ -2,39 +2,50 @@ package org.simplelibrary.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.simplelibrary.model.Book;
 
-class TableUtilTests extends DatabaseConnection {
+class TableUtilTests {
 
 	private static Table<Book> table = new Table<Book>(Book.class);
 
 	@Test
 	@Order(1)
-	void testSelect() throws SQLException {
-    	List<Book> results = table.select("bookId");
-    	Book book = results.get(0);
+	void testSelect() {
+		List<Book> books = table.filter("bookId=Wads4igrTJAC").orderBy("bookId").sort("dEsC").limit(1)
+				.select();
+		Book book = books.size() == 0 ? null : books.get(0);
     	System.out.println(book.getBookId());
 		assertNotNull(book.getBookId());
 	}
 
-//	@Test
-//	@Order(2)
-//	void testInsert() {
-//	}
-//
-//	@Test
-//	@Order(3)
-//	void testUpdate() {
-//	}
-//
-//	@Test
-//	@Order(4)
-//	void testDelete() {
-//	}
+	@Test
+	@Order(2)
+	void testInsert() {
+		Book book = new Book();
+		book.setBookId("new id");
+		book.setBookTitle("new title");
+		int insertCount = table.insert(book);
+		assertTrue(insertCount > 0);
+	}
+
+	@Test
+	@Order(3)
+	void testUpdate() {
+		int updateCount = table.filter("bookId=Wads4igrTJAC").orderBy("bookId").sort("dEsC").limit(1)
+				.update("bookIdentifiers", "CHANGEME!!!!");
+		assertTrue(updateCount > 0);
+	}
+
+	@Test
+	@Order(4)
+	void testDelete() {
+		int deleteCount = table.filter("bookId=Wads4igrTJAC").orderBy("bookId").sort("dEsC").limit(1)
+				.delete();
+		assertTrue(deleteCount > 0);
+	}
 
 }

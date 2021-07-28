@@ -12,23 +12,13 @@ public class DatabaseConnection {
 	
 	protected EntityManagerFactory entityManagerFactory = null;
 	protected EntityManager entityManager = null;
-	protected Connection connection = null;
-	
-    private final String DATABASE = "library";
-	private final String URL = "jdbc:mysql://127.0.0.1/" + DATABASE;
-	private final String USER = "root";
-	private final String PASSWORD = "Password";
-	
+
+	private final String DATABASE = "library";
+
 	// Connect to the database
 	public void connect() {
 		entityManagerFactory = Persistence.createEntityManagerFactory(DATABASE);
 		entityManager = entityManagerFactory.createEntityManager();
-		
-		try {
-			connection = DriverManager.getConnection(URL, USER, PASSWORD);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	// Disconnect from the database
@@ -40,14 +30,23 @@ public class DatabaseConnection {
 		if (entityManagerFactory != null) {
 			entityManagerFactory.close();
 		}
-		
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
-	
+
+	// Connect and begin transaction
+	public void begin() {
+		this.connect();
+		entityManager.getTransaction().begin();
+	}
+
+	// Commit transaction and disconnect
+	public void commit() {
+		entityManager.getTransaction().commit();
+		this.disconnect();
+	}
+
+	// Persist an object to the database
+	public void persist(Object object) {
+		entityManager.persist(object);
+	}
+
 }

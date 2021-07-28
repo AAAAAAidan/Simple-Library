@@ -12,7 +12,6 @@ class DatabaseConnectionUtilTests extends DatabaseConnection {
 	void testConnect() {
 		this.connect();
 		assertNotNull(entityManager);
-		assertNotNull(connection);
 	}
 
 	@Test
@@ -20,7 +19,6 @@ class DatabaseConnectionUtilTests extends DatabaseConnection {
 	void testDisconnect() {
 		this.disconnect();
 		assertNull(entityManager);
-		assertNull(connection);
 	}
 
 }
