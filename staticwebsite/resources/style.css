@@ -1,0 +1,141 @@
+
+/*
+Color Palette
+Head/foot bg:   #9bb0d1
+Main bg:        #F8F8F8
+Head/foot text: #ffffff
+Main text:      #444444
+Link normal:    #0645AD
+Link hover:     #0B0080
+Input hover:    #F0F0F0
+*/
+
+/* TODO - Use more classes */
+
+/* Font by Paul D. Hunt - https://fonts.google.com/specimen/Source+Code+Pro */
+@font-face {
+  font-family: "Source Code Pro";
+  src: url('fonts/SourceCodePro/SourceCodePro-Regular.ttf');
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+header {
+  display: grid;
+  grid-template-columns: 7fr 1fr;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header, footer {
+  background-color: #9bb0d1;
+}
+
+header, footer, nav {
+  font-family: "Verdana";
+}
+
+header a, footer a {
+  color: #FFFFFF;
+}
+
+header ul, footer {
+  font-size: 16px;
+}
+
+header div, main div, nav, main ul, footer {
+  padding: 16px;
+}
+
+main {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  background-color: #F8F8F8;
+  color: #444444;
+  font-family: "Helvetica";
+}
+
+main li, h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 16px 0;
+}
+
+main a, main a:visited {
+  color: #0645AD;
+}
+
+main li a:hover, a:hover, hr:hover {
+  color: #0B0080;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  margin: 0;
+  list-style-type: none;
+}
+
+form label {
+  display: block;
+}
+
+input, select {
+  border: 2px solid #444444;
+  border-radius: 1px;
+  background: none;
+  padding: 4px;
+  font-size: 1em;
+}
+
+input:hover, select:hover {
+  background-color: #F0F0F0;
+}
+
+footer {
+  text-align: center;
+}
+
+.grid-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.grid-3 {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.menu-item {
+  padding-bottom: 4px;
+  display: none;
+}
+
+#title {
+  font-family: "Source Code Pro";
+}
+
+#menu-button:hover {
+  cursor: pointer;
+}
+
+#menu-button {
+  border: none;
+  /* Icon by Pixel perfect - https://www.flaticon.com/free-icon/menu_1828551 */
+  background: url('images/menu_1828551.png');
+  background-size: contain;
+  height: 32px;
+  width: 32px;
+}

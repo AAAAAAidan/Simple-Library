@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="ISO-8859-1">
+    <title>Simple Library | Search</title>
+    <!-- Icon by Good Ware - https://www.flaticon.com/free-icon/book_864685 -->
+    <link rel="shortcut icon" type="image/png" href="resources/images/favicon.ico"/>
+    <link href="resources/style.css" rel="stylesheet">
+    <script src="resources/script.js"></script>
+  </head>
+  <body>
+    <header class="wrapper">
+      <div>
+        <h1 id="title"><a href="index.html">Simple Library</a></h1>
+      </div>
+			<div>
+				<ul id="menu-list">
+					<li><button id="menu-button" /></li>
+	        <li><a class="menu-item" href="signup.html">Signup</a></li>
+	        <li><a class="menu-item" href="signup.html">Login</a></li>
+	      </ul>
+			</div>
+    </header>
+    <main>
+      <nav>
+        <ul>
+          <li><a href="search.html">Search</a></li>
+          <li><a href="search.html">About</a></li>
+          <li><a href="search.html">Help</a></li>
+        </ul>
+      </nav>
+      <div id="content" class="wrapper">
+				<div>
+          <h2>Search the library!</h2>
+					<div>
+						<form action="javascript:search()" method="post">
+				      <input type="text" name="searchTerms" placeholder="Enter search terms"/>
+				    	<input type="submit" value="Search"/>
+							<select name="filter">
+								<option value="unfiltered">Books</option>
+								<option value="authors">Authors</option>
+								<option value="publishers">Publishers</option>
+								<option value="genres">Genres</option>
+								<option value="lists">Lists</option>
+					    </select>
+				    	<select name="orderby" selectedIndex=2>
+								<option value="date">By date</option>
+								<option value="name">By name</option>
+				    	</select>
+					    <select name="sort">
+								<option value="descending">Descending</option>
+								<option value="ascending">Ascending</option>
+					    </select>
+					  </form>
+						<p id="result"></p>
+					</div>
+				</div>
+      </div>
+    </main>
+    <footer>
+      <a target="_blank" href="https://github.com/AAAAAAidan/">&copy;Aidan Zamboni</a>
+    </footer>
+  </body>
+</html>
