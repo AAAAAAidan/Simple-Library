@@ -13,7 +13,7 @@
   <body>
     <header class="wrapper">
       <div>
-        <h1><a href="index">Simple Library</a></h1>
+        <h1 id="title"><a href="index">Simple Library</a></h1>
       </div>
       <ul>
         <li><a href="signup">Signup</a></li>
