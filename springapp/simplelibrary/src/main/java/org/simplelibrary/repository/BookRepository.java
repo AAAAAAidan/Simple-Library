@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository {
-	
-	public Book findById(String id);
-	
+  
+  public Book findById(String id);
+  
 }

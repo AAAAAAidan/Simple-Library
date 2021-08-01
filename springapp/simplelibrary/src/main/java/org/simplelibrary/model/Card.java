@@ -12,79 +12,79 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name="Card.findAll", query="SELECT c FROM Card c"),
-	@NamedQuery(name="Card.findById", query="SELECT c FROM Card c WHERE c.cardId = :id")
+  @NamedQuery(name="Card.findAll", query="SELECT c FROM Card c"),
+  @NamedQuery(name="Card.findById", query="SELECT c FROM Card c WHERE c.cardId = :id")
 })
 public class Card implements Serializable {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int cardId;
+  @Id
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  private int cardId;
 
-	private Timestamp cardAddDate;
+  private Timestamp cardAddDate;
 
-	@Temporal(TemporalType.DATE)
-	private Date cardExpirationDate;
+  @Temporal(TemporalType.DATE)
+  private Date cardExpirationDate;
 
-	private int cardNumber;
+  private int cardNumber;
 
-	private String cardStatus;
+  private String cardStatus;
 
-	//bi-directional many-to-one association to Account
-	@ManyToOne
-	@JoinColumn(name="accountId")
-	private Account account;
+  //bi-directional many-to-one association to Account
+  @ManyToOne
+  @JoinColumn(name="accountId")
+  private Account account;
 
-	public Card() {
-	}
+  public Card() {
+  }
 
-	public int getCardId() {
-		return this.cardId;
-	}
+  public int getCardId() {
+    return this.cardId;
+  }
 
-	public void setCardId(int cardId) {
-		this.cardId = cardId;
-	}
+  public void setCardId(int cardId) {
+    this.cardId = cardId;
+  }
 
-	public Timestamp getCardAddDate() {
-		return this.cardAddDate;
-	}
+  public Timestamp getCardAddDate() {
+    return this.cardAddDate;
+  }
 
-	public void setCardAddDate(Timestamp cardAddDate) {
-		this.cardAddDate = cardAddDate;
-	}
+  public void setCardAddDate(Timestamp cardAddDate) {
+    this.cardAddDate = cardAddDate;
+  }
 
-	public Date getCardExpirationDate() {
-		return this.cardExpirationDate;
-	}
+  public Date getCardExpirationDate() {
+    return this.cardExpirationDate;
+  }
 
-	public void setCardExpirationDate(Date cardExpirationDate) {
-		this.cardExpirationDate = cardExpirationDate;
-	}
+  public void setCardExpirationDate(Date cardExpirationDate) {
+    this.cardExpirationDate = cardExpirationDate;
+  }
 
-	public int getCardNumber() {
-		return this.cardNumber;
-	}
+  public int getCardNumber() {
+    return this.cardNumber;
+  }
 
-	public void setCardNumber(int cardNumber) {
-		this.cardNumber = cardNumber;
-	}
+  public void setCardNumber(int cardNumber) {
+    this.cardNumber = cardNumber;
+  }
 
-	public String getCardStatus() {
-		return this.cardStatus;
-	}
+  public String getCardStatus() {
+    return this.cardStatus;
+  }
 
-	public void setCardStatus(String cardStatus) {
-		this.cardStatus = cardStatus;
-	}
+  public void setCardStatus(String cardStatus) {
+    this.cardStatus = cardStatus;
+  }
 
-	public Account getAccount() {
-		return this.account;
-	}
+  public Account getAccount() {
+    return this.account;
+  }
 
-	public void setAccount(Account account) {
-		this.account = account;
-	}
+  public void setAccount(Account account) {
+    this.account = account;
+  }
 
 }

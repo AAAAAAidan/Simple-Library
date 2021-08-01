@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class BookController {
-	
-	private static final Table<Book> TABLE = new Table<>(Book.class);
-	
+  
+  private static final Table<Book> TABLE = new Table<>(Book.class);
+  
     @RequestMapping("/books")
-	public String books() {
-		return "search";
-	}
-	
+  public String books() {
+    return "search";
+  }
+  
     @RequestMapping("/books/{id}")
-	public String book(Model model, @PathVariable String id) {
-    	List<Book> books = TABLE.filter("bookId="+id).select();
-		Book book = books.size() == 0 ? null : books.get(0);
-    	model.addAttribute("book", book);
-		return "book";
-	}
-	
+  public String book(Model model, @PathVariable String id) {
+      List<Book> books = TABLE.filter("bookId="+id).select();
+    Book book = books.size() == 0 ? null : books.get(0);
+      model.addAttribute("book", book);
+    return "book";
+  }
+  
 }

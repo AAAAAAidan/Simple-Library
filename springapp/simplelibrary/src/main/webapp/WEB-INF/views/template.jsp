@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-	<meta charset="ISO-8859-1">
+  <meta charset="ISO-8859-1">
     <title>Simple Library</title>
     <!-- Icon by Good Ware - https://www.flaticon.com/free-icon/book_864685 -->
     <link rel="shortcut icon" type="image/png" href="<c:url value="/resources/images/favicon.ico" />"/>
@@ -29,7 +29,7 @@
         </ul>
       </nav>
       <div id="content" class="wrapper">
-      	<jsp:include page="${content}"/>
+        <jsp:include page="${content}"/>
       </div>
     </main>
     <footer>
