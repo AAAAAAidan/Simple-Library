@@ -14,17 +14,17 @@ public class BookController {
   
   private static final Table<Book> TABLE = new Table<>(Book.class);
   
-    @RequestMapping("/books")
+  @RequestMapping("/books")
   public String books() {
-    return "search";
+    return "default/search";
   }
   
-    @RequestMapping("/books/{id}")
+  @RequestMapping("/books/{id}")
   public String book(Model model, @PathVariable String id) {
       List<Book> books = TABLE.filter("bookId="+id).select();
-    Book book = books.size() == 0 ? null : books.get(0);
+      Book book = books.size() == 0 ? null : books.get(0);
       model.addAttribute("book", book);
-    return "book";
+      return "books/book";
   }
   
 }

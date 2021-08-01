@@ -4,30 +4,42 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class IndexController {
+public class DefaultController {
   
-  // Home page
+  // Index page
   
   @RequestMapping(value={"", "/", "index"})
   public String index() {
-    return "index";
+    return "default/index";
   }
-  
+
+  // Account links
+
+  @RequestMapping("/signup")
+  public String signup() {
+    return "default/signup";
+  }
+
+  @RequestMapping("/login")
+  public String login() {
+    return "default/login";
+  }
+
   // Sidebar links
-  
+
   @RequestMapping("/search")
   public String search() {
-    return "search";
+    return "default/search";
   }
   
   @RequestMapping("/about")
   public String about() {
-    return "about";
+    return "default/about";
   }
   
   @RequestMapping("/help")
   public String help() {
-    return "help";
+    return "default/help";
   }
-  
+
 }

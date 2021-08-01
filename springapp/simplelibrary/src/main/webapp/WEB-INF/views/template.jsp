@@ -13,19 +13,19 @@
   <body>
     <header class="wrapper">
       <div>
-        <h1 id="title"><a href="index">Simple Library</a></h1>
+        <h1 id="title"><a href="<c:url value="/index" />">Simple Library</a></h1>
       </div>
       <ul>
-        <li><a href="signup">Signup</a></li>
-        <li><a href="login">Login</a></li>
+        <li><a href="<c:url value="/signup" />">Signup</a></li>
+        <li><a href="<c:url value="/login" />">Login</a></li>
       </ul>
     </header>
     <main>
       <nav>
         <ul>
-          <li><a href="search">Search</a></li>
-          <li><a href="about">About</a></li>
-          <li><a href="help">Help</a></li>
+          <li><a href="<c:url value="/search" />">Search</a></li>
+          <li><a href="<c:url value="/about" />">About</a></li>
+          <li><a href="<c:url value="/help" />">Help</a></li>
         </ul>
       </nav>
       <div id="content" class="wrapper">
