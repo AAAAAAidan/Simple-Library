@@ -6,10 +6,11 @@ import java.util.regex.Pattern;
 
 import javax.persistence.Query;
 
-// Hasn't yet been thoroughly tested; errors may occur
+// Experimental usage of JPQL for querying and updating tables
+// May or may not be used in the final version
 public class Table<T> extends DatabaseConnection {
   
-    // Table fields
+  // Table fields
   
   private Class<T> tableClass = null;
   private String tableName = null;

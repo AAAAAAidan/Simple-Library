@@ -1,8 +1,10 @@
 package org.simplelibrary.repository;
 
+import org.simplelibrary.model.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepository {
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
 }
