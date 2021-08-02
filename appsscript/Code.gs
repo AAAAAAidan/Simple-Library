@@ -1,9 +1,10 @@
 // Build a spreadsheet with data from Google Books
-function fetchBooks()
-{
+function fetchBooks() {
+
   var startTime = new Date();
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var bookSheet = spreadsheet.getSheetByName("book");
+  var isbnSheet = spreadsheet.getSheetByName("isbn");
   var mapSheet = spreadsheet.getSheetByName("bookcategorymap");
   var categorySheet = spreadsheet.getSheetByName("category");
 
@@ -45,16 +46,16 @@ function fetchBooks()
       }
 
       var bookRow = bookSheet.getLastRow() + 1;
+      var isbnRow = isbnSheet.getLastRow() + 1;
       var mapRow = mapSheet.getLastRow() + 1;
       var categoryRow = categoryId + 1;
 
       Logger.log("Row " + bookRow + ": " + bookTitle);
 
-      // Book - 10 columns
+      // Book - 9 columns
 
       var bookId = bookId;
       var bookTitle = bookTitle;
-      var bookIdentifiers = JSON.stringify(item.volumeInfo.industryIdentifiers);
       var bookDescription = item.volumeInfo.description;
       var bookPublishDate = item.volumeInfo.publishedDate;
       var bookPageCount = item.volumeInfo.pageCount;
@@ -63,26 +64,14 @@ function fetchBooks()
       var bookStatus = "Active";
       var bookAddDate = new Date();
 
-      if (!bookIdentifiers) {
-        bookIdentifiers = "NULL";
-      }
+      if (!bookDescription) { bookDescription = "NULL"; }
+      if (!bookPublishDate) { bookPublishDate = "NULL"; }
+      if (!bookPageCount) { bookPageCount = "NULL"; }
+      if (bookPublishDate.length == 4) { bookPublishDate += "-01-01"; }
 
-      if (!bookDescription) {
-        bookDescription = "NULL";
-      }
-
-      if (!bookPublishDate) {
-        bookPublishDate = "NULL";
-      }
-
-      if (!bookPageCount) {
-        bookPageCount = "NULL";
-      }
-
-      bookSheet.getRange(bookRow, 1, 1, 10).setValues([[
+      bookSheet.getRange(bookRow, 1, 1, 9).setValues([[
         bookId,
         bookTitle,
-        bookIdentifiers,
         bookDescription,
         bookPublishDate,
         bookPageCount,
@@ -91,6 +80,25 @@ function fetchBooks()
         bookStatus,
         bookAddDate
       ]]);
+
+      // Isbn - 2 columns
+
+      var isbnId = "NULL";
+      var isbnType = "NULL";
+      var bookId = bookId;
+
+      var industryIdentifiers = item.volumeInfo.industryIdentifiers;
+
+      for (var i in industryIdentifiers) {
+        isbnId = industryIdentifiers[i].identifier;
+        isbnType = industryIdentifiers[i].type;
+
+        isbnSheet.getRange(isbnRow++, 1, 1, 3).setValues([[
+          isbnId,
+          isbnType,
+          bookId
+        ]]);
+      }
 
       // BookCategoryMap - 2 columns
 
@@ -169,7 +177,7 @@ function fetchBooks()
 function buildInsert() {
 
   var inserts = [];
-  var names = ["book", "category", "bookcategorymap"];
+  var names = ["book", "isbn", "category", "bookcategorymap"];
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
   for (var i in names) {
@@ -190,19 +198,16 @@ function buildInsert() {
     }
 
     values = values.join(",\n\t");
-
     inserts.push("INSERT INTO `" + names[i] + "`\n\t(" + columns + ")\nVALUES\n\t" + values + ";");
   }
 
   var insert = inserts.join("\n\n").replace(/'NULL'/g, "NULL");
-
   return insert;
 }
 
 
 
 // Return an insert query for the database
-function doGet(e)
-{
+function doGet(e) {
   return ContentService.createTextOutput(buildInsert());
 }

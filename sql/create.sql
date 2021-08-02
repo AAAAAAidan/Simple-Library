@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS `card` (
 CREATE TABLE IF NOT EXISTS `book` (
   `bookId` VARCHAR(12) NOT NULL,
   `bookTitle` VARCHAR(320) NOT NULL,
-  `bookIdentifiers` VARCHAR(320) DEFAULT NULL,
   `bookDescription` VARCHAR(3200) DEFAULT NULL,
   `bookPublishDate` DATE DEFAULT NULL,
   `bookPageCount` INT DEFAULT NULL,
@@ -56,6 +55,14 @@ CREATE TABLE IF NOT EXISTS `book` (
   `bookStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
   `bookAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`bookId`)
+);
+
+CREATE TABLE IF NOT EXISTS `isbn` (
+  `isbnId` VARCHAR(32) NOT NULL,
+  `isbnType` VARCHAR(32) NOT NULL,
+  `bookId` VARCHAR(12) NOT NULL,
+  PRIMARY KEY (`isbnId`),
+  FOREIGN KEY (`bookId`) REFERENCES book(`bookId`)
 );
 
 CREATE TABLE IF NOT EXISTS `borrow` (
@@ -71,7 +78,6 @@ CREATE TABLE IF NOT EXISTS `borrow` (
   FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
   FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
 );
-
 
 CREATE TABLE IF NOT EXISTS `catalog` (
   `catalogId` INT NOT NULL AUTO_INCREMENT,

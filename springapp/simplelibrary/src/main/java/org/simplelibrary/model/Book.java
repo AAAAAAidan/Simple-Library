@@ -28,8 +28,6 @@ public class Book implements Serializable {
 
   private String bookDescription;
 
-  private String bookIdentifiers;
-
   private int bookPageCount;
 
   @Temporal(TemporalType.DATE)
@@ -44,6 +42,10 @@ public class Book implements Serializable {
   //bi-directional many-to-one association to Borrow
   @OneToMany(mappedBy="book")
   private List<Borrow> borrows;
+
+  //bi-directional many-to-one association to Isbn
+  @OneToMany(mappedBy="book")
+  private List<Isbn> isbns;
 
   //bi-directional many-to-many association to Catalog
   @ManyToMany(mappedBy="books")
@@ -86,14 +88,6 @@ public class Book implements Serializable {
 
   public void setBookDescription(String bookDescription) {
     this.bookDescription = bookDescription;
-  }
-
-  public String getBookIdentifiers() {
-    return this.bookIdentifiers;
-  }
-
-  public void setBookIdentifiers(String bookIdentifiers) {
-    this.bookIdentifiers = bookIdentifiers;
   }
 
   public int getBookPageCount() {
@@ -156,6 +150,28 @@ public class Book implements Serializable {
     borrow.setBook(null);
 
     return borrow;
+  }
+
+  public List<Isbn> getIsbns() {
+    return this.isbns;
+  }
+
+  public void setIsbns(List<Isbn> isbns) {
+    this.isbns = isbns;
+  }
+
+  public Isbn addIsbn(Isbn isbn) {
+    getIsbns().add(isbn);
+    isbn.setBook(this);
+
+    return isbn;
+  }
+
+  public Isbn removeIsbn(Isbn isbn) {
+    getIsbns().remove(isbn);
+    isbn.setBook(null);
+
+    return isbn;
   }
 
   public List<Catalog> getCatalogs() {
