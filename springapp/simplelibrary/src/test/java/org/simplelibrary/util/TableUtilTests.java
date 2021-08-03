@@ -18,16 +18,16 @@ class TableUtilTests {
     List<Book> books = table.filter("bookId=Wads4igrTJAC").orderBy("bookId").sort("dEsC").limit(1)
         .select();
     Book book = books.size() == 0 ? null : books.get(0);
-      System.out.println(book.getBookId());
-    assertNotNull(book.getBookId());
+      System.out.println(book.getId());
+    assertNotNull(book.getId());
   }
 
   @Test
   @Order(2)
   void testInsert() {
     Book book = new Book();
-    book.setBookId("new id");
-    book.setBookTitle("new title");
+    book.setId("new id");
+    book.setTitle("new title");
     int insertCount = table.insert(book);
     assertTrue(insertCount > 0);
   }

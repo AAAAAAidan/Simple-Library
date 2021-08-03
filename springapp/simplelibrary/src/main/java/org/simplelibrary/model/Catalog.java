@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,120 +13,52 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Catalog.findAll", query="SELECT c FROM Catalog c"),
-  @NamedQuery(name="Catalog.findById", query="SELECT c FROM Catalog c WHERE c.catalogId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Catalog implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private int catalogId;
+  @Column(name="catalog_id", nullable=false)
+  private int id;
 
-  private Timestamp catalogAddDate;
+  @Column(name="catalog_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
-  private String catalogDescription;
+  @Column(name="catalog_description", length=3200)
+  private String description = null;
 
-  private Timestamp catalogLastUpdate;
+  @Column(name="catalog_last_update", nullable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp lastUpdate;
 
-  private String catalogName;
+  @Column(name="catalog_name", length=320)
+  private String name = null;
 
-  private String catalogPrivacy;
+  @Column(name="catalog_privacy", nullable=false,
+      columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
+  private String privacy = "Private";
 
-  private String catalogStatus;
+  @Column(name="catalog_status", nullable=false,
+      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
   //bi-directional many-to-one association to Account
   @ManyToOne
-  @JoinColumn(name="accountId")
+  @JoinColumn(name="account_id")
   private Account account;
 
   //bi-directional many-to-many association to Book
   @ManyToMany
   @JoinTable(
-    name="bookcatalogmap"
-    , joinColumns={
-      @JoinColumn(name="catalogId")
-      }
-    , inverseJoinColumns={
-      @JoinColumn(name="bookId")
-      }
-    )
+    name="book_catalog_map",
+    joinColumns={ @JoinColumn(name="catalog_id") },
+    inverseJoinColumns={ @JoinColumn(name="book_id") }
+  )
   private List<Book> books;
-
-  public Catalog() {
-  }
-
-  public int getCatalogId() {
-    return this.catalogId;
-  }
-
-  public void setCatalogId(int catalogId) {
-    this.catalogId = catalogId;
-  }
-
-  public Timestamp getCatalogAddDate() {
-    return this.catalogAddDate;
-  }
-
-  public void setCatalogAddDate(Timestamp catalogAddDate) {
-    this.catalogAddDate = catalogAddDate;
-  }
-
-  public String getCatalogDescription() {
-    return this.catalogDescription;
-  }
-
-  public void setCatalogDescription(String catalogDescription) {
-    this.catalogDescription = catalogDescription;
-  }
-
-  public Timestamp getCatalogLastUpdate() {
-    return this.catalogLastUpdate;
-  }
-
-  public void setCatalogLastUpdate(Timestamp catalogLastUpdate) {
-    this.catalogLastUpdate = catalogLastUpdate;
-  }
-
-  public String getCatalogName() {
-    return this.catalogName;
-  }
-
-  public void setCatalogName(String catalogName) {
-    this.catalogName = catalogName;
-  }
-
-  public String getCatalogPrivacy() {
-    return this.catalogPrivacy;
-  }
-
-  public void setCatalogPrivacy(String catalogPrivacy) {
-    this.catalogPrivacy = catalogPrivacy;
-  }
-
-  public String getCatalogStatus() {
-    return this.catalogStatus;
-  }
-
-  public void setCatalogStatus(String catalogStatus) {
-    this.catalogStatus = catalogStatus;
-  }
-
-  public Account getAccount() {
-    return this.account;
-  }
-
-  public void setAccount(Account account) {
-    this.account = account;
-  }
-
-  public List<Book> getBooks() {
-    return this.books;
-  }
-
-  public void setBooks(List<Book> books) {
-    this.books = books;
-  }
 
 }

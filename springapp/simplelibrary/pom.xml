@@ -16,17 +16,13 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.2.3</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
       </plugin>
     </plugins>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>org.eclipse.persistence</groupId>
-      <artifactId>eclipselink</artifactId>
-      <version>2.5.1</version>
-    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -40,24 +36,25 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>5.4.1.Final</version>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.20</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-aspects</artifactId>
-      <version>5.0.6.RELEASE</version>
+      <artifactId>spring-core</artifactId>
+      <version>5.3.9</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>5.1.0.BUILD-SNAPSHOT</version>
+      <version>5.3.9</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>5.0.6.RELEASE</version>
+      <version>5.3.9</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>

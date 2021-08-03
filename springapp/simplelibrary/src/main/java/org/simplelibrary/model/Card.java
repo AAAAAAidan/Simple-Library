@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
@@ -11,80 +13,32 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Card.findAll", query="SELECT c FROM Card c"),
-  @NamedQuery(name="Card.findById", query="SELECT c FROM Card c WHERE c.cardId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Card implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private int cardId;
+  @Column(name="card_id", nullable=false)
+  private int id;
 
-  private Timestamp cardAddDate;
+  @Column(name="card_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
   @Temporal(TemporalType.DATE)
-  private Date cardExpirationDate;
+  @Column(name="card_expiration_date", nullable=false)
+  private Date expirationDate = null;
 
-  private int cardNumber;
-
-  private String cardStatus;
+  @Column(name="card_status", nullable=false,
+      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
   //bi-directional many-to-one association to Account
   @ManyToOne
-  @JoinColumn(name="accountId")
+  @JoinColumn(name="account_id")
   private Account account;
-
-  public Card() {
-  }
-
-  public int getCardId() {
-    return this.cardId;
-  }
-
-  public void setCardId(int cardId) {
-    this.cardId = cardId;
-  }
-
-  public Timestamp getCardAddDate() {
-    return this.cardAddDate;
-  }
-
-  public void setCardAddDate(Timestamp cardAddDate) {
-    this.cardAddDate = cardAddDate;
-  }
-
-  public Date getCardExpirationDate() {
-    return this.cardExpirationDate;
-  }
-
-  public void setCardExpirationDate(Date cardExpirationDate) {
-    this.cardExpirationDate = cardExpirationDate;
-  }
-
-  public int getCardNumber() {
-    return this.cardNumber;
-  }
-
-  public void setCardNumber(int cardNumber) {
-    this.cardNumber = cardNumber;
-  }
-
-  public String getCardStatus() {
-    return this.cardStatus;
-  }
-
-  public void setCardStatus(String cardStatus) {
-    this.cardStatus = cardStatus;
-  }
-
-  public Account getAccount() {
-    return this.account;
-  }
-
-  public void setAccount(Account account) {
-    this.account = account;
-  }
 
 }

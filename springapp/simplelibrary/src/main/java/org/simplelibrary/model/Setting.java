@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,99 +12,43 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Setting.findAll", query="SELECT s FROM Setting s"),
-  @NamedQuery(name="Setting.findById", query="SELECT s FROM Setting s WHERE s.settingId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Setting implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
+  @Column(name="setting_id", nullable=false)
   private int settingId;
 
-  private Timestamp settingAddDate;
+  @Column(name="setting_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
-  private Timestamp settingLastUpdate;
+  @Column(name="setting_last_update", nullable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp lastUpdate;
 
-  private String settingProfileImage;
+  @Column(name="setting_profile_image", length=12)
+  private String profileImage = null;
 
-  private String settingSearchDisplayType;
+  @Column(name="setting_search_display_type", nullable=false,
+      columnDefinition="ENUM('Comfortable', 'Normal', 'Compact') DEFAULT 'Normal'")
+  private String searchDisplayType = "Normal";
 
-  private int settingSearchResultsPerPage;
+  @Column(name="setting_search_results_per_page")
+  private int searchResultsPerPage = 0;
 
-  private String settingStatus;
+  @Column(name="setting_status", nullable=false,
+  columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
   //bi-directional many-to-one association to Account
   @ManyToOne
-  @JoinColumn(name="accountId")
+  @JoinColumn(name="account_id")
   private Account account;
-
-  public Setting() {
-  }
-
-  public int getSettingId() {
-    return this.settingId;
-  }
-
-  public void setSettingId(int settingId) {
-    this.settingId = settingId;
-  }
-
-  public Timestamp getSettingAddDate() {
-    return this.settingAddDate;
-  }
-
-  public void setSettingAddDate(Timestamp settingAddDate) {
-    this.settingAddDate = settingAddDate;
-  }
-
-  public Timestamp getSettingLastUpdate() {
-    return this.settingLastUpdate;
-  }
-
-  public void setSettingLastUpdate(Timestamp settingLastUpdate) {
-    this.settingLastUpdate = settingLastUpdate;
-  }
-
-  public String getSettingProfileImage() {
-    return this.settingProfileImage;
-  }
-
-  public void setSettingProfileImage(String settingProfileImage) {
-    this.settingProfileImage = settingProfileImage;
-  }
-
-  public String getSettingSearchDisplayType() {
-    return this.settingSearchDisplayType;
-  }
-
-  public void setSettingSearchDisplayType(String settingSearchDisplayType) {
-    this.settingSearchDisplayType = settingSearchDisplayType;
-  }
-
-  public int getSettingSearchResultsPerPage() {
-    return this.settingSearchResultsPerPage;
-  }
-
-  public void setSettingSearchResultsPerPage(int settingSearchResultsPerPage) {
-    this.settingSearchResultsPerPage = settingSearchResultsPerPage;
-  }
-
-  public String getSettingStatus() {
-    return this.settingStatus;
-  }
-
-  public void setSettingStatus(String settingStatus) {
-    this.settingStatus = settingStatus;
-  }
-
-  public Account getAccount() {
-    return this.account;
-  }
-
-  public void setAccount(Account account) {
-    this.account = account;
-  }
 
 }

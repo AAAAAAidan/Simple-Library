@@ -1,4 +1,5 @@
 # Database and table create statements
+# Note that this file is deprecated
 
 DROP DATABASE IF EXISTS `library`;
 
@@ -7,111 +8,112 @@ CREATE DATABASE `library`;
 USE `library`;
 
 CREATE TABLE IF NOT EXISTS `account` (
-  `accountId` INT NOT NULL AUTO_INCREMENT,
-  `accountFirstName` VARCHAR(320) NOT NULL,
-  `accountLastName` VARCHAR(320) NOT NULL,
-  `accountPassword` VARCHAR(32) NOT NULL,
-  `accountEmail` VARCHAR(320) DEFAULT NULL,
-  `accountActiveBorrows` INT DEFAULT 0,
-  `accountTotalBorrows` INT DEFAULT 0,
-  `accountLastLoginDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `accountStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `accountAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`accountId`)
+  `account_id` INT NOT NULL AUTO_INCREMENT,
+  `account_first_name` VARCHAR(320) DEFAULT NULL,
+  `account_last_name` VARCHAR(320) DEFAULT NULL,
+  `account_password` VARCHAR(32) NOT NULL,
+  `account_email` VARCHAR(320) DEFAULT NULL,
+  `account_active_borrows` INT DEFAULT 0,
+  `account_total_borrows` INT DEFAULT 0,
+  `account_last_login_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `account_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `account_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `setting` (
-  `settingId` INT NOT NULL AUTO_INCREMENT,
-  `accountId` INT UNIQUE NOT NULL,
-  `settingProfileImage` VARCHAR(12) DEFAULT NULL,
-  `settingSearchResultsPerPage` INT DEFAULT 30,
-  `settingSearchDisplayType` ENUM('Compact', 'Normal', 'Comfortable') DEFAULT 'Normal',
-  `settingLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `settingStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `settingAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`settingId`),
-  FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
+  `setting_id` INT NOT NULL AUTO_INCREMENT,
+  `account_id` INT UNIQUE NOT NULL,
+  `setting_profile_image` VARCHAR(12) DEFAULT NULL,
+  `setting_search_results_per_page` INT DEFAULT 30,
+  `setting_search_display_type` ENUM('Compact', 'Normal', 'Comfortable') DEFAULT 'Normal',
+  `setting_last_update` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `setting_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `setting_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`setting_id`),
+  FOREIGN KEY (`account_id`) REFERENCES account(`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `card` (
-  `cardId` INT NOT NULL AUTO_INCREMENT,
-  `cardNumber` INT NOT NULL,
-  `cardExpirationDate` DATE NOT NULL,
-  `cardStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `cardAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `accountId` INT NOT NULL,
-  PRIMARY KEY (`cardId`),
-  FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
+  `card_id` INT NOT NULL AUTO_INCREMENT,
+  `card_expiration_date` DATE NOT NULL,
+  `card_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `card_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `account_id` INT NOT NULL,
+  PRIMARY KEY (`card_id`),
+  FOREIGN KEY (`account_id`) REFERENCES account(`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `book` (
-  `bookId` VARCHAR(12) NOT NULL,
-  `bookTitle` VARCHAR(320) NOT NULL,
-  `bookDescription` VARCHAR(3200) DEFAULT NULL,
-  `bookPublishDate` DATE DEFAULT NULL,
-  `bookPageCount` INT DEFAULT NULL,
-  `bookAvailability` ENUM('Available', 'Unavailable') DEFAULT 'Available',
-  `bookTotalBorrows` INT DEFAULT 0,
-  `bookStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `bookAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`bookId`)
+  `book_id` VARCHAR(12) NOT NULL,
+  `book_title` VARCHAR(320) NOT NULL,
+  `book_description` VARCHAR(3200) DEFAULT NULL,
+  `book_publish_date` DATE DEFAULT NULL,
+  `book_page_count` INT DEFAULT NULL,
+  `book_availability` ENUM('Available', 'Unavailable') DEFAULT 'Available',
+  `book_total_borrows` INT DEFAULT 0,
+  `book_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `book_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`book_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `isbn` (
-  `isbnId` VARCHAR(32) NOT NULL,
-  `isbnType` VARCHAR(32) NOT NULL,
-  `bookId` VARCHAR(12) NOT NULL,
-  PRIMARY KEY (`isbnId`),
-  FOREIGN KEY (`bookId`) REFERENCES book(`bookId`)
+  `isbn_id` VARCHAR(32) NOT NULL,
+  `isbn_type` VARCHAR(32) DEFAULT 'OTHER',
+  `book_id` VARCHAR(12) NOT NULL,
+  `isbn_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `isbn_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`isbn_id`),
+  FOREIGN KEY (`book_id`) REFERENCES book(`book_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `borrow` (
-  `borrowId` INT NOT NULL AUTO_INCREMENT,
-  `borrowQueueNumber` INT DEFAULT 1,
-  `borrowQueueStatus` ENUM('Waiting', 'Started', 'Ended') DEFAULT 'Waiting',
-  `borrowDueDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, # + 24 hr
-  `borrowAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `borrowStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `bookId` VARCHAR(12) NOT NULL,
-  `accountId` INT NOT NULL,
-  PRIMARY KEY (`borrowId`),
-  FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
-  FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
+  `borrow_id` INT NOT NULL AUTO_INCREMENT,
+  `borrow_queue_number` INT DEFAULT 1,
+  `borrow_queue_status` ENUM('Waiting', 'Started', 'Ended') DEFAULT 'Waiting',
+  `borrow_due_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, # + 24 hr
+  `borrow_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `borrow_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `book_id` VARCHAR(12) NOT NULL,
+  `account_id` INT NOT NULL,
+  PRIMARY KEY (`borrow_id`),
+  FOREIGN KEY (`book_id`) REFERENCES book(`book_id`),
+  FOREIGN KEY (`account_id`) REFERENCES account(`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `catalog` (
-  `catalogId` INT NOT NULL AUTO_INCREMENT,
-  `catalogName` VARCHAR(320) NOT NULL,
-  `catalogDescription` VARCHAR(3200) DEFAULT NULL,
-  `catalogPrivacy` ENUM('Public', 'Private') DEFAULT 'Private',
-  `catalogLastUpdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `catalogStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `catalogAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `accountId` INT NOT NULL,
-  PRIMARY KEY (`catalogId`),
-  FOREIGN KEY (`accountId`) REFERENCES account(`accountId`)
+  `catalog_id` INT NOT NULL AUTO_INCREMENT,
+  `catalog_name` VARCHAR(320) NOT NULL,
+  `catalog_description` VARCHAR(3200) DEFAULT NULL,
+  `catalog_privacy` ENUM('Public', 'Private') DEFAULT 'Private',
+  `catalog_last_update` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `catalog_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `catalog_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `account_id` INT NOT NULL,
+  PRIMARY KEY (`catalog_id`),
+  FOREIGN KEY (`account_id`) REFERENCES account(`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `category` (
-  `categoryId` INT NOT NULL AUTO_INCREMENT,
-  `categoryName` VARCHAR(320) NOT NULL,
-  `categoryType` ENUM('Author', 'Publisher', 'Subject') NOT NULL,
-  `categoryDescription` VARCHAR(3200) DEFAULT NULL,
-  `categoryStatus` ENUM('Active', 'Inactive') DEFAULT 'Active',
-  `categoryAddDate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`categoryId`)
+  `category_id` INT NOT NULL AUTO_INCREMENT,
+  `category_name` VARCHAR(320) NOT NULL,
+  `category_type` ENUM('Author', 'Publisher', 'Subject') NOT NULL,
+  `category_description` VARCHAR(3200) DEFAULT NULL,
+  `category_status` ENUM('Active', 'Inactive') DEFAULT 'Active',
+  `category_add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`category_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `bookcategorymap` (
-  `bookId` VARCHAR(12) NOT NULL,
-  `categoryId` INT NOT NULL,
-  FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
-  FOREIGN KEY (`categoryId`) REFERENCES category(`categoryId`)
+CREATE TABLE IF NOT EXISTS `book_category_map` (
+  `book_id` VARCHAR(12) NOT NULL,
+  `category_id` INT NOT NULL,
+  FOREIGN KEY (`book_id`) REFERENCES book(`book_id`),
+  FOREIGN KEY (`category_id`) REFERENCES category(`category_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `bookcatalogmap` (
-  `bookId` VARCHAR(12) NOT NULL,
-  `catalogId` INT NOT NULL,
-  FOREIGN KEY (`bookId`) REFERENCES book(`bookId`),
-  FOREIGN KEY (`catalogId`) REFERENCES catalog(`catalogId`)
+CREATE TABLE IF NOT EXISTS `book_catalog_map` (
+  `book_id` VARCHAR(12) NOT NULL,
+  `catalog_id` INT NOT NULL,
+  FOREIGN KEY (`book_id`) REFERENCES book(`book_id`),
+  FOREIGN KEY (`catalog_id`) REFERENCES catalog(`catalog_id`)
 );

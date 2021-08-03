@@ -5,7 +5,7 @@ function fetchBooks() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var bookSheet = spreadsheet.getSheetByName("book");
   var isbnSheet = spreadsheet.getSheetByName("isbn");
-  var mapSheet = spreadsheet.getSheetByName("bookcategorymap");
+  var mapSheet = spreadsheet.getSheetByName("book_category_map");
   var categorySheet = spreadsheet.getSheetByName("category");
 
   var categoryId = 0;
@@ -67,7 +67,12 @@ function fetchBooks() {
       if (!bookDescription) { bookDescription = "NULL"; }
       if (!bookPublishDate) { bookPublishDate = "NULL"; }
       if (!bookPageCount) { bookPageCount = "NULL"; }
-      if (bookPublishDate.length == 4) { bookPublishDate += "-01-01"; }
+
+      while (bookPublishDate.split("-").length != 3) {
+        bookPublishDate += "-01";
+        Logger.log(bookPublishDate.length);
+        Logger.log(bookPublishDate);
+      }
 
       bookSheet.getRange(bookRow, 1, 1, 9).setValues([[
         bookId,
@@ -81,10 +86,12 @@ function fetchBooks() {
         bookAddDate
       ]]);
 
-      // Isbn - 2 columns
+      // Isbn - 5 columns
 
       var isbnId = "NULL";
       var isbnType = "NULL";
+      var isbnStatus = "Active";
+      var isbnAddDate = new Date();
       var bookId = bookId;
 
       var industryIdentifiers = item.volumeInfo.industryIdentifiers;
@@ -93,9 +100,11 @@ function fetchBooks() {
         isbnId = industryIdentifiers[i].identifier;
         isbnType = industryIdentifiers[i].type;
 
-        isbnSheet.getRange(isbnRow++, 1, 1, 3).setValues([[
+        isbnSheet.getRange(isbnRow++, 1, 1, 5).setValues([[
           isbnId,
           isbnType,
+          isbnStatus,
+          isbnAddDate,
           bookId
         ]]);
       }
@@ -177,7 +186,7 @@ function fetchBooks() {
 function buildInsert() {
 
   var inserts = [];
-  var names = ["book", "isbn", "category", "bookcategorymap"];
+  var names = ["book", "isbn", "category", "book_category_map"];
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
   for (var i in names) {
@@ -197,8 +206,8 @@ function buildInsert() {
       values[j] = "(" + values[j] + ")";
     }
 
-    values = values.join(",\n\t");
-    inserts.push("INSERT INTO `" + names[i] + "`\n\t(" + columns + ")\nVALUES\n\t" + values + ";");
+    values = values.join(",\n  ");
+    inserts.push("INSERT INTO `" + names[i] + "`\n  (" + columns + ")\nVALUES\n  " + values + ";");
   }
 
   var insert = inserts.join("\n\n").replace(/'NULL'/g, "NULL");

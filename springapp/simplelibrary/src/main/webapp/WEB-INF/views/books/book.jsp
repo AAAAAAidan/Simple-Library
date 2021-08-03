@@ -1,5 +1,5 @@
 <div>
-  <h2>${book.bookTitle}</h2>
-  <h6>${book.bookId}</h6>
-  <h4>${book.bookDescription}</h4>
+  <h2>${book.title}</h2>
+  <h6>${book.id}</h6>
+  <h4>${book.description}</h4>
 </div>

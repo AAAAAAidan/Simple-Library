@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,34 +13,47 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Account.findAll", query="SELECT a FROM Account a"),
-  @NamedQuery(name="Account.findById", query="SELECT a FROM Account a WHERE a.accountId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private int accountId;
+  @Column(name="account_id", nullable=false)
+  private int id;
 
-  private int accountActiveBorrows;
+  @Column(name="account_active_borrows")
+  private int activeBorrows = 0;
 
-  private Timestamp accountAddDate;
+  @Column(name="account_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
-  private String accountEmail;
+  @Column(name="account_email", length=320)
+  private String email = null;
 
-  private String accountFirstName;
+  @Column(name="account_first_name", length=320)
+  private String firstName = null;
 
-  private Timestamp accountLastLoginDate;
+  @Column(name="account_last_login_date", nullable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp lastLoginDate;
 
-  private String accountLastName;
+  @Column(name="account_last_name", length=320)
+  private String lastName = null;
 
-  private String accountPassword;
+  @Column(name="account_password", length=32, nullable=false)
+  private String password;
 
-  private String accountStatus;
+  @Column(name="account_status", nullable=false,
+      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
-  private int accountTotalBorrows;
+  @Column(name="account_total_borrows")
+  private int totalBorrows = 0;
 
   //bi-directional many-to-one association to Borrow
   @OneToMany(mappedBy="account")
@@ -56,97 +71,6 @@ public class Account implements Serializable {
   @OneToMany(mappedBy="account")
   private List<Setting> settings;
 
-  public Account() {
-  }
-
-  public int getAccountId() {
-    return this.accountId;
-  }
-
-  public void setAccountId(int accountId) {
-    this.accountId = accountId;
-  }
-
-  public int getAccountActiveBorrows() {
-    return this.accountActiveBorrows;
-  }
-
-  public void setAccountActiveBorrows(int accountActiveBorrows) {
-    this.accountActiveBorrows = accountActiveBorrows;
-  }
-
-  public Timestamp getAccountAddDate() {
-    return this.accountAddDate;
-  }
-
-  public void setAccountAddDate(Timestamp accountAddDate) {
-    this.accountAddDate = accountAddDate;
-  }
-
-  public String getAccountEmail() {
-    return this.accountEmail;
-  }
-
-  public void setAccountEmail(String accountEmail) {
-    this.accountEmail = accountEmail;
-  }
-
-  public String getAccountFirstName() {
-    return this.accountFirstName;
-  }
-
-  public void setAccountFirstName(String accountFirstName) {
-    this.accountFirstName = accountFirstName;
-  }
-
-  public Timestamp getAccountLastLoginDate() {
-    return this.accountLastLoginDate;
-  }
-
-  public void setAccountLastLoginDate(Timestamp accountLastLoginDate) {
-    this.accountLastLoginDate = accountLastLoginDate;
-  }
-
-  public String getAccountLastName() {
-    return this.accountLastName;
-  }
-
-  public void setAccountLastName(String accountLastName) {
-    this.accountLastName = accountLastName;
-  }
-
-  public String getAccountPassword() {
-    return this.accountPassword;
-  }
-
-  public void setAccountPassword(String accountPassword) {
-    this.accountPassword = accountPassword;
-  }
-
-  public String getAccountStatus() {
-    return this.accountStatus;
-  }
-
-  public void setAccountStatus(String accountStatus) {
-    this.accountStatus = accountStatus;
-  }
-
-  public int getAccountTotalBorrows() {
-    return this.accountTotalBorrows;
-  }
-
-  public void setAccountTotalBorrows(int accountTotalBorrows) {
-    this.accountTotalBorrows = accountTotalBorrows;
-  }
-
-  public List<Borrow> getBorrows() {
-    return this.borrows;
-  }
-
-  public void setBorrows(List<Borrow> borrows) {
-    this.borrows = borrows;
-  }
-
   public Borrow addBorrow(Borrow borrow) {
     getBorrows().add(borrow);
     borrow.setAccount(this);
@@ -159,14 +83,6 @@ public class Account implements Serializable {
     borrow.setAccount(null);
 
     return borrow;
-  }
-
-  public List<Card> getCards() {
-    return this.cards;
-  }
-
-  public void setCards(List<Card> cards) {
-    this.cards = cards;
   }
 
   public Card addCard(Card card) {
@@ -183,14 +99,6 @@ public class Account implements Serializable {
     return card;
   }
 
-  public List<Catalog> getCatalogs() {
-    return this.catalogs;
-  }
-
-  public void setCatalogs(List<Catalog> catalogs) {
-    this.catalogs = catalogs;
-  }
-
   public Catalog addCatalog(Catalog catalog) {
     getCatalogs().add(catalog);
     catalog.setAccount(this);
@@ -203,14 +111,6 @@ public class Account implements Serializable {
     catalog.setAccount(null);
 
     return catalog;
-  }
-
-  public List<Setting> getSettings() {
-    return this.settings;
-  }
-
-  public void setSettings(List<Setting> settings) {
-    this.settings = settings;
   }
 
   public Setting addSetting(Setting setting) {

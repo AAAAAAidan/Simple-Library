@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,97 +13,43 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Category.findAll", query="SELECT c FROM Category c"),
-  @NamedQuery(name="Category.findById", query="SELECT c FROM Category c WHERE c.categoryId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Category implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
-  private int categoryId;
+  @Column(name="category_id", nullable=false)
+  private int id;
 
-  private Timestamp categoryAddDate;
+  @Column(name="category_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
-  private String categoryDescription;
+  @Column(name="category_description", length=320)
+  private String description = null;
 
-  private String categoryName;
+  @Column(name="category_name", length=320)
+  private String name = null;
 
-  private String categoryStatus;
+  @Column(name="category_status", nullable=false,
+      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
-  private String categoryType;
+  @Column(name="category_type",
+      columnDefinition="ENUM('Author', 'Publisher', 'Subject')")
+  private String type = null;
 
   //bi-directional many-to-many association to Book
   @ManyToMany
   @JoinTable(
-    name="bookcategorymap"
-    , joinColumns={
-      @JoinColumn(name="categoryId")
-      }
-    , inverseJoinColumns={
-      @JoinColumn(name="bookId")
-      }
-    )
+    name="book_category_map",
+    joinColumns={ @JoinColumn(name="category_id") },
+    inverseJoinColumns={ @JoinColumn(name="book_id") }
+  )
   private List<Book> books;
-
-  public Category() {
-  }
-
-  public int getCategoryId() {
-    return this.categoryId;
-  }
-
-  public void setCategoryId(int categoryId) {
-    this.categoryId = categoryId;
-  }
-
-  public Timestamp getCategoryAddDate() {
-    return this.categoryAddDate;
-  }
-
-  public void setCategoryAddDate(Timestamp categoryAddDate) {
-    this.categoryAddDate = categoryAddDate;
-  }
-
-  public String getCategoryDescription() {
-    return this.categoryDescription;
-  }
-
-  public void setCategoryDescription(String categoryDescription) {
-    this.categoryDescription = categoryDescription;
-  }
-
-  public String getCategoryName() {
-    return this.categoryName;
-  }
-
-  public void setCategoryName(String categoryName) {
-    this.categoryName = categoryName;
-  }
-
-  public String getCategoryStatus() {
-    return this.categoryStatus;
-  }
-
-  public void setCategoryStatus(String categoryStatus) {
-    this.categoryStatus = categoryStatus;
-  }
-
-  public String getCategoryType() {
-    return this.categoryType;
-  }
-
-  public void setCategoryType(String categoryType) {
-    this.categoryType = categoryType;
-  }
-
-  public List<Book> getBooks() {
-    return this.books;
-  }
-
-  public void setBooks(List<Book> books) {
-    this.books = books;
-  }
 
 }

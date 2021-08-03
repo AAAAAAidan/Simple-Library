@@ -7,24 +7,24 @@ import org.simplelibrary.util.Table;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class BookController {
   
   private static final Table<Book> TABLE = new Table<>(Book.class);
   
-  @RequestMapping("/books")
+  @GetMapping("/books")
   public String books() {
     return "default/search";
   }
-  
-  @RequestMapping("/books/{id}")
+
+  @GetMapping("/books/{id}")
   public String book(Model model, @PathVariable String id) {
-      List<Book> books = TABLE.filter("bookId="+id).select();
-      Book book = books.size() == 0 ? null : books.get(0);
-      model.addAttribute("book", book);
-      return "books/book";
+    List<Book> books = TABLE.filter("book_id="+id).select();
+    Book book = books.size() == 0 ? null : books.get(0);
+    model.addAttribute("book", book);
+    return "books/book";
   }
-  
+
 }

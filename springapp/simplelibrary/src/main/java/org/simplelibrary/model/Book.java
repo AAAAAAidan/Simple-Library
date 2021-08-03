@@ -1,5 +1,7 @@
 package org.simplelibrary.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
@@ -12,32 +14,44 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQueries({
-  @NamedQuery(name="Book.findAll", query="SELECT b FROM Book b"),
-  @NamedQuery(name="Book.findById", query="SELECT b FROM Book b WHERE b.bookId = :id")
-})
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  private String bookId;
+  @Column(name="book_id", length=12, nullable=false)
+  private String id;
 
-  private Timestamp bookAddDate;
+  @Column(name="book_add_date", nullable=false, updatable=false, insertable=false,
+      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
 
-  private String bookAvailability;
+  @Column(name="book_availability", nullable=false,
+      columnDefinition="ENUM('Available', 'Unavailable') DEFAULT 'Available'")
+  private String availability = "Available";
 
-  private String bookDescription;
+  @Column(name="book_description", length=3200)
+  private String description = null;
 
-  private int bookPageCount;
+  @Column(name="book_page_count")
+  private int pageCount = 0;
 
   @Temporal(TemporalType.DATE)
-  private Date bookPublishDate;
+  @Column(name="book_publish_date")
+  private Date publishDate = null;
 
-  private String bookStatus;
+  @Column(name="book_status", nullable=false,
+      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+  private String status = "Active";
 
-  private String bookTitle;
+  @Column(name="book_title", length=320)
+  private String title = null;
 
-  private int bookTotalBorrows;
+  @Column(name="book_total_borrows")
+  private int totalBorrows = 0;
 
   //bi-directional many-to-one association to Borrow
   @OneToMany(mappedBy="book")
@@ -55,89 +69,6 @@ public class Book implements Serializable {
   @ManyToMany(mappedBy="books")
   private List<Category> categories;
 
-  public Book() {
-  }
-
-  public String getBookId() {
-    return this.bookId;
-  }
-
-  public void setBookId(String bookId) {
-    this.bookId = bookId;
-  }
-
-  public Timestamp getBookAddDate() {
-    return this.bookAddDate;
-  }
-
-  public void setBookAddDate(Timestamp bookAddDate) {
-    this.bookAddDate = bookAddDate;
-  }
-
-  public String getBookAvailability() {
-    return this.bookAvailability;
-  }
-
-  public void setBookAvailability(String bookAvailability) {
-    this.bookAvailability = bookAvailability;
-  }
-
-  public String getBookDescription() {
-    return this.bookDescription;
-  }
-
-  public void setBookDescription(String bookDescription) {
-    this.bookDescription = bookDescription;
-  }
-
-  public int getBookPageCount() {
-    return this.bookPageCount;
-  }
-
-  public void setBookPageCount(int bookPageCount) {
-    this.bookPageCount = bookPageCount;
-  }
-
-  public Date getBookPublishDate() {
-    return this.bookPublishDate;
-  }
-
-  public void setBookPublishDate(Date bookPublishDate) {
-    this.bookPublishDate = bookPublishDate;
-  }
-
-  public String getBookStatus() {
-    return this.bookStatus;
-  }
-
-  public void setBookStatus(String bookStatus) {
-    this.bookStatus = bookStatus;
-  }
-
-  public String getBookTitle() {
-    return this.bookTitle;
-  }
-
-  public void setBookTitle(String bookTitle) {
-    this.bookTitle = bookTitle;
-  }
-
-  public int getBookTotalBorrows() {
-    return this.bookTotalBorrows;
-  }
-
-  public void setBookTotalBorrows(int bookTotalBorrows) {
-    this.bookTotalBorrows = bookTotalBorrows;
-  }
-
-  public List<Borrow> getBorrows() {
-    return this.borrows;
-  }
-
-  public void setBorrows(List<Borrow> borrows) {
-    this.borrows = borrows;
-  }
-
   public Borrow addBorrow(Borrow borrow) {
     getBorrows().add(borrow);
     borrow.setBook(this);
@@ -152,14 +83,6 @@ public class Book implements Serializable {
     return borrow;
   }
 
-  public List<Isbn> getIsbns() {
-    return this.isbns;
-  }
-
-  public void setIsbns(List<Isbn> isbns) {
-    this.isbns = isbns;
-  }
-
   public Isbn addIsbn(Isbn isbn) {
     getIsbns().add(isbn);
     isbn.setBook(this);
@@ -172,22 +95,6 @@ public class Book implements Serializable {
     isbn.setBook(null);
 
     return isbn;
-  }
-
-  public List<Catalog> getCatalogs() {
-    return this.catalogs;
-  }
-
-  public void setCatalogs(List<Catalog> catalogs) {
-    this.catalogs = catalogs;
-  }
-
-  public List<Category> getCategories() {
-    return this.categories;
-  }
-
-  public void setCategories(List<Category> categories) {
-    this.categories = categories;
   }
 
 }
