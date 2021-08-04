@@ -1,11 +1,11 @@
 # Database and table create statements
 # Note that this file is deprecated
 
-DROP DATABASE IF EXISTS `library`;
+DROP DATABASE IF EXISTS `simplelibrary`;
 
-CREATE DATABASE `library`;
+CREATE DATABASE `simplelibrary`;
 
-USE `library`;
+USE `simplelibrary`;
 
 CREATE TABLE IF NOT EXISTS `account` (
   `account_id` INT NOT NULL AUTO_INCREMENT,

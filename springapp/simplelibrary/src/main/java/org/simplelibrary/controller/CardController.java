@@ -1,8 +1,9 @@
 package org.simplelibrary.controller;
 
+import org.simplelibrary.view.TemplateView;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class CardController {
+public class CardController extends TemplateView {
 
 }

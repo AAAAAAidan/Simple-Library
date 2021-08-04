@@ -1,0 +1,6 @@
+# Ignore all but the project files
+*
+!.gitignore
+!pom.xml
+!/src/
+!/src/**

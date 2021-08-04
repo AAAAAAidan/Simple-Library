@@ -13,7 +13,7 @@ public class DatabaseConnection {
   protected EntityManagerFactory entityManagerFactory = null;
   protected EntityManager entityManager = null;
 
-  private final String DATABASE = "library";
+  private final String DATABASE = "simplelibrary";
 
   // Connect to the database
   public void connect() {

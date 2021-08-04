@@ -1,6 +1,6 @@
 # Row insert statements
 
-USE `library`;
+USE `simplelibrary`;
 
 INSERT INTO `book`
   (`book_id`,`book_title`,`book_description`,`book_publish_date`,`book_page_count`,`book_availability`,`book_total_borrows`,`book_status`,`book_add_date`)

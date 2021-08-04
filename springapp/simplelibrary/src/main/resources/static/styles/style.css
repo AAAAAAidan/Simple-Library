@@ -15,7 +15,7 @@ Input hover:    #F0F0F0
 /* Font by Paul D. Hunt - https://fonts.google.com/specimen/Source+Code+Pro */
 @font-face {
   font-family: "Source Code Pro";
-  src: url('fonts/SourceCodePro/SourceCodePro-Regular.ttf');
+  src: url('../fonts/SourceCodePro/SourceCodePro-Regular.ttf');
 }
 
 html {
