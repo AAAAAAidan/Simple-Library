@@ -166,7 +166,7 @@ public class Table<T> extends DatabaseConnection {
     String sql = "";
 
     if (sort != null) {
-      if (Pattern.matches("[desc|descending|-](?i)", sort)) {
+      if (Pattern.matches("[descending|descend|desc|d|-](?i)", sort)) {
         sql += "DESC";
       }
       else {

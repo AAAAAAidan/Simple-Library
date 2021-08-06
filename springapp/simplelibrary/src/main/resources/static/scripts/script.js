@@ -10,10 +10,6 @@ class ValidationField {
 
 // Functions
 
-function search() {
-  document.getElementById("result").innerHTML = "This is where the search results will go!";
-}
-
 function validate() {
   var valid = true;
   var alphanumericRegex = /[A-Za-z0-9]+/g;
