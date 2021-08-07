@@ -21,7 +21,7 @@ public class AccountController extends TemplateView {
 
   @GetMapping("/account")
   public String account(Model model) {
-    return getView(model, "accounts/account");
+    return loadView(model, "accounts/account");
   }
 
 }

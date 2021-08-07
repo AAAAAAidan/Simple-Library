@@ -9,32 +9,33 @@ import javax.persistence.Query;
 // Experimental usage of JPQL for querying and updating tables
 // May or may not be used in the final version
 public class Table<T> extends DatabaseConnection {
-  
+
   // Table fields
-  
+
   private Class<T> tableClass = null;
   private String tableName = null;
   private String[] filters = null;
-  private String[] orderByColumns = null;
-  private String sort = null;
+  private String[] sortColumns = null;
+  private String order = null;
   private Integer limit= null;
   private Integer offset = null;
-  
+
   // Constructors
-  
+
   public Table() {
   }
-  
+
   public Table(Class<T> tableClass) {
     this.tableClass = tableClass;
   }
-  
-  public Table(Class<T> tableClass, String[] filters, String[] orderByColumns,
-         String sort, Integer limit, Integer offset) {
+
+  public Table(Class<T> tableClass, String tableName, String[] filters,
+               String[] sortColumns, String order, Integer limit, Integer offset) {
     this.tableClass = tableClass;
+    this.tableName = tableName;
     this.filters = filters;
-    this.orderByColumns = orderByColumns;
-    this.sort = sort;
+    this.sortColumns = sortColumns;
+    this.order = order;
     this.limit = limit;
     this.offset = offset;
   }
@@ -48,12 +49,12 @@ public class Table<T> extends DatabaseConnection {
   public void setTableClass(Class<T> tableClass) {
     this.tableClass = tableClass;
   }
-  
+
   public String getTableName() {
     if (tableName == null) {
       tableName = tableClass.getSimpleName();
     }
-    
+
     return tableName;
   }
 
@@ -73,24 +74,24 @@ public class Table<T> extends DatabaseConnection {
     this.filters = filters;
   }
 
-  public String[] getorderByColumns() {
-    return orderByColumns;
+  public String[] getSortColumns() {
+    return sortColumns;
   }
 
-  public void setorderByColumn(String orderByColumn) {
-    this.orderByColumns = new String[] {orderByColumn};
+  public void setSortColumn(String sortColumns) {
+    this.sortColumns = new String[] {sortColumns};
   }
 
-  public void setorderByColumns(String[] orderByColumns) {
-    this.orderByColumns = orderByColumns;
+  public void setSortColumns(String[] sortColumns) {
+    this.sortColumns = sortColumns;
   }
 
-  public String getsort() {
-    return sort;
+  public String getOrder() {
+    return order;
   }
 
-  public void setsort(String sort) {
-    this.sort = sort;
+  public void setOrder(String sort) {
+    this.order = order;
   }
 
   public Integer getOffset() {
@@ -109,11 +110,6 @@ public class Table<T> extends DatabaseConnection {
     this.limit = limit;
   }
 
-  public void setRange(Integer start, Integer end) {
-    this.limit = end - start + 1;
-    this.offset = start - 1;
-  }
-  
   // SQL clause methods
 
   private String getWhereClause() {
@@ -124,8 +120,16 @@ public class Table<T> extends DatabaseConnection {
       sql += "WHERE ";
 
       for (int i = 0; i < filters.length; i++) {
-        String column = filters[i].split("=")[0];
-        sql += String.format("t.%s = ?%s, ", column, ++paramCount);
+        String filter = filters[i].toLowerCase();
+
+        if (filter.contains("=")) {
+          String column = filter.split("=")[0].trim();
+          sql += String.format("t.%s = ?%s, ", column, ++paramCount);
+        }
+        else if (filter.contains("contains")) {
+          String column = filter.split("contains")[0].trim();
+          sql += String.format("t.%s like ?%s, ", column, ++paramCount);
+        }
       }
 
       sql = sql.substring(0, sql.lastIndexOf(","));
@@ -134,24 +138,24 @@ public class Table<T> extends DatabaseConnection {
     return sql;
   }
 
-  private String getOrderByClause() {
+  private String getSortClause() {
     String sql = "";
 
-    if (orderByColumns != null) {
-      List<String> acceptedorderByColumns = new ArrayList<String>();
+    if (sortColumns != null) {
+      List<String> acceptedSortColumns = new ArrayList<String>();
 
-      for (String column : orderByColumns) {
-        if (Pattern.matches("[a-zA-Z]+", column)) {
-          acceptedorderByColumns.add(column);
+      for (String column : sortColumns) {
+        if (Pattern.matches("[_a-zA-Z]+", column)) {
+          acceptedSortColumns.add(column);
         }
       }
 
-      if (acceptedorderByColumns.size() > 0) {
-        sql += "ORDER BY ";
+      if (acceptedSortColumns.size() > 0) {
+        sql += "ORDER BY t.";
 
-        for (String column : acceptedorderByColumns) {
-          if (Pattern.matches("[a-zA-Z]+", column)) {
-            sql += column + ", ";
+        for (String column : acceptedSortColumns) {
+          if (Pattern.matches("[_a-zA-Z]+", column)) {
+            sql += column + ", t.";
           }
         }
 
@@ -162,11 +166,11 @@ public class Table<T> extends DatabaseConnection {
     return sql;
   }
 
-  private String getSortClause() {
+  private String getOrderClause() {
     String sql = "";
 
-    if (sort != null) {
-      if (Pattern.matches("[descending|descend|desc|d|-](?i)", sort)) {
+    if (order != null) {
+      if (Pattern.matches("[descending|descend|desc|d|-](?i)", order)) {
         sql += "DESC";
       }
       else {
@@ -199,19 +203,18 @@ public class Table<T> extends DatabaseConnection {
 
   private String getAllClauses() {
     String sql = String.format("%s %s %s %s %s", getWhereClause(),
-        getOrderByClause(), getSortClause(),
+        getSortClause(), getOrderClause(),
         getLimitClause(), getOffsetClause());
     return sql;
   }
 
   // Query methods
-  
+
   private Query getSelectQuery(String sql) {
     return getSelectQuery(sql, false);
   }
 
   private Query getSelectQuery(String sql, boolean isNative) {
-    System.out.println(sql);
     Query query = null;
     int paramCount = 0;
 
@@ -224,8 +227,16 @@ public class Table<T> extends DatabaseConnection {
 
     if (filters != null) {
       for (int i = 0; i < filters.length; i++) {
-        String value = filters[i].split("=")[1];
-        query.setParameter(++paramCount, value);
+        String filter = filters[i].toLowerCase();
+
+        if (filter.contains("=")) {
+          String value = filter.split("=")[1].trim();
+          query.setParameter(++paramCount, value);
+        }
+        else if (filter.contains("contains")) {
+          String value = "%" + filter.split("contains")[1].trim() + "%";
+          query.setParameter(++paramCount, value);
+        }
       }
     }
 
@@ -242,15 +253,15 @@ public class Table<T> extends DatabaseConnection {
     this.disconnect();
     return results;
   }
-  
+
   // Insert methods
-  
+
   public int insert(T entity) {
     List<T> entities = new ArrayList<T>();
     entities.add(entity);
     return insert(entities);
   }
-  
+
   public int insert(List<T> entities) {
     this.begin();
 
@@ -261,18 +272,18 @@ public class Table<T> extends DatabaseConnection {
     this.commit();
     return entities.size();
   }
-  
+
   // Update methods
-  
+
   public int update(String column, String value) {
     return update(new String[] {column}, new String[] {value});
   }
-  
+
   public int update(String[] columns, String[] values) {
     if (columns.length != values.length) {
       return 0;
     }
-    
+
     String columnsToValues = "";
     int paramCount = 1000;
 
@@ -294,9 +305,9 @@ public class Table<T> extends DatabaseConnection {
     this.commit();
     return result;
   }
-  
+
   // Delete methods
-  
+
   public int delete() {
     String sql = String.format("DELETE FROM %s t %s", getTableName(), getWhereClause());
     this.begin();
@@ -305,44 +316,44 @@ public class Table<T> extends DatabaseConnection {
     this.commit();
     return result;
   }
-  
+
   // Filter methods
-  
-  public Table<T> filter(String filter) {
-    return filter(new String[] {filter});
+
+  public Table<T> filterBy(String filter) {
+    return filterBy(new String[] {filter});
   }
-  
-  public Table<T> filter(String[] filters) {
-    return new Table<T>(tableClass, filters, orderByColumns, sort, limit, offset);
+
+  public Table<T> filterBy(String[] filters) {
+    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
   }
-  
+
   // Sort methods
-  
-  public Table<T> orderBy(String orderByColumn) {
-    return orderBy(new String[] {orderByColumn});
+
+  public Table<T> sortBy(String sortColumn) {
+    return sortBy(new String[] {sortColumn});
   }
-  
-  public Table<T> orderBy(String[] orderByColumns) {
-    return new Table<T>(tableClass, filters, orderByColumns, sort, limit, offset);
+
+  public Table<T> sortBy(String[] sortColumns) {
+    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
   }
 
   // Order methods
 
-  public Table<T> sort(String sort) {
-    sort = Pattern.matches("(?i)(-|d|desc|descending)", sort) ? "DESC" : "ASC";
-    return new Table<T>(tableClass, filters, orderByColumns, sort, limit, offset);
+  public Table<T> inOrder(String order) {
+    order = Pattern.matches("(?i)(-|d|desc|descending)", order) ? "DESC" : "ASC";
+    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
   }
 
   // Range methods
 
-  public Table<T> limit(Integer limit) {
-    return range(0, limit - 1);
+  public Table<T> limitTo(Integer limit) {
+    return fromRange(0, limit - 1);
   }
 
-  public Table<T> range(Integer start, Integer end) {
+  public Table<T> fromRange(Integer start, Integer end) {
     Integer limit = end - start + 1;
     Integer offset = start;
-    return new Table<T>(tableClass, filters, orderByColumns, sort, limit, offset);
+    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
   }
 
 }

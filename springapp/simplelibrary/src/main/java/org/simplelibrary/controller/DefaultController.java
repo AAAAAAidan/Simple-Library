@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 @Slf4j
 @Controller
 public class DefaultController extends TemplateView {
@@ -27,14 +30,14 @@ public class DefaultController extends TemplateView {
   
   @GetMapping({"/", "/index"})
   public String index(Model model) {
-    return getView(model, "default/index");
+    return loadView(model, "default/index");
   }
 
   // Account links
 
   @GetMapping("/signup")
   public String getSignup(Model model) {
-    return getView(model, "default/signup");
+    return loadView(model, "default/signup");
   }
 
   @PostMapping("/signup")
@@ -44,7 +47,7 @@ public class DefaultController extends TemplateView {
 
   @GetMapping("/login")
   public String getLogin(Model model) {
-    return getView(model, "default/login");
+    return loadView(model, "default/login");
   }
 
   @PostMapping("/login")
@@ -55,8 +58,57 @@ public class DefaultController extends TemplateView {
   // Sidebar links
 
   @GetMapping("/search")
-  public String getSearch(Model model) {
-    return getView(model, "default/search");
+  public String getSearch(Model model,
+                          @RequestParam(value="search", required=false) String searchTerms,
+                          @RequestParam(value="filter", required=false) String filter,
+                          @RequestParam(value="sort", required=false) String sort,
+                          @RequestParam(value="order", required=false) String order,
+                          @RequestParam(value="page", required=false) int page) {
+
+    if (searchTerms != null) {
+      searchTerms = searchTerms.trim();
+    }
+    else {
+      searchTerms = "";
+    }
+
+    searchTerms = "book_title contains " + searchTerms;
+
+    if (sort != null && Pattern.matches("[name|title](?i)", sort.trim())) {
+      sort = "book_title";
+    }
+    else {
+      sort = "book_publish_date";
+    }
+
+    if (order == null || Pattern.matches("[descending|desc](?i)", sort.trim())) {
+      order = "desc";
+    }
+    else {
+      order = "asc";
+    }
+
+    if (filter != null) {
+      switch(filter) {
+        case "authors":
+          break;
+        case "publishers":
+          break;
+        case "genres":
+          break;
+        case "lists":
+          break;
+        default:
+          List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+          model.addAttribute("books", books);
+      }
+    }
+    else {
+      List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+      model.addAttribute("books", books);
+    }
+
+    return loadView(model, "default/search");
   }
 
   @PostMapping("/search")
@@ -76,10 +128,10 @@ public class DefaultController extends TemplateView {
     log.info(entry);
 
     if (!searchTerms.equals("")) {
-      redirectAttributes.addAttribute("searchTerms", searchTerms);
+      redirectAttributes.addAttribute("search", searchTerms);
     }
 
-    if (!filter.equals("unfiltered")) {
+    if (!filter.equals("books")) {
       redirectAttributes.addAttribute("filter", filter);
     }
 
@@ -87,8 +139,8 @@ public class DefaultController extends TemplateView {
       redirectAttributes.addAttribute("sort", sort);
     }
 
-    if (order.equals("desc")) {
-      redirectAttributes.addAttribute("order", order);
+    if (!order.equals("descending")) {
+      redirectAttributes.addAttribute("order", "asc");
     }
 
     return "redirect:/search";
@@ -96,12 +148,12 @@ public class DefaultController extends TemplateView {
 
   @GetMapping("/about")
   public String about(Model model) {
-    return getView(model, "default/about");
+    return loadView(model, "default/about");
   }
   
   @GetMapping("/help")
   public String help(Model model) {
-    return getView(model, "default/help");
+    return loadView(model, "default/help");
   }
 
 }

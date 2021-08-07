@@ -1,12 +1,10 @@
 package org.simplelibrary.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Book;
 import org.simplelibrary.service.BookService;
-import org.simplelibrary.util.Table;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,10 +34,10 @@ public class BookController extends TemplateView {
 
     if (book.isPresent()) {
       model.addAttribute("book", book.get());
-      return getView(model, "books/book");
+      return loadView(model, "books/book");
     }
     else {
-      return getView(model, "errors/404");
+      return loadView(model, "errors/404");
     }
   }
 
