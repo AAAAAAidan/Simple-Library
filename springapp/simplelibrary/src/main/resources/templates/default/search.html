@@ -1,5 +1,5 @@
 <h2>Search the library!</h2>
-<form action="search" method="post">
+<form class="margin-bottom" action="search" method="post">
   <input type="text" th:name="searchTerms" placeholder="Enter search terms"/>
   <input type="submit" value="Search"/>
   <select th:name="filter">
@@ -17,21 +17,20 @@
     <option value="descending">Descending</option>
     <option value="ascending">Ascending</option>
   </select>
-  <table>
-    <thead>
-      <tr>
-        <th class="col-3">Book ID</th>
-        <th class="col-3">Book Title</th>
-        <th class="col-3">Publish Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="book:${books}" >
-        <td class="col-3" th:text="${book.id}"></td>
-        <td class="col-3" th:text="${book.title}"></td>
-        <td class="col-3" th:text="${book.publishDate}"></td>
-      </tr>
-    </tbody>
-  </table>
 </form>
-<p id="result"></p>
+<table>
+  <thead>
+    <tr>
+      <th>Book ID</th>
+      <th>Book Title</th>
+      <th>Publish Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="book:${books}">
+      <td th:text="${book.id}"></td>
+      <td th:text="${book.title}"></td>
+      <td th:text="${book.publishDate}"></td>
+    </tr>
+  </tbody>
+</table>

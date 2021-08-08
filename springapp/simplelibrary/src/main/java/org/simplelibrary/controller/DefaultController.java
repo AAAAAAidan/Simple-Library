@@ -63,7 +63,7 @@ public class DefaultController extends TemplateView {
                           @RequestParam(value="filter", required=false) String filter,
                           @RequestParam(value="sort", required=false) String sort,
                           @RequestParam(value="order", required=false) String order,
-                          @RequestParam(value="page", required=false) int page) {
+                          @RequestParam(value="page", required=false) Integer page) {
 
     if (searchTerms != null) {
       searchTerms = searchTerms.trim();

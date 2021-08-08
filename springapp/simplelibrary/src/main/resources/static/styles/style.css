@@ -10,12 +10,15 @@ Link hover:     #0B0080
 Input hover:    #F0F0F0
 */
 
-/* TODO - Use more classes */
-
 /* Font by Paul D. Hunt - https://fonts.google.com/specimen/Source+Code+Pro */
 @font-face {
   font-family: "Source Code Pro";
   src: url('../fonts/SourceCodePro/SourceCodePro-Regular.ttf');
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
 html {
@@ -23,7 +26,6 @@ html {
 }
 
 body {
-  margin: 0;
   min-height: 100%;
   display: flex;
   flex-flow: column;
@@ -34,28 +36,24 @@ header {
   grid-template-columns: 777fr 1fr;
 }
 
-header h1 {
-  margin: 0;
-}
-
 header, footer {
   background-color: #9bb0d1;
 }
 
 header, footer, nav {
-  font-family: "Verdana";
+  font-family: "Verdana", serif;
 }
 
 header a, footer a {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 header ul, footer {
   font-size: 16px;
 }
 
-header div, main div, nav, ul, form, footer {
-  padding: 16px;
+footer {
+  text-align: center;
 }
 
 main {
@@ -63,33 +61,26 @@ main {
   display: grid;
   grid-template-columns: 1fr 5fr;
   background-color: #F8F8F8;
-  color: #444444;
-  font-family: "Helvetica";
+  color: #222222;
+  font-family: "Helvetica", sans-serif;
 }
 
-main li, h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 16px 0;
-}
-
-main a, main a:visited {
+a, a:visited {
   color: #0645AD;
-}
-
-main li a:hover, a:hover {
-  color: #0B0080;
-}
-
-a {
   text-decoration: none;
 }
 
+a:hover {
+  color: #222222 !important;
+}
+
 ul {
-  margin: 0;
+  padding-left: 16px;
   list-style-type: none;
 }
 
-form label {
-  display: block;
+td {
+  padding: 4px 16px;
 }
 
 input, select {
@@ -104,17 +95,9 @@ input:hover, select:hover {
   background-color: #F0F0F0;
 }
 
-td {
-  padding: 4px 16px;
-}
-
 img, video {
   max-height: 100%;
   width: 100%;
-}
-
-footer {
-  text-align: center;
 }
 
 .grid-2 {
@@ -127,6 +110,27 @@ footer {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.padded-container {
+  padding: 16px;
+}
+
+.margin-bottom, h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 16px;
+}
+
+.element-list * {
+  display: block;
+}
+
+.element-list input, .element-list li {
+  margin-bottom: 16px;
+}
+
+.help-text {
+  font-size: 0.8em;
+}
+
 #title {
-  font-family: "Source Code Pro";
+  margin: 0;
+  font-family: "Source Code Pro", monospace;
 }

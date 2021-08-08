@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-  <meta charset="ISO-8859-1">
+  <head>
+    <meta charset="ISO-8859-1">
     <title>Simple Library</title>
     <!-- Icon by Good Ware - https://www.flaticon.com/free-icon/book_864685 -->
     <link rel="shortcut icon" type="image/png" th:href="@{~/images/favicon.ico}"/>
@@ -9,28 +9,24 @@
     <script th:src="@{~/scripts/script.js}"></script>
   </head>
   <body>
-    <header class="wrapper">
-      <div>
-        <h1 id="title"><a th:href="@{~/index}">Simple Library</a></h1>
-      </div>
+    <header class="padded-container">
+      <h1 id="title"><a th:href="@{~/index}">Simple Library</a></h1>
       <ul>
         <li><a th:href="@{~/signup}">Signup</a></li>
         <li><a th:href="@{~/login}">Login</a></li>
       </ul>
     </header>
-    <main>
-      <nav>
-        <ul>
+    <main class="padded-container">
+      <nav class="padded-container">
+        <ul class="element-list">
           <li><a th:href="@{~/search}">Search</a></li>
           <li><a th:href="@{~/about}">About</a></li>
           <li><a th:href="@{~/help}">Help</a></li>
         </ul>
       </nav>
-      <div id="content" class="wrapper">
-        <div th:insert="${content}"></div>
-      </div>
+      <div class="padded-container" th:insert="${content}"></div>
     </main>
-    <footer>
+    <footer class="padded-container">
       <a target="_blank" href="https://github.com/AAAAAAidan/">&copy;Aidan Zamboni</a>
     </footer>
   </body>
