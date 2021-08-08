@@ -22,7 +22,7 @@ public class Borrow implements Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="borrow_id", length=32, nullable=false)
-  private int id;
+  private Integer id;
 
   @Column(name="borrow_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -33,7 +33,7 @@ public class Borrow implements Serializable {
   private Timestamp dueDate;
 
   @Column(name="borrow_queue_number")
-  private int queueNumber = 0;
+  private Integer queueNumber = 0;
 
   @Column(name="borrow_queue_status", nullable=false,
       columnDefinition="ENUM('Waiting', 'Started', 'Ended') DEFAULT 'Waiting'")

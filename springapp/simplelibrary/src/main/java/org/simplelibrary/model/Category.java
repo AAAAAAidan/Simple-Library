@@ -23,7 +23,7 @@ public class Category implements Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="category_id", nullable=false)
-  private int id;
+  private Integer id;
 
   @Column(name="category_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

@@ -68,10 +68,10 @@ function fetchBooks() {
       if (!bookPublishDate) { bookPublishDate = "NULL"; }
       if (!bookPageCount) { bookPageCount = "NULL"; }
 
-      while (bookPublishDate.split("-").length != 3) {
-        bookPublishDate += "-01";
-        Logger.log(bookPublishDate.length);
-        Logger.log(bookPublishDate);
+      if (bookPublishDate != "NULL") {
+        while (bookPublishDate.split("-").length != 3) {
+          bookPublishDate += "-01";
+        }
       }
 
       bookSheet.getRange(bookRow, 1, 1, 9).setValues([[

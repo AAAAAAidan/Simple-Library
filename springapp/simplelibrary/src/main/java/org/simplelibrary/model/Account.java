@@ -23,10 +23,10 @@ public class Account implements Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="account_id", nullable=false)
-  private int id;
+  private Integer id;
 
   @Column(name="account_active_borrows")
-  private int activeBorrows = 0;
+  private Integer activeBorrows = 0;
 
   @Column(name="account_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -53,7 +53,7 @@ public class Account implements Serializable {
   private String status = "Active";
 
   @Column(name="account_total_borrows")
-  private int totalBorrows = 0;
+  private Integer totalBorrows = 0;
 
   //bi-directional many-to-one association to Borrow
   @OneToMany(mappedBy="account")

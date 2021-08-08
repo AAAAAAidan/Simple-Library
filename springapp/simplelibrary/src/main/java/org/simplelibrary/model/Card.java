@@ -22,7 +22,7 @@ public class Card implements Serializable {
 
   @Id
   @Column(name="card_id", nullable=false)
-  private int id;
+  private Integer id;
 
   @Column(name="card_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

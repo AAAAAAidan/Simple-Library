@@ -37,7 +37,7 @@ public class Book implements Serializable {
   private String description = null;
 
   @Column(name="book_page_count")
-  private int pageCount = 0;
+  private Integer pageCount = 0;
 
   @Temporal(TemporalType.DATE)
   @Column(name="book_publish_date")
@@ -51,7 +51,7 @@ public class Book implements Serializable {
   private String title = null;
 
   @Column(name="book_total_borrows")
-  private int totalBorrows = 0;
+  private Integer totalBorrows = 0;
 
   //bi-directional many-to-one association to Borrow
   @OneToMany(mappedBy="book")

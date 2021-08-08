@@ -23,7 +23,7 @@ public class Catalog implements Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="catalog_id", nullable=false)
-  private int id;
+  private Integer id;
 
   @Column(name="catalog_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

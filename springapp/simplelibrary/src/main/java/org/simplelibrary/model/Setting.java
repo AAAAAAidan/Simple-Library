@@ -22,7 +22,7 @@ public class Setting implements Serializable {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="setting_id", nullable=false)
-  private int settingId;
+  private Integer settingId;
 
   @Column(name="setting_add_date", nullable=false, updatable=false, insertable=false,
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -40,7 +40,7 @@ public class Setting implements Serializable {
   private String searchDisplayType = "Normal";
 
   @Column(name="setting_search_results_per_page")
-  private int searchResultsPerPage = 0;
+  private Integer searchResultsPerPage = 0;
 
   @Column(name="setting_status", nullable=false,
   columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
