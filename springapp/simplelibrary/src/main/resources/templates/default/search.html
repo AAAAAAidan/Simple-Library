@@ -6,10 +6,10 @@
     <option value="books">Books</option>
     <option value="authors">Authors</option>
     <option value="publishers">Publishers</option>
-    <option value="genres">Genres</option>
+    <option value="subjects">Subjects</option>
     <option value="lists">Lists</option>
   </select>
-  <select th:name="sort" selectedIndex=2>
+  <select th:name="sort">
     <option value="date">By date</option>
     <option value="title">By title</option>
   </select>
@@ -18,19 +18,49 @@
     <option value="ascending">Ascending</option>
   </select>
 </form>
-<table>
+<table id="search-results">
   <thead>
     <tr>
-      <th>Book ID</th>
-      <th>Book Title</th>
-      <th>Publish Date</th>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Date</th>
     </tr>
   </thead>
-  <tbody>
-    <tr th:each="book:${books}">
-      <td th:text="${book.id}"></td>
-      <td th:text="${book.title}"></td>
-      <td th:text="${book.publishDate}"></td>
-    </tr>
+  <tbody th:switch="${filter}">
+    <div th:case="'books'">
+      <tr th:each="book:${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.publishDate}"></td>
+      </tr>
+    </div>
+    <div th:case="'authors'">
+      <tr th:each="author:${categories}">
+        <td th:text="${author.id}"></td>
+        <td th:text="${author.name}"></td>
+        <td th:text="${author.addDate}"></td>
+      </tr>
+    </div>
+    <div th:case="'publishers'">
+      <tr th:each="publisher:${categories}">
+        <td th:text="${publisher.id}"></td>
+        <td th:text="${publisher.name}"></td>
+        <td th:text="${publisher.addDate}"></td>
+      </tr>
+    </div>
+    <div th:case="'subjects'">
+      <tr th:each="subject:${categories}">
+        <td th:text="${subject.id}"></td>
+        <td th:text="${subject.name}"></td>
+        <td th:text="${subject.addDate}"></td>
+      </tr>
+    </div>
+    <div th:case="'lists'">
+      <tr th:each="list:${lists}">
+        <td th:text="${list.id}"></td>
+        <td th:text="${list.name}"></td>
+        <td th:text="${list.lastUpdate}"></td>
+      </tr>
+    </div>
   </tbody>
 </table>

@@ -124,15 +124,15 @@ public class Table<T> extends DatabaseConnection {
 
         if (filter.contains("=")) {
           String column = filter.split("=")[0].trim();
-          sql += String.format("t.%s = ?%s, ", column, ++paramCount);
+          sql += String.format("t.%s = ?%s AND ", column, ++paramCount);
         }
         else if (filter.contains("contains")) {
           String column = filter.split("contains")[0].trim();
-          sql += String.format("t.%s like ?%s, ", column, ++paramCount);
+          sql += String.format("t.%s like ?%s AND ", column, ++paramCount);
         }
       }
 
-      sql = sql.substring(0, sql.lastIndexOf(","));
+      sql = sql.substring(0, sql.lastIndexOf(" AND"));
     }
 
     return sql;
@@ -170,7 +170,7 @@ public class Table<T> extends DatabaseConnection {
     String sql = "";
 
     if (order != null) {
-      if (Pattern.matches("[descending|descend|desc|d|-](?i)", order)) {
+      if (Pattern.matches("(?i)(-|d|desc|descending)", order)) {
         sql += "DESC";
       }
       else {

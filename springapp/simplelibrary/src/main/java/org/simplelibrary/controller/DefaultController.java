@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Controller
@@ -65,48 +64,95 @@ public class DefaultController extends TemplateView {
                           @RequestParam(value="order", required=false) String order,
                           @RequestParam(value="page", required=false) Integer page) {
 
-    if (searchTerms != null) {
-      searchTerms = searchTerms.trim();
+    if (filter == null) {
+      filter = "books";
     }
     else {
+      filter = filter.trim().toLowerCase();
+    }
+
+    if (sort == null) {
+      sort = "date";
+    }
+    else {
+      sort = sort.trim().toLowerCase();
+    }
+
+    if (searchTerms == null) {
       searchTerms = "";
     }
-
-    searchTerms = "book_title contains " + searchTerms;
-
-    if (sort != null && Pattern.matches("[name|title](?i)", sort.trim())) {
-      sort = "book_title";
-    }
     else {
-      sort = "book_publish_date";
+      searchTerms = searchTerms.trim();
     }
 
-    if (order == null || Pattern.matches("[descending|desc](?i)", sort.trim())) {
+    if (order == null || !order.equals("ascending")) {
       order = "desc";
     }
     else {
       order = "asc";
     }
 
-    if (filter != null) {
-      switch(filter) {
-        case "authors":
-          break;
-        case "publishers":
-          break;
-        case "genres":
-          break;
-        case "lists":
-          break;
-        default:
-          List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
-          model.addAttribute("books", books);
-      }
+    switch(filter) {
+      case "authors":
+      case "publishers":
+      case "subjects":
+        searchTerms = "category_name contains " + searchTerms;
+
+        if (sort.equals("title")) {
+          sort = "category_name";
+        }
+        else {
+          sort = "category_add_date";
+        }
+
+        String categoryType = filter.substring(0, filter.length() - 1);
+        String[] filters = new String[2];
+        filters[0] = searchTerms;
+        filters[1] = "category_type contains " + categoryType;
+
+        List<Category> categories = CATEGORY_TABLE.filterBy(filters).sortBy(sort).inOrder(order).select();
+        model.addAttribute("categories", categories);
+        break;
+      case "lists":
+        searchTerms = "catalog_name contains " + searchTerms;
+
+        if (sort.equals("title")) {
+          sort = "catalog_name";
+        }
+        else {
+          sort = "catalog_last_update";
+        }
+
+        List<Catalog> lists = CATALOG_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        model.addAttribute("lists", lists);
+        break;
+      default:
+        searchTerms = "book_title contains " + searchTerms;
+
+        if (sort.equals("title")) {
+          sort = "book_title";
+        }
+        else {
+          sort = "book_publish_date";
+        }
+
+        List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        model.addAttribute("books", books);
     }
-    else {
-      List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
-      model.addAttribute("books", books);
+
+    if (page == null) {
+      page = 1;
     }
+
+    // TODO - add pagination stuff
+    // Use subList https://docs.oracle.com/javase/7/docs/api/java/util/List.html#subList(int,%20int)
+
+    System.out.println(filter);
+    model.addAttribute("searchTerms", searchTerms);
+    model.addAttribute("filter", filter);
+    model.addAttribute("sort", sort);
+    model.addAttribute("order", order);
+    model.addAttribute("page", page);
 
     return loadView(model, "default/search");
   }
@@ -140,7 +186,7 @@ public class DefaultController extends TemplateView {
     }
 
     if (!order.equals("descending")) {
-      redirectAttributes.addAttribute("order", "asc");
+      redirectAttributes.addAttribute("order", "ascending");
     }
 
     return "redirect:/search";

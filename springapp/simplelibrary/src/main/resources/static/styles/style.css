@@ -134,3 +134,15 @@ img, video {
   margin: 0;
   font-family: "Source Code Pro", monospace;
 }
+
+#search-results {
+  width: 100%;
+  border: 1px solid #444444;
+  border-radius: 1px;
+}
+
+#search-results th, #search-results td {
+  border: 1px solid #444444;
+  padding: 4px;
+  text-align: left;
+}
