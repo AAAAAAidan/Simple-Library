@@ -43,7 +43,7 @@ public class Category implements Serializable {
       columnDefinition="ENUM('Author', 'Publisher', 'Subject')")
   private String type = null;
 
-  //bi-directional many-to-many association to Book
+  //bi-directional many-to-many association to Account
   @ManyToMany
   @JoinTable(
     name="book_category_map",

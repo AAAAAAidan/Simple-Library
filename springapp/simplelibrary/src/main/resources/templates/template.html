@@ -12,8 +12,14 @@
     <header class="padded-container">
       <h1 id="title"><a th:href="@{~/index}">Simple Library</a></h1>
       <ul>
-        <li><a th:href="@{~/signup}">Signup</a></li>
-        <li><a th:href="@{~/login}">Login</a></li>
+        <div sec:authorize="isAnonymous()">
+          <li><a th:href="@{~/signup}">Signup</a></li>
+          <li><a th:href="@{~/login}">Login</a></li>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+          <li><a th:href="@{~/account}">Account</a></li>
+          <li><a th:href="@{~/logout}">Logout</a></li>
+        </div>
       </ul>
     </header>
     <main class="padded-container">

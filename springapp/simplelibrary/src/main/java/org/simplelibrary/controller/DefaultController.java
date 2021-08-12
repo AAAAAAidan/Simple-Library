@@ -32,28 +32,6 @@ public class DefaultController extends TemplateView {
     return loadView(model, "default/index");
   }
 
-  // Account links
-
-  @GetMapping("/signup")
-  public String getSignup(Model model) {
-    return loadView(model, "default/signup");
-  }
-
-  @PostMapping("/signup")
-  public String postSignup(Model model) {
-    return "redirect:/index";
-  }
-
-  @GetMapping("/login")
-  public String getLogin(Model model) {
-    return loadView(model, "default/login");
-  }
-
-  @PostMapping("/login")
-  public String postLogin(Model model) {
-    return "redirect:/index";
-  }
-
   // Sidebar links
 
   @GetMapping("/search")

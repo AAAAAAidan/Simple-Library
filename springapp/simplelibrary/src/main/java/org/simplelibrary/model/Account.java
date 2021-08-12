@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * The persistent class for the account database table.
- * 
+ *
  */
 @Entity
 @Getter
@@ -32,7 +32,7 @@ public class Account implements Serializable {
       columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp addDate;
 
-  @Column(name="account_email", length=320)
+  @Column(name="account_email", unique=true, length=320)
   private String email = null;
 
   @Column(name="account_first_name", length=320)
@@ -45,7 +45,7 @@ public class Account implements Serializable {
   @Column(name="account_last_name", length=320)
   private String lastName = null;
 
-  @Column(name="account_password", length=32, nullable=false)
+  @Column(name="account_password", length=60, nullable=false)
   private String password;
 
   @Column(name="account_status", nullable=false,
@@ -70,6 +70,15 @@ public class Account implements Serializable {
   //bi-directional many-to-one association to Setting
   @OneToMany(mappedBy="account")
   private List<Setting> settings;
+
+  //bi-directional many-to-many association to AuthGroup
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+      name="account_auth_group_map",
+      joinColumns={ @JoinColumn(name="account_id") },
+      inverseJoinColumns={ @JoinColumn(name="auth_group_id") }
+  )
+  private List<AuthGroup> authGroups;
 
   public Borrow addBorrow(Borrow borrow) {
     getBorrows().add(borrow);
