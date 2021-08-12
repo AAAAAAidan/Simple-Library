@@ -8,8 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class DatabaseConnection {
-  
+public abstract class DatabaseConnection {
+
   protected EntityManagerFactory entityManagerFactory = null;
   protected EntityManager entityManager = null;
 
@@ -20,13 +20,13 @@ public class DatabaseConnection {
     entityManagerFactory = Persistence.createEntityManagerFactory(DATABASE);
     entityManager = entityManagerFactory.createEntityManager();
   }
-  
+
   // Disconnect from the database
   public void disconnect() {
     if (entityManager != null) {
       entityManager.close();
     }
-    
+
     if (entityManagerFactory != null) {
       entityManagerFactory.close();
     }

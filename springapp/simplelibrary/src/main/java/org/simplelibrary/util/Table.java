@@ -245,6 +245,17 @@ public class Table<T> extends DatabaseConnection {
 
   // Select methods
 
+  public T selectOne() {
+    List<T> results = select();
+
+    if (results.size() == 0) {
+      return null;
+    }
+    else {
+      return results.get(0);
+    }
+  }
+
   public List<T> select() {
     String sql = String.format("SELECT * FROM %s t %s", getTableName(), getAllClauses());
     this.connect();

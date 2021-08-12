@@ -1,17 +1,17 @@
 <h2>Sign up for the library!</h2>
-<form class="element-list" action="index" onsubmit="return validate()" method="post">
+<form class="element-list" th:action="@{/signup}" method="post">
   <label for="username">Username*</label>
-  <input type="text" placeholder="Enter a username" id="username" required>
+  <input type="text" placeholder="Enter a username" id="username" name="username" required>
   <label for="email">Email*</label>
-  <input type="email" placeholder="Enter an email" id="email" required>
+  <input type="email" placeholder="Enter an email" id="email" name="email" required>
   <label for="password">Password*</label>
-  <input type="password" placeholder="Enter a Password" id="password" required>
+  <input type="password" placeholder="Enter a Password" id="password" name="password" required>
   <label for="passwordConfirm">Confirm password*</label>
-  <input type="password" placeholder="Confirm your Password" id="passwordConfirm" required>
+  <input type="password" placeholder="Confirm your Password" id="passwordConfirm" name="passwordConfirm" required>
   <label for="birthdate">Date of birth</label>
-  <input type="date" placeholder="mm/dd/yyyy" id="birthdate">
+  <input type="date" placeholder="mm/dd/yyyy" id="birthdate" name="birthdate">
   <label for="phone">Phone number</label>
-  <input type="tel" placeholder="0-000-000-0000" id="phone">
+  <input type="tel" placeholder="0-000-000-0000" id="phone" name="phone">
   <p class="help-text margin-bottom">Required fields marked with *
   <br />Usernames and passwords must only contain alphanumeric characters.</p>
   <input type="submit" value="Register"/>
