@@ -59,15 +59,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .permitAll()
       .and()
         .exceptionHandling()
-        .accessDeniedPage("/403")
-      ;
+        .accessDeniedPage("/403");
   }
 
   @Override
   public void configure(final WebSecurity web) throws Exception {
     web
       .ignoring()
-      .antMatchers("/resources/**", "/static/**", "/styles/**", "/scripts/**", "/images/**");
+      .antMatchers( "/files/**", "/resources/**", "/static/**", "/fonts/**", "/images/**", "/uploads/**", "/styles/**", "/scripts/**");
   }
 
 }

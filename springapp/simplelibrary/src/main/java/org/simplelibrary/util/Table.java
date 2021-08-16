@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import javax.persistence.Query;
 
-// Experimental usage of JPQL for querying and updating tables
-// May or may not be used in the final version
+// Experimental usage of JPQL for querying and updating tables.
+// Will only be used for the search page, where repositories would be inefficient.
 public class Table<T> extends DatabaseConnection {
 
   // Table fields

@@ -10,12 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Slf4j
-public class AccountPrincipal implements UserDetails {
+public class AccountDetails implements UserDetails {
 
   private Account account;
   private List<AuthGroup> authGroups;
 
-  public AccountPrincipal(Account account, List<AuthGroup> authGroups) {
+  public AccountDetails(Account account, List<AuthGroup> authGroups) {
     this.account = account;
     this.authGroups = authGroups;
   }
@@ -29,6 +29,10 @@ public class AccountPrincipal implements UserDetails {
     Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
     authGroups.forEach(authGroup -> grantedAuthorities.add(new SimpleGrantedAuthority(authGroup.getName())));
     return grantedAuthorities;
+  }
+
+  public Integer getId() {
+    return account.getId();
   }
 
   @Override
