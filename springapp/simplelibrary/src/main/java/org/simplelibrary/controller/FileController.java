@@ -71,7 +71,7 @@ public class FileController {
   private FileData pathToFile(Path path) {
     FileData fileData = new FileData();
     String filename = path.getFileName().toString();
-    fileData.setFilename(filename);
+    fileData.setName(filename);
     fileData.setUrl(MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile", filename)
         .build().toString());
 

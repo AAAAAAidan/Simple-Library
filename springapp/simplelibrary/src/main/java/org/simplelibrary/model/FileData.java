@@ -1,35 +1,20 @@
 package org.simplelibrary.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileData {
 
-  private String filename;
+  private String name;
   private String url;
   private Long size;
-
-  public String getFilename() {
-    return filename;
-  }
-
-  public void setFilename(String filename) {
-    this.filename = filename;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  public Long getSize() {
-    return size;
-  }
-
-  public void setSize(Long size) {
-    this.size = size;
-  }
 
 }
