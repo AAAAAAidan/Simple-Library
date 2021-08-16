@@ -130,6 +130,11 @@ img, video {
   font-size: 0.8em;
 }
 
+.profile-picture {
+  width: 50px;
+  height: 50px;
+}
+
 #title {
   margin: 0;
   font-family: "Source Code Pro", monospace;

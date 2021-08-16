@@ -28,12 +28,12 @@ public class AccountDetailsService implements UserDetailsService {
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     Account account = accountService.getAccountByEmail(email);
 
-    if(account == null) {
+    if (account == null) {
       throw new UsernameNotFoundException("No account found for " + email);
     }
 
     List<AuthGroup> authGroups = account.getAuthGroups();
-    return new AccountPrincipal(account, authGroups);
+    return new AccountDetails(account, authGroups);
   }
 
 }
