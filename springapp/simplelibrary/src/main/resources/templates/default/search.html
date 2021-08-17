@@ -1,21 +1,21 @@
 <h2>Search the library!</h2>
 <form class="margin-bottom" action="search" method="post">
-  <input type="text" th:name="searchTerms" placeholder="Enter search terms"/>
+  <input type="text" th:name="terms" th:value="${terms}" placeholder="Enter search terms"/>
   <input type="submit" value="Search"/>
   <select th:name="filter">
     <option value="books">Books</option>
-    <option value="authors">Authors</option>
-    <option value="publishers">Publishers</option>
-    <option value="subjects">Subjects</option>
-    <option value="lists">Lists</option>
+    <option value="authors" th:selected="${filter=='authors'}">Authors</option>
+    <option value="publishers" th:selected="${filter=='publishers'}">Publishers</option>
+    <option value="subjects" th:selected="${filter=='subjects'}">Subjects</option>
+    <option value="lists" th:selected="${filter=='lists'}">Lists</option>
   </select>
   <select th:name="sort">
     <option value="date">By date</option>
-    <option value="title">By title</option>
+    <option value="title" th:selected="${sort=='title'}">By title</option>
   </select>
   <select th:name="order">
-    <option value="descending">Descending</option>
-    <option value="ascending">Ascending</option>
+    <option value="desc">Descending</option>
+    <option value="asc" th:selected="${order=='asc'}">Ascending</option>
   </select>
 </form>
 <table id="search-results">

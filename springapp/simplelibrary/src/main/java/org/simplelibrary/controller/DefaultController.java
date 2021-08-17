@@ -30,7 +30,7 @@ public class DefaultController extends TemplateView {
 
   @GetMapping("/search")
   public String getSearch(Model model,
-                          @RequestParam(value="search", required=false) String searchTerms,
+                          @RequestParam(value="terms", required=false) String terms,
                           @RequestParam(value="filter", required=false) String filter,
                           @RequestParam(value="sort", required=false) String sort,
                           @RequestParam(value="order", required=false) String order,
@@ -43,76 +43,80 @@ public class DefaultController extends TemplateView {
     if (filter == null) {
       filter = "books";
     }
-    else {
-      filter = filter.trim().toLowerCase();
-    }
 
     if (sort == null) {
       sort = "date";
     }
-    else {
-      sort = sort.trim().toLowerCase();
+
+    if (terms == null) {
+      terms = "";
     }
 
-    if (searchTerms == null) {
-      searchTerms = "";
-    }
-    else {
-      searchTerms = searchTerms.trim();
-    }
-
-    if (order == null || !order.equals("ascending")) {
+    if (order == null || !order.equals("asc")) {
       order = "desc";
     }
-    else {
-      order = "asc";
-    }
+
+    String termsFilter;
+    String sortColumn;
 
     switch(filter) {
       case "authors":
       case "publishers":
       case "subjects":
-        searchTerms = "category_name contains " + searchTerms;
+        termsFilter = "category_name contains " + terms;
 
         if (sort.equals("title")) {
-          sort = "category_name";
+          sortColumn = "category_name";
         }
         else {
-          sort = "category_add_date";
+          sortColumn = "category_add_date";
         }
 
         String categoryType = filter.substring(0, filter.length() - 1);
         String[] filters = new String[2];
-        filters[0] = searchTerms;
+        filters[0] = termsFilter;
         filters[1] = "category_type contains " + categoryType;
+        List<Category> categories = categoryTable.filterBy(filters)
+                                                 .sortBy(sortColumn)
+                                                 .inOrder(order)
+                                                 .select();
 
-        List<Category> categories = categoryTable.filterBy(filters).sortBy(sort).inOrder(order).select();
         model.addAttribute("categories", categories);
         break;
+
       case "lists":
-        searchTerms = "catalog_name contains " + searchTerms;
+        termsFilter = "catalog_name contains " + terms;
 
         if (sort.equals("title")) {
-          sort = "catalog_name";
+          sortColumn = "catalog_name";
         }
         else {
-          sort = "catalog_last_update";
+          sortColumn = "catalog_last_update";
         }
 
-        List<Catalog> lists = catalogTable.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        List<Catalog> lists = catalogTable.filterBy(termsFilter)
+                                          .sortBy(sortColumn)
+                                          .inOrder(order)
+                                          .select();
+
         model.addAttribute("lists", lists);
         break;
+
       default:
-        searchTerms = "book_title contains " + searchTerms;
+        termsFilter = "book_title contains " + terms;
 
         if (sort.equals("title")) {
-          sort = "book_title";
+          sortColumn = "book_title";
         }
         else {
-          sort = "book_publish_date";
+          sortColumn = "book_publish_date";
         }
 
-        List<Book> books = bookTable.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        List<Book> books = bookTable.filterBy(termsFilter)
+                                    .sortBy(sortColumn)
+                                    .inOrder(order)
+                                    .select();
+
         model.addAttribute("books", books);
     }
 
@@ -120,10 +124,9 @@ public class DefaultController extends TemplateView {
       page = 1;
     }
 
-    // TODO - add pagination stuff
     // Use subList https://docs.oracle.com/javase/7/docs/api/java/util/List.html#subList(int,%20int)
 
-    model.addAttribute("searchTerms", searchTerms);
+    model.addAttribute("terms", terms);
     model.addAttribute("filter", filter);
     model.addAttribute("sort", sort);
     model.addAttribute("order", order);
@@ -134,22 +137,22 @@ public class DefaultController extends TemplateView {
 
   @PostMapping("/search")
   public String postSearch(Model model,
-                           @RequestParam("searchTerms") String searchTerms,
+                           @RequestParam("terms") String terms,
                            @RequestParam("filter") String filter,
                            @RequestParam("sort") String sort,
                            @RequestParam("order") String order,
                            RedirectAttributes redirectAttributes) {
 
-    searchTerms = searchTerms.trim().toLowerCase();
+    terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
     sort = sort.trim().toLowerCase();
     order = order.trim().toLowerCase();
 
-    String entry = String.format("Search %s for '%s' ordered by %s %s", filter,  searchTerms, sort, order);
+    String entry = String.format("Search %s for '%s' ordered by %s %s", filter,  terms, sort, order);
     log.info(entry);
 
-    if (!searchTerms.equals("")) {
-      redirectAttributes.addAttribute("search", searchTerms);
+    if (!terms.equals("")) {
+      redirectAttributes.addAttribute("terms", terms);
     }
 
     if (!filter.equals("books")) {
@@ -160,8 +163,8 @@ public class DefaultController extends TemplateView {
       redirectAttributes.addAttribute("sort", sort);
     }
 
-    if (!order.equals("descending")) {
-      redirectAttributes.addAttribute("order", "ascending");
+    if (!order.equals("desc")) {
+      redirectAttributes.addAttribute("order", order);
     }
 
     return "redirect:/search";
