@@ -19,14 +19,8 @@ import java.util.List;
 @Controller
 public class DefaultController extends TemplateView {
 
-  // These will be used by the search page
-
-  private final Table<Book> BOOK_TABLE = new Table<>(Book.class);
-  private final Table<Category> CATEGORY_TABLE = new Table<>(Category.class);
-  private final Table<Catalog> CATALOG_TABLE = new Table<>(Catalog.class);
-
   // Index page
-  
+
   @GetMapping({"/", "/index"})
   public String index(Model model) {
     return loadView(model, "default/index");
@@ -41,6 +35,10 @@ public class DefaultController extends TemplateView {
                           @RequestParam(value="sort", required=false) String sort,
                           @RequestParam(value="order", required=false) String order,
                           @RequestParam(value="page", required=false) Integer page) {
+
+    final Table<Book> bookTable = new Table<>(Book.class);
+    final Table<Category> categoryTable = new Table<>(Category.class);
+    final Table<Catalog> catalogTable = new Table<>(Catalog.class);
 
     if (filter == null) {
       filter = "books";
@@ -88,7 +86,7 @@ public class DefaultController extends TemplateView {
         filters[0] = searchTerms;
         filters[1] = "category_type contains " + categoryType;
 
-        List<Category> categories = CATEGORY_TABLE.filterBy(filters).sortBy(sort).inOrder(order).select();
+        List<Category> categories = categoryTable.filterBy(filters).sortBy(sort).inOrder(order).select();
         model.addAttribute("categories", categories);
         break;
       case "lists":
@@ -101,7 +99,7 @@ public class DefaultController extends TemplateView {
           sort = "catalog_last_update";
         }
 
-        List<Catalog> lists = CATALOG_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        List<Catalog> lists = catalogTable.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
         model.addAttribute("lists", lists);
         break;
       default:
@@ -114,7 +112,7 @@ public class DefaultController extends TemplateView {
           sort = "book_publish_date";
         }
 
-        List<Book> books = BOOK_TABLE.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
+        List<Book> books = bookTable.filterBy(searchTerms).sortBy(sort).inOrder(order).select();
         model.addAttribute("books", books);
     }
 
@@ -125,7 +123,6 @@ public class DefaultController extends TemplateView {
     // TODO - add pagination stuff
     // Use subList https://docs.oracle.com/javase/7/docs/api/java/util/List.html#subList(int,%20int)
 
-    System.out.println(filter);
     model.addAttribute("searchTerms", searchTerms);
     model.addAttribute("filter", filter);
     model.addAttribute("sort", sort);
@@ -174,7 +171,7 @@ public class DefaultController extends TemplateView {
   public String about(Model model) {
     return loadView(model, "default/about");
   }
-  
+
   @GetMapping("/help")
   public String help(Model model) {
     return loadView(model, "default/help");
