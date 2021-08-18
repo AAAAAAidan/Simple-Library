@@ -1,7 +1,7 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.simplelibrary.service.DefaultService;
+import org.simplelibrary.service.HomeService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,20 +16,20 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
-public class DefaultController extends TemplateView {
+public class HomeController extends TemplateView {
 
-  private DefaultService defaultService;
+  private HomeService homeService;
 
   @Autowired
-  public DefaultController(DefaultService defaultService) {
-    this.defaultService = defaultService;
+  public HomeController(HomeService homeService) {
+    this.homeService = homeService;
   }
 
   // Index page
 
   @GetMapping({"/", "/index"})
   public String index(Model model) {
-    return loadView(model, "default/index");
+    return loadView(model, "home/index");
   }
 
   // Sidebar links
@@ -62,15 +62,15 @@ public class DefaultController extends TemplateView {
       page = 1;
     }
 
-    List<?> results = defaultService.getSearchResults(terms, filter, sort, order);
+    List<?> results = homeService.getSearchResults(terms, filter, sort, order);
     int resultCount = results.size();
 
     if (page > resultCount / 10) {
       page = resultCount / 10;
     }
 
-    results = defaultService.limitSearchResultsByPage(results, page);
-    List<String> resultPages = defaultService.getSearchResultPages(resultCount, page);
+    results = homeService.limitSearchResultsByPage(results, page);
+    List<String> resultPages = homeService.getSearchResultPages(resultCount, page);
 
     String currentUrl = request.getContextPath();
     String parameters = request.getQueryString();
@@ -95,7 +95,7 @@ public class DefaultController extends TemplateView {
     model.addAttribute("sort", sort);
     model.addAttribute("order", order);
 
-    return loadView(model, "default/search");
+    return loadView(model, "home/search");
   }
 
   @PostMapping("/search")
@@ -135,12 +135,12 @@ public class DefaultController extends TemplateView {
 
   @GetMapping("/about")
   public String about(Model model) {
-    return loadView(model, "default/about");
+    return loadView(model, "home/about");
   }
 
   @GetMapping("/help")
   public String help(Model model) {
-    return loadView(model, "default/help");
+    return loadView(model, "home/help");
   }
 
 }

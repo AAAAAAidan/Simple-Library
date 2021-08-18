@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class DefaultService {
+public class HomeService {
 
   private final Table<Book> bookTable = new Table<>(Book.class);
   private final Table<Category> categoryTable = new Table<>(Category.class);
