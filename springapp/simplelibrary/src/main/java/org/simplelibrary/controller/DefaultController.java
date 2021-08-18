@@ -1,11 +1,9 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.simplelibrary.model.Book;
-import org.simplelibrary.model.Catalog;
-import org.simplelibrary.model.Category;
-import org.simplelibrary.util.Table;
+import org.simplelibrary.service.DefaultService;
 import org.simplelibrary.view.TemplateView;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +12,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
 public class DefaultController extends TemplateView {
+
+  private DefaultService defaultService;
+
+  @Autowired
+  public DefaultController(DefaultService defaultService) {
+    this.defaultService = defaultService;
+  }
 
   // Index page
 
@@ -29,16 +35,12 @@ public class DefaultController extends TemplateView {
   // Sidebar links
 
   @GetMapping("/search")
-  public String getSearch(Model model,
+  public String getSearch(Model model, HttpServletRequest request,
                           @RequestParam(value="terms", required=false) String terms,
                           @RequestParam(value="filter", required=false) String filter,
                           @RequestParam(value="sort", required=false) String sort,
                           @RequestParam(value="order", required=false) String order,
                           @RequestParam(value="page", required=false) Integer page) {
-
-    final Table<Book> bookTable = new Table<>(Book.class);
-    final Table<Category> categoryTable = new Table<>(Category.class);
-    final Table<Catalog> catalogTable = new Table<>(Catalog.class);
 
     if (filter == null) {
       filter = "books";
@@ -56,81 +58,42 @@ public class DefaultController extends TemplateView {
       order = "desc";
     }
 
-    String termsFilter;
-    String sortColumn;
-
-    switch(filter) {
-      case "authors":
-      case "publishers":
-      case "subjects":
-        termsFilter = "category_name contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "category_name";
-        }
-        else {
-          sortColumn = "category_add_date";
-        }
-
-        String categoryType = filter.substring(0, filter.length() - 1);
-        String[] filters = new String[2];
-        filters[0] = termsFilter;
-        filters[1] = "category_type contains " + categoryType;
-        List<Category> categories = categoryTable.filterBy(filters)
-                                                 .sortBy(sortColumn)
-                                                 .inOrder(order)
-                                                 .select();
-
-        model.addAttribute("categories", categories);
-        break;
-
-      case "lists":
-        termsFilter = "catalog_name contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "catalog_name";
-        }
-        else {
-          sortColumn = "catalog_last_update";
-        }
-
-        List<Catalog> lists = catalogTable.filterBy(termsFilter)
-                                          .sortBy(sortColumn)
-                                          .inOrder(order)
-                                          .select();
-
-        model.addAttribute("lists", lists);
-        break;
-
-      default:
-        termsFilter = "book_title contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "book_title";
-        }
-        else {
-          sortColumn = "book_publish_date";
-        }
-
-        List<Book> books = bookTable.filterBy(termsFilter)
-                                    .sortBy(sortColumn)
-                                    .inOrder(order)
-                                    .select();
-
-        model.addAttribute("books", books);
-    }
-
-    if (page == null) {
+    if (page == null || page < 1) {
       page = 1;
     }
 
-    // Use subList https://docs.oracle.com/javase/7/docs/api/java/util/List.html#subList(int,%20int)
+    List<?> results = defaultService.getSearchResults(terms, filter, sort, order);
+    int resultCount = results.size();
+
+    if (page > resultCount / 10) {
+      page = resultCount / 10;
+    }
+
+    results = defaultService.limitSearchResultsByPage(results, page);
+    List<String> resultPages = defaultService.getSearchResultPages(resultCount, page);
+
+    String currentUrl = request.getContextPath();
+    String parameters = request.getQueryString();
+
+    if (parameters != null ) {
+      parameters = parameters.replaceAll("[&]*page=[-+]*[0-9]*", "");
+
+      if (parameters.length() != 0) {
+        currentUrl += "?" + parameters;
+      }
+    }
+
+    model.addAttribute("currentUrl", currentUrl);
+    model.addAttribute("page", page);
+
+    model.addAttribute("results", results);
+    model.addAttribute("resultCount", resultCount);
+    model.addAttribute("resultPages", resultPages);
 
     model.addAttribute("terms", terms);
     model.addAttribute("filter", filter);
     model.addAttribute("sort", sort);
     model.addAttribute("order", order);
-    model.addAttribute("page", page);
 
     return loadView(model, "default/search");
   }

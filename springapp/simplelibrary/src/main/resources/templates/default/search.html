@@ -1,24 +1,24 @@
 <h2>Search the library!</h2>
 <form class="margin-bottom" action="search" method="post">
-  <input type="text" th:name="terms" th:value="${terms}" placeholder="Enter search terms"/>
-  <input type="submit" value="Search"/>
-  <select th:name="filter">
+  <input class="button-style" type="text" th:name="terms" th:value="${terms}" placeholder="Enter search terms"/>
+  <input class="button-style" type="submit" value="Search"/>
+  <select class="button-style" th:name="filter">
     <option value="books">Books</option>
     <option value="authors" th:selected="${filter=='authors'}">Authors</option>
     <option value="publishers" th:selected="${filter=='publishers'}">Publishers</option>
     <option value="subjects" th:selected="${filter=='subjects'}">Subjects</option>
     <option value="lists" th:selected="${filter=='lists'}">Lists</option>
   </select>
-  <select th:name="sort">
+  <select class="button-style" th:name="sort">
     <option value="date">By date</option>
     <option value="title" th:selected="${sort=='title'}">By title</option>
   </select>
-  <select th:name="order">
+  <select class="button-style" th:name="order">
     <option value="desc">Descending</option>
     <option value="asc" th:selected="${order=='asc'}">Ascending</option>
   </select>
 </form>
-<table id="search-results">
+<table id="search-results" class="margin-bottom">
   <thead>
     <tr>
       <th>ID</th>
@@ -28,35 +28,35 @@
   </thead>
   <tbody th:switch="${filter}">
     <div th:case="'books'">
-      <tr th:each="book:${books}">
+      <tr th:each="book:${results}">
         <td th:text="${book.id}"></td>
         <td th:text="${book.title}"></td>
         <td th:text="${book.publishDate}"></td>
       </tr>
     </div>
     <div th:case="'authors'">
-      <tr th:each="author:${categories}">
+      <tr th:each="author:${results}">
         <td th:text="${author.id}"></td>
         <td th:text="${author.name}"></td>
         <td th:text="${author.addDate}"></td>
       </tr>
     </div>
     <div th:case="'publishers'">
-      <tr th:each="publisher:${categories}">
+      <tr th:each="publisher:${results}">
         <td th:text="${publisher.id}"></td>
         <td th:text="${publisher.name}"></td>
         <td th:text="${publisher.addDate}"></td>
       </tr>
     </div>
     <div th:case="'subjects'">
-      <tr th:each="subject:${categories}">
+      <tr th:each="subject:${results}">
         <td th:text="${subject.id}"></td>
         <td th:text="${subject.name}"></td>
         <td th:text="${subject.addDate}"></td>
       </tr>
     </div>
     <div th:case="'lists'">
-      <tr th:each="list:${lists}">
+      <tr th:each="list:${results}">
         <td th:text="${list.id}"></td>
         <td th:text="${list.name}"></td>
         <td th:text="${list.lastUpdate}"></td>
@@ -64,3 +64,13 @@
     </div>
   </tbody>
 </table>
+<div class="grid-2">
+  <div style="text-align:left">
+    <span th:each="pageNumber:${resultPages}" th:switch="${pageNumber}">
+      <span th:case="..."> . . . </span>
+      <span class="button-style button-dark" th:case="${page}" th:text="${pageNumber}"></span>
+      <a class="button-style" th:case="*" th:href="@{${currentUrl}(page=${pageNumber})}" th:text="${pageNumber}"></a>
+    </span>
+  </div>
+  <div style="text-align:right">Found <span th:text="${resultCount}"></span> results</div>
+</div>
