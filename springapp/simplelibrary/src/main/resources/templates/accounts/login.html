@@ -1,8 +1,8 @@
 <h2>Log in to the library!</h2>
 <form class="element-list" th:action="@{/login/authenticate}" onsubmit="return true" method="post">
   <label for="email">Email</label>
-  <input type="text" placeholder="Enter your email" id="email" name="email" required>
+  <input class="button-style" type="text" placeholder="Enter your email" id="email" name="email" required>
   <label for="password">Password</label>
-  <input type="password" placeholder="Enter your Password" id="password" name="password" required>
-  <input type="submit" value="Login"/>
+  <input class="button-style" type="password" placeholder="Enter your Password" id="password" name="password" required>
+  <input class="button-style" type="submit" value="Login"/>
 </form>

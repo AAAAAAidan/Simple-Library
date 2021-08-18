@@ -2,8 +2,8 @@
   <h2>Account</h2>
   <img th:src="${filepath}" class="profile-picture" alt="Profile picture" />
   <form th:action="@{/account/uploadprofilepicture}" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept="image/png, image/jpeg"/>
-    <input type="submit" name="SUBMIT" />
+    <input class="button-style" type="file" name="file" accept="image/png, image/jpeg"/>
+    <input class="button-style" type="submit" name="SUBMIT" />
   </form>
   <div th:if="${message}">
     <h2 th:text="${message}" />
