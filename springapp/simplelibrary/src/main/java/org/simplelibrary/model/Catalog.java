@@ -7,17 +7,17 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 /**
  * The persistent class for the catalog database table.
- * 
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 public class Catalog implements Serializable {
+
   private static final long serialVersionUID = 1L;
 
   @Id
@@ -25,34 +25,36 @@ public class Catalog implements Serializable {
   @Column(name="catalog_id", nullable=false)
   private Integer id;
 
-  @Column(name="catalog_add_date", nullable=false, updatable=false, insertable=false,
-      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp addDate;
+  @NonNull
+  @Column(name="catalog_name", length=320, nullable=false)
+  private String name;
 
-  @Column(name="catalog_description", length=3200)
-  private String description = null;
-
-  @Column(name="catalog_last_update", nullable=false, insertable=false,
-      columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp lastUpdate;
-
-  @Column(name="catalog_name", length=320)
-  private String name = null;
+  @NonNull
+  @Column(name="catalog_description", length=3200, nullable=false)
+  private String description;
 
   @Column(name="catalog_privacy", nullable=false,
-      columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
+          columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
   private String privacy = "Private";
 
+  @Column(name="catalog_last_update", nullable=false, insertable=false,
+          columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp lastUpdate;
+
+  @Column(name="catalog_add_date", nullable=false, updatable=false, insertable=false,
+          columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp addDate;
+
   @Column(name="catalog_status", nullable=false,
-      columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
+          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
   private String status = "Active";
 
-  //bi-directional many-to-one association to Account
+  // Bi-directional many-to-one association to Account
   @ManyToOne
   @JoinColumn(name="account_id")
   private Account account;
 
-  //bi-directional many-to-many association to Book
+  // Bi-directional many-to-many association to Book
   @ManyToMany
   @JoinTable(
     name="book_catalog_map",

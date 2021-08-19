@@ -64,9 +64,10 @@ public class HomeController extends TemplateView {
 
     List<?> results = homeService.getSearchResults(terms, filter, sort, order);
     int resultCount = results.size();
+    int lastPage = homeService.getLastPage(resultCount);
 
-    if (page > resultCount / 10) {
-      page = resultCount / 10;
+    if (page > lastPage) {
+      page = lastPage;
     }
 
     results = homeService.limitSearchResultsByPage(results, page);

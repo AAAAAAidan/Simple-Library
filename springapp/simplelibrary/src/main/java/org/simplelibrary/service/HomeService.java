@@ -80,9 +80,13 @@ public class HomeService {
     }
   }
 
+  public Integer getLastPage(int resultCount) {
+    return resultCount / 10 + 1;
+  }
+
   public List<String> getSearchResultPages(int resultCount, int currentPage) {
     List<String> resultPages = new ArrayList<>();
-    int lastPage = resultCount / 10;
+    int lastPage = getLastPage(resultCount);
     int pageCounter = 0;
 
     while (++pageCounter <= lastPage) {
@@ -106,19 +110,28 @@ public class HomeService {
   }
 
   public List<?> limitSearchResultsByPage(List<?> results, int page) {
-    int fromIndex = page * 10 - 10;
-    int toIndex = fromIndex + 10;
 
-    if (fromIndex > results.size() - 1) {
-      fromIndex = results.size() - 1;
+    if (results.size() == 0) {
+      return results;
     }
 
-    if (toIndex > results.size() - 1) {
-      toIndex = results.size() - 1;
+    int fromIndex = page * 10 - 10;
+
+    if (fromIndex < 0) {
+      fromIndex = 0;
+    }
+
+    if (fromIndex > results.size()) {
+      fromIndex = results.size();
+    }
+
+    int toIndex = fromIndex + 10;
+
+    if (toIndex > results.size()) {
+      toIndex = results.size();
     }
 
     return results.subList(fromIndex, toIndex);
   }
-
 
 }
