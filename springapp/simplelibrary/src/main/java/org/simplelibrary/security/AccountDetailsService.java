@@ -1,10 +1,9 @@
 package org.simplelibrary.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.model.Account;
-import org.simplelibrary.service.AccountService;
-import org.simplelibrary.service.AuthGroupService;
+import org.simplelibrary.model.AuthGroup;
+import org.simplelibrary.repository.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,17 +15,15 @@ import java.util.List;
 @Slf4j
 public class AccountDetailsService implements UserDetailsService {
 
-  private AccountService accountService;
-  private AuthGroupService authGroupService;
+  private AccountRepository accountRepository;
 
-  public AccountDetailsService(AccountService accountService, AuthGroupService authGroupService) {
-    this.accountService = accountService;
-    this.authGroupService = authGroupService;
+  public AccountDetailsService(AccountRepository accountRepository) {
+    this.accountRepository = accountRepository;
   }
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    Account account = accountService.getAccountByEmail(email);
+    Account account = accountRepository.getAccountByEmail(email);
 
     if (account == null) {
       throw new UsernameNotFoundException("No account found for " + email);

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
@@ -26,13 +27,15 @@ public class AccountController extends TemplateView {
   }
 
   @GetMapping("/account")
-  public String account(Model model) {
+  public String getAccount(Model model) {
     model.addAttribute("filepath", accountService.getProfilePicturePath());
     return loadView(model, "accounts/account");
   }
 
-  @PostMapping("/account/uploadprofilepicture")
-  public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+  @PostMapping("/account/profilepicture")
+  public String postProfilePicture(RedirectAttributes redirectAttributes,
+                                   @RequestParam("file") MultipartFile file) {
+
     String fileName = file.getOriginalFilename();
 
     if (Pattern.matches(".*.(png|jpg|jpeg)", fileName)) {
@@ -53,13 +56,14 @@ public class AccountController extends TemplateView {
 
   @PostMapping("/signup")
   public String postSignup(Model model,
-                           @RequestParam("username") String username,
+                           HttpServletRequest request,
                            @RequestParam("email") String email,
                            @RequestParam("password") String password,
                            @RequestParam("passwordConfirm") String passwordConfirm) {
 
     if (password.equals(passwordConfirm)) {
-      accountService.addAccount(email, password);
+      accountService.signUpAccount(email, password);
+      accountService.logInAccount(request, email, password);
       return "redirect:/index";
     }
     else {

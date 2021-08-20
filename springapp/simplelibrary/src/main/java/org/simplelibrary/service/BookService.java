@@ -6,7 +6,7 @@ import org.simplelibrary.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,8 +19,12 @@ public class BookService {
     this.bookRepository = bookRepository;
   }
 
-  public Optional<Book> findBookById(String id) {
-    return bookRepository.findById(id);
+  public Book getBookById(String id) {
+    return bookRepository.getById(id);
+  }
+
+  public List<Book> findAll() {
+    return bookRepository.findAll();
   }
 
 }

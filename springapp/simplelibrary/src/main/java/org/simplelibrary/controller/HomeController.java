@@ -28,14 +28,15 @@ public class HomeController extends TemplateView {
   // Index page
 
   @GetMapping({"/", "/index"})
-  public String index(Model model) {
+  public String getIndex(Model model) {
     return loadView(model, "home/index");
   }
 
   // Sidebar links
 
   @GetMapping("/search")
-  public String getSearch(Model model, HttpServletRequest request,
+  public String getSearch(Model model,
+                          HttpServletRequest request,
                           @RequestParam(value="terms", required=false) String terms,
                           @RequestParam(value="filter", required=false) String filter,
                           @RequestParam(value="sort", required=false) String sort,
@@ -101,11 +102,11 @@ public class HomeController extends TemplateView {
 
   @PostMapping("/search")
   public String postSearch(Model model,
+                           RedirectAttributes redirectAttributes,
                            @RequestParam("terms") String terms,
                            @RequestParam("filter") String filter,
                            @RequestParam("sort") String sort,
-                           @RequestParam("order") String order,
-                           RedirectAttributes redirectAttributes) {
+                           @RequestParam("order") String order) {
 
     terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
@@ -135,12 +136,12 @@ public class HomeController extends TemplateView {
   }
 
   @GetMapping("/about")
-  public String about(Model model) {
+  public String getAbout(Model model) {
     return loadView(model, "home/about");
   }
 
   @GetMapping("/help")
-  public String help(Model model) {
+  public String getHelp(Model model) {
     return loadView(model, "home/help");
   }
 
