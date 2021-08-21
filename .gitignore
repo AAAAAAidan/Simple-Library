@@ -1,6 +1,7 @@
 # Ignore all but the necessary project files
 *
 !.gitignore
+!README.md
 !pom.xml
 !/src/
 !/src/**
