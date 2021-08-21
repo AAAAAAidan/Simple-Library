@@ -22,30 +22,29 @@ public class Book implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @NonNull
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   @Column(name="book_id", length=12, nullable=false)
-  private String id;
+  private Integer id;
 
   @NonNull
-  @Column(name="book_title", length=320, nullable=false)
-  private String title;
+  @Column(name="book_name", unique=true, length=320, nullable=false)
+  private String name;
 
   @Column(name="book_description", length=3200)
-  private String description;
+  private String description = null;
 
   @Temporal(TemporalType.DATE)
   @Column(name="book_publish_date")
-  private Date publishDate;
+  private Date publishDate = null;
 
   @Column(name="book_page_count")
-  private Integer pageCount;
+  private Integer pageCount = null;
 
-  @Column(name="book_total_borrows")
-  private Integer totalBorrows = 0;
+  @Column(name="book_view_count")
+  private Integer viewCount = 0;
 
-  @Column(name="book_availability", nullable=false,
-          columnDefinition="ENUM('Available', 'Unavailable') DEFAULT 'Available'")
-  private String availability = "Available";
+  @Column(name="book_download_count")
+  private Integer downloadCount = 0;
 
   @Column(name="book_add_date", nullable=false, updatable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -55,14 +54,6 @@ public class Book implements Serializable {
           columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
   private String status = "Active";
 
-  // Bi-directional many-to-one association to Borrow
-  @OneToMany(mappedBy="book")
-  private List<Borrow> borrows;
-
-  // Bi-directional many-to-one association to Isbn
-  @OneToMany(mappedBy="book")
-  private List<Isbn> isbns;
-
   // Bi-directional many-to-many association to Catalog
   @ManyToMany(mappedBy="books")
   private List<Catalog> catalogs;
@@ -70,29 +61,5 @@ public class Book implements Serializable {
   // Bi-directional many-to-many association to Category
   @ManyToMany(mappedBy="books")
   private List<Category> categories;
-
-  public Borrow addBorrow(Borrow borrow) {
-    getBorrows().add(borrow);
-    borrow.setBook(this);
-    return borrow;
-  }
-
-  public Borrow removeBorrow(Borrow borrow) {
-    getBorrows().remove(borrow);
-    borrow.setBook(null);
-    return borrow;
-  }
-
-  public Isbn addIsbn(Isbn isbn) {
-    getIsbns().add(isbn);
-    isbn.setBook(this);
-    return isbn;
-  }
-
-  public Isbn removeIsbn(Isbn isbn) {
-    getIsbns().remove(isbn);
-    isbn.setBook(null);
-    return isbn;
-  }
 
 }

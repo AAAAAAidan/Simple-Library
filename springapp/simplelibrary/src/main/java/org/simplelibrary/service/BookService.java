@@ -19,8 +19,24 @@ public class BookService {
     this.bookRepository = bookRepository;
   }
 
-  public Book getBookById(String id) {
+  public void save(Book book) {
+    bookRepository.save(book);
+  }
+
+  public void saveAll(List<Book> books) {
+    bookRepository.saveAll(books);
+  }
+
+  public boolean existsByName(String name) {
+    return bookRepository.existsByName(name);
+  }
+
+  public Book getById(Integer id) {
     return bookRepository.getById(id);
+  }
+
+  public Book getByName(String name) {
+    return bookRepository.getByName(name);
   }
 
   public List<Book> findAll() {

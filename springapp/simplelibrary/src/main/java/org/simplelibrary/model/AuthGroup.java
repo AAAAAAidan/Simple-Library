@@ -27,7 +27,7 @@ public class AuthGroup implements Serializable {
   Integer authId;
 
   @NonNull
-  @Column(name="auth_group_name", nullable=false)
+  @Column(name="auth_group_name", unique=true, nullable=false)
   String name;
 
   @Column(name="auth_group_add_date", nullable=false, updatable=false, insertable=false,

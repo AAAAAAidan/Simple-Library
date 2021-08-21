@@ -42,16 +42,16 @@ public class AccountService {
     this.fileService = fileService;
   }
 
-  public Account getAccountByEmail(String email) {
-    return accountRepository.getAccountByEmail(email);
+  public Account getByEmail(String email) {
+    return accountRepository.getByEmail(email);
   }
 
-  public Integer getLoggedInAccountId() {
+  public Integer getLoggedInId() {
     AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return accountDetails.getId();
   }
 
-  public void signUpAccount(String email, String password) {
+  public void signUp(String email, String password) {
     Account account = new Account();
     account.setEmail(email);
 
@@ -60,7 +60,7 @@ public class AccountService {
     account.setPassword(encodedPassword);
 
     List<AuthGroup> authGroups = new ArrayList<>();
-    AuthGroup authGroup = authGroupService.getAuthGroupByName("ROLE_USER");
+    AuthGroup authGroup = authGroupService.getByName("ROLE_USER");
 
     if (authGroup != null) {
       authGroups.add(authGroup);
@@ -70,26 +70,26 @@ public class AccountService {
     accountRepository.save(account);
   }
 
-  public void logInAccount(HttpServletRequest request, String email, String password) {
+  public void logIn(HttpServletRequest request, String email, String password) {
     try {
       request.login(email, password);
     }
     catch (ServletException e) {
-      log.warn(e.toString());
+      e.printStackTrace();
     }
   }
 
   public void uploadProfilePicture(MultipartFile file) {
-    String newFileName = "account-" + getLoggedInAccountId() + ".png";
+    String newFileName = "account-" + getLoggedInId() + ".png";
     fileService.saveAs(file, newFileName);
   }
 
   public String getProfilePicturePath() {
-    String fileName = "account-" + getLoggedInAccountId() + ".png";
+    String fileName = "account-" + getLoggedInId() + ".png";
     Path filePath = Paths.get(uploadPath + File.separator + fileName);
 
     if (!Files.exists(filePath)) {
-      fileName = fileName.replace(String.valueOf(getLoggedInAccountId()), "default");
+      fileName = fileName.replace(String.valueOf(getLoggedInId()), "default");
     }
 
     return "files" + File.separator + fileName;

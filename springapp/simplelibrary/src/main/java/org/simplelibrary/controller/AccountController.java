@@ -62,8 +62,8 @@ public class AccountController extends TemplateView {
                            @RequestParam("passwordConfirm") String passwordConfirm) {
 
     if (password.equals(passwordConfirm)) {
-      accountService.signUpAccount(email, password);
-      accountService.logInAccount(request, email, password);
+      accountService.signUp(email, password);
+      accountService.logIn(request, email, password);
       return "redirect:/index";
     }
     else {

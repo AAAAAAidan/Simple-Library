@@ -39,12 +39,6 @@ public class Account implements Serializable {
   @Column(name="account_last_name", length=320)
   private String lastName = null;
 
-  @Column(name="account_active_borrows")
-  private Integer activeBorrows = 0;
-
-  @Column(name="account_total_borrows")
-  private Integer totalBorrows = 0;
-
   @Column(name="account_last_login_date", nullable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp lastLoginDate;
@@ -56,14 +50,6 @@ public class Account implements Serializable {
   @Column(name="account_status", nullable=false,
           columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
   private String status = "Active";
-
-  // Bi-directional many-to-one association to Borrow
-  @OneToMany(mappedBy="account")
-  private List<Borrow> borrows;
-
-  // Bi-directional many-to-one association to Card
-  @OneToMany(mappedBy="account")
-  private List<Card> cards;
 
   // Bi-directional many-to-one association to Catalog
   @OneToMany(mappedBy="account")
@@ -81,30 +67,6 @@ public class Account implements Serializable {
     inverseJoinColumns={ @JoinColumn(name="auth_group_id") }
   )
   private List<AuthGroup> authGroups;
-
-  public Borrow addBorrow(Borrow borrow) {
-    getBorrows().add(borrow);
-    borrow.setAccount(this);
-    return borrow;
-  }
-
-  public Borrow removeBorrow(Borrow borrow) {
-    getBorrows().remove(borrow);
-    borrow.setAccount(null);
-    return borrow;
-  }
-
-  public Card addCard(Card card) {
-    getCards().add(card);
-    card.setAccount(this);
-    return card;
-  }
-
-  public Card removeCard(Card card) {
-    getCards().remove(card);
-    card.setAccount(null);
-    return card;
-  }
 
   public Catalog addCatalog(Catalog catalog) {
     getCatalogs().add(catalog);

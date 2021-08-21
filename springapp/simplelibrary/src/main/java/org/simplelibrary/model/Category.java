@@ -26,16 +26,13 @@ public class Category implements Serializable {
   private Integer id;
 
   @NonNull
-  @Column(name="category_type", nullable=false,
-          columnDefinition="ENUM('Author', 'Publisher', 'Subject')")
-  private String type;
-
-  @NonNull
   @Column(name="category_name", length=320, nullable=false)
   private String name;
 
-  @Column(name="category_description", length=320)
-  private String description = null;
+  @NonNull
+  @Column(name="category_type", nullable=false,
+          columnDefinition="ENUM('Author', 'Subject')")
+  private String type;
 
   @Column(name="category_add_date", nullable=false, updatable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

@@ -23,7 +23,7 @@ public class AccountDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    Account account = accountRepository.getAccountByEmail(email);
+    Account account = accountRepository.getByEmail(email);
 
     if (account == null) {
       throw new UsernameNotFoundException("No account found for " + email);

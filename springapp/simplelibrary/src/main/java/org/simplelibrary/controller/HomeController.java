@@ -48,15 +48,15 @@ public class HomeController extends TemplateView {
     }
 
     if (sort == null) {
-      sort = "date";
+      sort = "name";
     }
 
     if (terms == null) {
       terms = "";
     }
 
-    if (order == null || !order.equals("asc")) {
-      order = "desc";
+    if (order == null || !order.equals("desc")) {
+      order = "asc";
     }
 
     if (page == null || page < 1) {
@@ -124,11 +124,11 @@ public class HomeController extends TemplateView {
       redirectAttributes.addAttribute("filter", filter);
     }
 
-    if (!sort.equals("date")) {
+    if (!sort.equals("name")) {
       redirectAttributes.addAttribute("sort", sort);
     }
 
-    if (!order.equals("desc")) {
+    if (!order.equals("asc")) {
       redirectAttributes.addAttribute("order", order);
     }
 

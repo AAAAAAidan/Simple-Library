@@ -27,10 +27,11 @@ public class BookController extends TemplateView {
   }
 
   @GetMapping("/books/{id}")
-  public String book(Model model, @PathVariable String id) {
-    Book book = bookService.getBookById(id);
+  public String book(Model model, @PathVariable Integer id) {
+    Book book = bookService.getById(id);
 
     if (book != null) {
+      log.info(book.getName());
       model.addAttribute("book", book);
       return loadView(model, "books/book");
     }

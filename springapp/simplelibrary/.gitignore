@@ -1,6 +1,10 @@
-# Ignore all but the project files
+# Ignore all but the necessary project files
 *
 !.gitignore
 !pom.xml
 !/src/
 !/src/**
+
+# Ignore all media files but the defaults
+/src/main/resources/files/**
+!/src/main/resources/files/*default*

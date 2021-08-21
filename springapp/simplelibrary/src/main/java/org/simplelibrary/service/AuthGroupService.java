@@ -21,8 +21,8 @@ public class AuthGroupService {
     authGroupRepository.save(authGroup);
   }
 
-  public AuthGroup getAuthGroupByName(String name) {
-    return authGroupRepository.getAuthGroupByName(name);
+  public AuthGroup getByName(String name) {
+    return authGroupRepository.getByName(name);
   }
 
 }
