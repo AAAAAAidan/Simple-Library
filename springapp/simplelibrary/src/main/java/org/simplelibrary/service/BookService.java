@@ -6,7 +6,7 @@ import org.simplelibrary.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,8 +19,28 @@ public class BookService {
     this.bookRepository = bookRepository;
   }
 
-  public Optional<Book> findBookById(String id) {
-    return bookRepository.findById(id);
+  public void save(Book book) {
+    bookRepository.save(book);
+  }
+
+  public void saveAll(List<Book> books) {
+    bookRepository.saveAll(books);
+  }
+
+  public boolean existsByName(String name) {
+    return bookRepository.existsByName(name);
+  }
+
+  public Book getById(Integer id) {
+    return bookRepository.getById(id);
+  }
+
+  public Book getByName(String name) {
+    return bookRepository.getByName(name);
+  }
+
+  public List<Book> findAll() {
+    return bookRepository.findAll();
   }
 
 }

@@ -51,17 +51,30 @@ public class FileService {
         init();
       }
 
-      Files.copy(file.getInputStream(), root.resolve(name), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(file.getInputStream(),
+                 root.resolve(name),
+                 StandardCopyOption.REPLACE_EXISTING);
     }
     catch (Exception e) {
       throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
     }
   }
 
+  public boolean exists(String filename) {
+    try {
+      load(filename);
+      return true;
+    }
+    catch (Exception e) {
+      log.trace(e.toString());
+      return false;
+    }
+  }
+
   public Resource load(String filename) {
     try {
       Path file = Paths.get(uploadPath)
-          .resolve(filename);
+                       .resolve(filename);
       Resource resource = new UrlResource(file.toUri());
 
       if (resource.exists() || resource.isReadable()) {
@@ -78,7 +91,7 @@ public class FileService {
 
   public void deleteAll() {
     FileSystemUtils.deleteRecursively(Paths.get(uploadPath)
-        .toFile());
+                   .toFile());
   }
 
   public List<Path> loadAll() {
@@ -87,8 +100,8 @@ public class FileService {
 
       if (Files.exists(root)) {
         return Files.walk(root, 1)
-            .filter(path -> !path.equals(root))
-            .collect(Collectors.toList());
+                    .filter(path -> !path.equals(root))
+                    .collect(Collectors.toList());
       }
 
       return Collections.emptyList();

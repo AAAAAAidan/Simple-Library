@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuthGroupRepository extends JpaRepository<AuthGroup, Integer> {
 
+  public AuthGroup getByName(String name);
+
 }

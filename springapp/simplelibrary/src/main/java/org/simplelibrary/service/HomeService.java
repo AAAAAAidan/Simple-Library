@@ -25,21 +25,15 @@ public class HomeService {
 
     switch(filter) {
       case "authors":
-      case "publishers":
       case "subjects":
         termsFilter = "category_name contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "category_name";
-        }
-        else {
-          sortColumn = "category_add_date";
-        }
+        sortColumn = "category_name";
 
         String categoryType = filter.substring(0, filter.length() - 1);
         String[] filters = new String[2];
         filters[0] = termsFilter;
         filters[1] = "category_type contains " + categoryType;
+
         List<Category> categories = categoryTable.filterBy(filters)
                                                  .sortBy(sortColumn)
                                                  .inOrder(order)
@@ -48,13 +42,7 @@ public class HomeService {
 
       case "lists":
         termsFilter = "catalog_name contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "catalog_name";
-        }
-        else {
-          sortColumn = "catalog_last_update";
-        }
+        sortColumn = "catalog_name";
 
         List<Catalog> lists = catalogTable.filterBy(termsFilter)
                                           .sortBy(sortColumn)
@@ -63,14 +51,8 @@ public class HomeService {
         return lists;
 
       default:
-        termsFilter = "book_title contains " + terms;
-
-        if (sort.equals("title")) {
-          sortColumn = "book_title";
-        }
-        else {
-          sortColumn = "book_publish_date";
-        }
+        termsFilter = "book_name contains " + terms;
+        sortColumn = "book_name";
 
         List<Book> books = bookTable.filterBy(termsFilter)
                                     .sortBy(sortColumn)
@@ -80,9 +62,19 @@ public class HomeService {
     }
   }
 
+  public Integer getLastPage(int resultCount) {
+    int lastPage = resultCount / 10;
+
+    if (resultCount % 10 != 0) {
+      lastPage++;
+    }
+
+    return lastPage;
+  }
+
   public List<String> getSearchResultPages(int resultCount, int currentPage) {
     List<String> resultPages = new ArrayList<>();
-    int lastPage = resultCount / 10;
+    int lastPage = getLastPage(resultCount);
     int pageCounter = 0;
 
     while (++pageCounter <= lastPage) {
@@ -106,19 +98,28 @@ public class HomeService {
   }
 
   public List<?> limitSearchResultsByPage(List<?> results, int page) {
-    int fromIndex = page * 10 - 10;
-    int toIndex = fromIndex + 10;
 
-    if (fromIndex > results.size() - 1) {
-      fromIndex = results.size() - 1;
+    if (results.size() == 0) {
+      return results;
     }
 
-    if (toIndex > results.size() - 1) {
-      toIndex = results.size() - 1;
+    int fromIndex = page * 10 - 10;
+
+    if (fromIndex < 0) {
+      fromIndex = 0;
+    }
+
+    if (fromIndex > results.size()) {
+      fromIndex = results.size();
+    }
+
+    int toIndex = fromIndex + 10;
+
+    if (toIndex > results.size()) {
+      toIndex = results.size();
     }
 
     return results.subList(fromIndex, toIndex);
   }
-
 
 }

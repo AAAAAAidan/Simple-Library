@@ -5,7 +5,6 @@ import org.simplelibrary.model.Account;
 import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.repository.AccountRepository;
 import org.simplelibrary.security.AccountDetails;
-import org.simplelibrary.util.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Service
@@ -34,22 +34,24 @@ public class AccountService {
   private FileService fileService;
 
   @Autowired
-  public AccountService(AccountRepository accountRepository, AuthGroupService authGroupService, FileService fileService) {
+  public AccountService(AccountRepository accountRepository,
+                        AuthGroupService authGroupService,
+                        FileService fileService) {
     this.accountRepository = accountRepository;
     this.authGroupService = authGroupService;
     this.fileService = fileService;
   }
 
-  public Account getAccountByEmail(String email) {
-    return accountRepository.getAccountByEmail(email);
+  public Account getByEmail(String email) {
+    return accountRepository.getByEmail(email);
   }
 
-  public Integer getLoggedInAccountId() {
+  public Integer getLoggedInId() {
     AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return accountDetails.getId();
   }
 
-  public void addAccount(String email, String password) {
+  public void signUp(String email, String password) {
     Account account = new Account();
     account.setEmail(email);
 
@@ -58,27 +60,36 @@ public class AccountService {
     account.setPassword(encodedPassword);
 
     List<AuthGroup> authGroups = new ArrayList<>();
-    Optional<AuthGroup> authGroup = authGroupService.findAuthGroupById(1);
+    AuthGroup authGroup = authGroupService.getByName("ROLE_USER");
 
-    if (authGroup.isPresent()) {
-      authGroups.add(authGroup.get());
+    if (authGroup != null) {
+      authGroups.add(authGroup);
       account.setAuthGroups(authGroups);
     }
 
     accountRepository.save(account);
   }
 
+  public void logIn(HttpServletRequest request, String email, String password) {
+    try {
+      request.login(email, password);
+    }
+    catch (ServletException e) {
+      e.printStackTrace();
+    }
+  }
+
   public void uploadProfilePicture(MultipartFile file) {
-    String newFileName = "account-" + getLoggedInAccountId() + ".png";
+    String newFileName = "account-" + getLoggedInId() + ".png";
     fileService.saveAs(file, newFileName);
   }
 
   public String getProfilePicturePath() {
-    String fileName = "account-" + getLoggedInAccountId() + ".png";
+    String fileName = "account-" + getLoggedInId() + ".png";
     Path filePath = Paths.get(uploadPath + File.separator + fileName);
 
     if (!Files.exists(filePath)) {
-      fileName = fileName.replace(String.valueOf(getLoggedInAccountId()), "default");
+      fileName = fileName.replace(String.valueOf(getLoggedInId()), "default");
     }
 
     return "files" + File.separator + fileName;

@@ -6,8 +6,6 @@ import org.simplelibrary.repository.AuthGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 public class AuthGroupService {
@@ -19,7 +17,12 @@ public class AuthGroupService {
     this.authGroupRepository = authGroupRepository;
   }
 
-  public Optional<AuthGroup> findAuthGroupById(int id) {
-    return authGroupRepository.findById(id);
+  public void save(AuthGroup authGroup) {
+    authGroupRepository.save(authGroup);
   }
+
+  public AuthGroup getByName(String name) {
+    return authGroupRepository.getByName(name);
+  }
+
 }

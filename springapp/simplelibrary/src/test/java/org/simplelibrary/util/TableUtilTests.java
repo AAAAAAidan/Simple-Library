@@ -15,19 +15,16 @@ class TableUtilTests {
   @Test
   @Order(1)
   void testSelect() {
-    List<Book> books = table.filterBy("bookId=Wads4igrTJAC").sortBy("bookId").inOrder("dEsC").limitTo(1)
-        .select();
+    List<Book> books = table.filterBy("bookId=1").sortBy("bookId").inOrder("dEsC").limitTo(1).select();
     Book book = books.size() == 0 ? null : books.get(0);
-      System.out.println(book.getId());
+    System.out.println(book.getId());
     assertNotNull(book.getId());
   }
 
   @Test
   @Order(2)
   void testInsert() {
-    Book book = new Book();
-    book.setId("new id");
-    book.setTitle("new title");
+    Book book = new Book("new title");
     int insertCount = table.insert(book);
     assertTrue(insertCount > 0);
   }
@@ -35,16 +32,14 @@ class TableUtilTests {
   @Test
   @Order(3)
   void testUpdate() {
-    int updateCount = table.filterBy("bookId=Wads4igrTJAC").sortBy("bookId").inOrder("dEsC").limitTo(1)
-        .update("bookIdentifiers", "CHANGEME!!!!");
+    int updateCount = table.filterBy("bookId=1").sortBy("bookId").inOrder("dEsC").limitTo(1).update("bookIdentifiers", "CHANGEME!!!!");
     assertTrue(updateCount > 0);
   }
 
   @Test
   @Order(4)
   void testDelete() {
-    int deleteCount = table.filterBy("bookId=Wads4igrTJAC").sortBy("bookId").inOrder("dEsC").limitTo(1)
-        .delete();
+    int deleteCount = table.filterBy("bookId=1").sortBy("bookId").inOrder("dEsC").limitTo(1).delete();
     assertTrue(deleteCount > 0);
   }
 

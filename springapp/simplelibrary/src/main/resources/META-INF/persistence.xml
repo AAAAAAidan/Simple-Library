@@ -4,11 +4,8 @@
     <class>org.simplelibrary.model.Account</class>
     <class>org.simplelibrary.model.AuthGroup</class>
     <class>org.simplelibrary.model.Book</class>
-    <class>org.simplelibrary.model.Borrow</class>
-    <class>org.simplelibrary.model.Card</class>
     <class>org.simplelibrary.model.Catalog</class>
     <class>org.simplelibrary.model.Category</class>
-    <class>org.simplelibrary.model.Isbn</class>
     <class>org.simplelibrary.model.Setting</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

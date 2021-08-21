@@ -1,12 +1,8 @@
 package org.simplelibrary.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.simplelibrary.model.FileData;
+import org.simplelibrary.model.ResponseMessage;
+import org.simplelibrary.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -24,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import org.simplelibrary.model.ResponseMessage;
-import org.simplelibrary.service.FileService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
@@ -42,25 +41,28 @@ public class FileController {
 
   @PostMapping
   public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+    String fileName = file.getOriginalFilename();
+
     try {
       fileService.save(file);
       return ResponseEntity.status(HttpStatus.OK)
-          .body(new ResponseMessage("Uploaded the file successfully: " + file.getOriginalFilename()));
+          .body(new ResponseMessage("Uploaded file successfully: " + fileName));
     }
     catch (Exception e) {
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-          .body(new ResponseMessage("Could not upload the file: " + file.getOriginalFilename() + "!"));
+          .body(new ResponseMessage("Could not upload file: " + fileName + "!"));
     }
   }
 
   @GetMapping
   public ResponseEntity<List<FileData>> getListFiles() {
     List<FileData> fileData = fileService.loadAll()
-        .stream()
-        .map(this::pathToFile)
-        .collect(Collectors.toList());
+                                         .stream()
+                                         .map(this::pathToFile)
+                                         .collect(Collectors.toList());
 
-    return ResponseEntity.status(HttpStatus.OK).body(fileData);
+    return ResponseEntity.status(HttpStatus.OK)
+                         .body(fileData);
   }
 
   @DeleteMapping
@@ -73,7 +75,8 @@ public class FileController {
     String filename = path.getFileName().toString();
     fileData.setName(filename);
     fileData.setUrl(MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile", filename)
-        .build().toString());
+                                           .build()
+                                           .toString());
 
     try {
       fileData.setSize(Files.size(path));
@@ -92,7 +95,9 @@ public class FileController {
     Resource file = fileService.load(filename);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.IMAGE_PNG);
-    return ResponseEntity.ok().headers(headers).body(file);
+    return ResponseEntity.ok()
+                         .headers(headers)
+                         .body(file);
   }
 
 }

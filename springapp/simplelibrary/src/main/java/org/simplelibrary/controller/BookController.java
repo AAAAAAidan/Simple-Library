@@ -1,7 +1,5 @@
 package org.simplelibrary.controller;
 
-import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Book;
 import org.simplelibrary.service.BookService;
@@ -29,11 +27,12 @@ public class BookController extends TemplateView {
   }
 
   @GetMapping("/books/{id}")
-  public String book(Model model, @PathVariable String id) {
-    Optional<Book> book = bookService.findBookById(id);
+  public String book(Model model, @PathVariable Integer id) {
+    Book book = bookService.getById(id);
 
-    if (book.isPresent()) {
-      model.addAttribute("book", book.get());
+    if (book != null) {
+      log.info(book.getName());
+      model.addAttribute("book", book);
       return loadView(model, "books/book");
     }
     else {
