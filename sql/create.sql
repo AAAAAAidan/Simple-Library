@@ -1,5 +1,5 @@
 # Database and table create statements
-# Note that this file is deprecated
+# Note that this file was already deprecated
 
 DROP DATABASE IF EXISTS `simplelibrary`;
 

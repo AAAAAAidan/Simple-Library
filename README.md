@@ -1,7 +1,3 @@
-# Simple Library
+# Deprecated Files from Simple Library
 
-A digital book library web application for my full stack Java development case study. The book selection will be restricted to those in the public domain. Work in progress.
-
-### External Links
-
-* [Software Requirements Specification](https://docs.google.com/document/d/1_wm5c655yeb50E9_qUmYXXQPPT1rFpTIRPdNIKOd3Qg/edit)
+These files were initially planned to be used with Simple Library and remain here only for archival purposes. Originally, data would have been fetched from the Google Books API and inserted manually with generated SQL files. However, the files became obsolete after switching to usage of the Gutendex API to initialize the database directly from the Runner.java class.

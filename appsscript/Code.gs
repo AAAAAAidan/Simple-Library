@@ -18,7 +18,7 @@ function fetchBooks() {
 
   do {
 
-    var parameters = "?q=a&country=US&download=epub&filter=full&maxResults=40&orderBy=newest&printType=books&projection=full&startIndex=" + startIndex;
+    var parameters = "?q=a&country=US&download=epub&filter=free-ebooks&maxResults=40&orderBy=newest&printType=books&projection=full&startIndex=" + startIndex;
     var url = "https://www.googleapis.com/books/v1/volumes" + parameters;
     var responseText = UrlFetchApp.fetch(url).getContentText();
     var responseJson = JSON.parse(responseText);
@@ -29,6 +29,13 @@ function fetchBooks() {
     for (i in responseJson.items) {
 
       var item = responseJson.items[i];
+      var publicDomain = item.accessInfo.publicDomain;
+
+      if (!publicDomain) {
+        Logger.log("Skipping " + bookTitle + " (not public domain)");
+        continue;
+      }
+
       var bookId = item.id;
       var bookTitle = item.volumeInfo.title;
       var subtitle = item.volumeInfo.subtitle;
@@ -41,7 +48,7 @@ function fetchBooks() {
       var index = ids.findIndex(ids => {return ids[0] == bookId});
 
       if (index != -1) {
-        Logger.log("Skipping " + bookTitle);
+        Logger.log("Skipping " + bookTitle + " (already in sheet)");
         continue;
       }
 
@@ -172,7 +179,7 @@ function fetchBooks() {
       additionCount++;
     }
 
-    startIndex += 10;
+    startIndex += 30;
     var currentTime = new Date();
 
   } while (responseJson.items && currentTime.getTime() - startTime.getTime() < 320000);
