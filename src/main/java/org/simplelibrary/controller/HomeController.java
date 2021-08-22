@@ -29,10 +29,11 @@ public class HomeController extends TemplateView {
 
   @GetMapping({"/", "/index"})
   public String getIndex(Model model) {
+    // TODO - Get five random books and five random authors
     return loadView(model, "home/index");
   }
 
-  // Sidebar links
+  // Footer links
 
   @GetMapping("/search")
   public String getSearch(Model model,

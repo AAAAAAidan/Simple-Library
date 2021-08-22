@@ -9,7 +9,7 @@
     <script th:src="@{~/scripts/script.js}"></script>
   </head>
   <body>
-    <header class="padded-container">
+    <header class="outer-content padded-container">
       <h1 id="title"><a th:href="@{~/index}">Simple Library</a></h1>
       <ul>
         <div sec:authorize="isAnonymous()">
@@ -23,17 +23,14 @@
       </ul>
     </header>
     <main class="padded-container">
-      <nav class="padded-container">
-        <ul class="element-list">
-          <li><a th:href="@{~/search}">Search</a></li>
-          <li><a th:href="@{~/about}">About</a></li>
-          <li><a th:href="@{~/help}">Help</a></li>
-        </ul>
-      </nav>
-      <div class="padded-container" th:insert="${content}"></div>
+      <div id="main-content" th:insert="${content}"></div>
     </main>
-    <footer class="padded-container">
-      <a target="_blank" href="https://github.com/AAAAAAidan/">&copy;Aidan Zamboni</a>
+    <footer class="outer-content padded-container">
+      <a th:href="@{~/search}">Search</a>
+      <span>&bull;</span>
+      <a th:href="@{~/about}">About</a>
+      <span>&bull;</span>
+      <a th:href="@{~/help}">Help</a>
     </footer>
   </body>
 </html>

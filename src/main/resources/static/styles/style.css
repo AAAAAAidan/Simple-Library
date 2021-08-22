@@ -1,20 +1,22 @@
-
 /*
 Color Palette
 Head/foot bg:   #9bb0d1
 Main bg:        #F8F8F8
 Head/foot text: #ffffff
 Main text:      #444444
-Link normal:    #0645AD
-Link hover:     #0B0080
+Link normal:    #3366BB
+Link hover:     #0645AD
 Input hover:    #F0F0F0
 */
 
 /* Font by Paul D. Hunt - https://fonts.google.com/specimen/Source+Code+Pro */
+
 @font-face {
   font-family: "Source Code Pro";
   src: url('../fonts/SourceCodePro/SourceCodePro-Regular.ttf');
 }
+
+/* Element selectors */
 
 * {
   margin: 0;
@@ -36,66 +38,60 @@ header {
   grid-template-columns: 777fr 1fr;
 }
 
-header, footer {
-  background-color: #9bb0d1;
+main {
+  flex-grow: 1;
+  background-color: #F8F8F8;
+  color: #222222;
+  font-family: "Helvetica", sans-serif;
 }
 
-header, footer, nav {
-  font-family: "Verdana", serif;
+main a, main a:visited {
+  color: #3366BB;
 }
 
-header a, footer a {
-  color: #FFFFFF !important;
-}
-
-header ul, footer {
-  font-size: 16px;
+main a:hover {
+  color: #0645AD;
 }
 
 footer {
   text-align: center;
 }
 
-main {
-  flex-grow: 1;
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  background-color: #F8F8F8;
-  color: #222222;
-  font-family: "Helvetica", sans-serif;
-}
-
-a, a:visited {
-  color: #0645AD;
+a {
   text-decoration: none;
 }
 
-a:hover {
-  color: #222222 !important;
-}
-
 ul {
-  padding-left: 16px;
   list-style-type: none;
 }
 
-td {
-  padding: 4px 16px;
+th {
+  text-align: left;
 }
 
-img, video {
+th, td {
+  padding: 4px;
+}
+
+img {
   max-height: 100%;
   width: 100%;
 }
+
+/* Class selectors */
 
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.grid-3 {
+.grid-5 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .padded-container {
@@ -106,6 +102,21 @@ img, video {
   margin-bottom: 16px;
 }
 
+.outer-content {
+  background-color: #9bb0d1;
+  font-family: "Verdana", serif;
+  font-size: medium;
+}
+
+.outer-content * {
+  color: #ffffff;
+}
+
+.outer-content a:hover {
+  color: #222222;
+  text-shadow: 0 0 9px #ffffff;
+}
+
 .element-list * {
   display: block;
 }
@@ -114,8 +125,25 @@ img, video {
   margin-bottom: 16px;
 }
 
+.button-style {
+  border: 2px solid #444444;
+  border-radius: 2px;
+  background: none;
+  padding: 4px;
+  font-size: medium;
+}
+
+.button-style:hover, .button-dark {
+  background-color: #F0F0F0;
+}
+
 .help-text {
-  font-size: 0.8em;
+  font-size: small;
+}
+
+.text-box {
+  text-align: justify;
+  width: 50%;
 }
 
 .profile-picture {
@@ -123,30 +151,14 @@ img, video {
   height: 50px;
 }
 
-.button-style {
-  border: 2px solid #444444;
-  border-radius: 2px;
-  background: none;
-  padding: 4px;
-  font-size: 1em;
-}
-
-.button-style:hover, .button-dark {
-  background-color: #F0F0F0;
-}
+/* ID selectors */
 
 #title {
   margin: 0;
   font-family: "Source Code Pro", monospace;
+  font-size: xx-large;
 }
 
-#search-results {
-  width: 100%;
-  border: 2px solid #444444;
-  border-radius: 2px;
-}
-
-#search-results th, #search-results td {
-  padding: 4px;
-  text-align: left;
+#main-content {
+  padding: 16px 62px;
 }
