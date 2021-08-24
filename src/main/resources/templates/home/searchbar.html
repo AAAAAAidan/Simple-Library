@@ -5,14 +5,9 @@
     <option value="books">Books</option>
     <option value="authors" th:selected="${filter=='authors'}">Authors</option>
     <option value="subjects" th:selected="${filter=='subjects'}">Subjects</option>
-    <option value="lists" th:selected="${filter=='lists'}">Lists</option>
-  </select>
-  <select class="button-style" th:name="sort">
-    <!-- TODO - Add more sorting options, dork! -->
-    <option value="name">By name</option>
   </select>
   <select class="button-style" th:name="order">
-    <option value="asc">Ascending</option>
-    <option value="desc" th:selected="${order=='desc'}">Descending</option>
+    <option value="asc">A-Z</option>
+    <option value="desc" th:selected="${order=='desc'}">Z-A</option>
   </select>
 </form>

@@ -3,11 +3,10 @@ package org.simplelibrary;
 import lombok.extern.slf4j.Slf4j;
 
 import org.simplelibrary.model.AuthGroup;
+import org.simplelibrary.model.Author;
 import org.simplelibrary.model.Book;
-import org.simplelibrary.model.Category;
-import org.simplelibrary.service.AuthGroupService;
-import org.simplelibrary.service.BookService;
-import org.simplelibrary.service.CategoryService;
+import org.simplelibrary.model.Subject;
+import org.simplelibrary.service.*;
 import org.simplelibrary.util.UrlReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +14,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.simplelibrary.service.FileService;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -26,17 +24,20 @@ import javax.json.JsonObject;
 public class Runner implements CommandLineRunner {
 
   private final AuthGroupService authGroupService;
-  private final CategoryService categoryService;
+  private final AuthorService authorService;
+  private final SubjectService subjectService;
   private final BookService bookService;
   private final FileService fileService;
 
   @Autowired
   public Runner(AuthGroupService authGroupService,
-                CategoryService categoryService,
+                AuthorService authorService,
+                SubjectService subjectService,
                 BookService bookService,
                 FileService fileService) {
     this.authGroupService = authGroupService;
-    this.categoryService = categoryService;
+    this.authorService = authorService;
+    this.subjectService = subjectService;
     this.bookService = bookService;
     this.fileService = fileService;
   }
@@ -86,18 +87,18 @@ public class Runner implements CommandLineRunner {
         JsonArray authors = result.getJsonArray("authors");
 
         for (int authorIndex = 0; authorIndex < authors.size(); authorIndex++) {
-          JsonObject author = authors.getJsonObject(authorIndex);
-          String name = author.getString("name");
-          Category category;
+          JsonObject authorObject = authors.getJsonObject(authorIndex);
+          String name = authorObject.getString("name");
+          Author author;
 
-          if (categoryService.existsByName(name)) {
-            category = categoryService.getByName(name);
+          if (authorService.existsByName(name)) {
+            author = authorService.getByName(name);
           }
           else {
-            category = new Category(name, "Author");
+            author = new Author(name);
           }
 
-          categoryService.mapToBook(category, book);
+          authorService.mapToBook(author, book);
         }
 
         JsonArray subjects = result.getJsonArray("subjects");
@@ -105,16 +106,16 @@ public class Runner implements CommandLineRunner {
         for (int subjectIndex = 0; subjectIndex < subjects.size(); subjectIndex++) {
           String name = subjects.getString(subjectIndex);
           name = name.replaceAll("\\(.*", "").replaceAll("--.*", "").trim();
-          Category category;
+          Subject subject;
 
-          if (categoryService.existsByName(name)) {
-            category = categoryService.getByName(name);
+          if (subjectService.existsByName(name)) {
+            subject = subjectService.getByName(name);
           }
           else {
-            category = new Category(name, "Subject");
+            subject = new Subject(name);
           }
 
-          categoryService.mapToBook(category, book);
+          subjectService.mapToBook(subject, book);
         }
 
         JsonObject formats = result.getJsonObject("formats");

@@ -1,13 +1,15 @@
 package org.simplelibrary.repository;
 
-import org.simplelibrary.model.Category;
+import org.simplelibrary.model.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+import java.util.List;
 
-  public Category getByName(String name);
+@Repository
+public interface AuthorRepository extends JpaRepository<Author, Integer> {
+
+  public Author getByName(String name);
   public boolean existsByName(String name);
 
 }

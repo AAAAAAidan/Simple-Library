@@ -42,8 +42,8 @@ public class Setting implements Serializable {
   private Timestamp addDate;
 
   @Column(name="setting_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-one association to Account
   @ManyToOne

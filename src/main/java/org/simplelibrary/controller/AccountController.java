@@ -32,14 +32,20 @@ public class AccountController extends TemplateView {
     return loadView(model, "accounts/account");
   }
 
+  @GetMapping("/account/profilepicture")
+  public String getProfilePicture() {
+    // TODO - I should fix this
+    return "files/account-default.png";
+  }
+
   @PostMapping("/account/profilepicture")
   public String postProfilePicture(RedirectAttributes redirectAttributes,
-                                   @RequestParam("file") MultipartFile file) {
+                                   @RequestParam MultipartFile file) {
 
-    String fileName = file.getOriginalFilename();
+    String filename = file.getOriginalFilename();
 
-    if (Pattern.matches(".*.(png|jpg|jpeg)", fileName)) {
-      accountService.uploadProfilePicture(file);
+    if (Pattern.matches(".*.(png|jpg|jpeg)", filename)) {
+      accountService.saveProfilePicture(file);
       redirectAttributes.addFlashAttribute("message", "Successfully uploaded " + file.getOriginalFilename());
     }
     else {
@@ -57,9 +63,9 @@ public class AccountController extends TemplateView {
   @PostMapping("/signup")
   public String postSignup(Model model,
                            HttpServletRequest request,
-                           @RequestParam("email") String email,
-                           @RequestParam("password") String password,
-                           @RequestParam("passwordConfirm") String passwordConfirm) {
+                           @RequestParam String email,
+                           @RequestParam String password,
+                           @RequestParam String passwordConfirm) {
 
     if (password.equals(passwordConfirm)) {
       accountService.signUp(email, password);

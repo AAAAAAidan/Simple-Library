@@ -26,6 +26,12 @@ public class Book implements Serializable {
   @Column(name="book_id", length=12, nullable=false)
   private Integer id;
 
+  @Transient
+  private String cover;
+
+  @Transient
+  private String reader;
+
   @NonNull
   @Column(name="book_name", unique=true, length=320, nullable=false)
   private String name;
@@ -51,15 +57,19 @@ public class Book implements Serializable {
   private Timestamp addDate;
 
   @Column(name="book_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-many association to Catalog
   @ManyToMany(mappedBy="books")
   private List<Catalog> catalogs;
 
-  // Bi-directional many-to-many association to Category
+  // Bi-directional many-to-many association to Author
   @ManyToMany(mappedBy="books")
-  private List<Category> categories;
+  private List<Author> authors;
+
+  // Bi-directional many-to-many association to Subject
+  @ManyToMany(mappedBy="books")
+  private List<Subject> subjects;
 
 }

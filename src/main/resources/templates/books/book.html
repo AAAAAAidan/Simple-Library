@@ -1,2 +1,49 @@
 <h2 th:text="${book.name}"></h2>
-<!-- TODO - Add stuff haha -->
+<div class="margin-bottom">
+  <!-- TODO - Fix this silly image src -->
+  <!-- <img th:src="${book.cover}" th:alt="${book.name}"/> -->
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <form th:action="@{~/books/read}" method="post">
+            <input type="hidden" name="id" th:value="${book.id}">
+            <input class="button-style" type="submit" value="Read">
+          </form>
+        </td>
+        <td>
+          <form th:action="@{~/books/download}" method="post">
+            <input type="hidden" name="id" th:value="${book.id}">
+            <input class="button-style" type="submit" value="Download">
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="grid-2">
+  <div>
+    <b>Authors</b>
+    <table>
+      <tbody>
+        <tr th:each="author:${book.authors}">
+          <td class="button-style">
+            <a th:href="@{|/authors/${author.id}|}" th:text="${author.name}"></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <b>Subjects</b>
+    <table>
+      <tbody>
+        <tr th:each="subject:${book.subjects}">
+          <td class="button-style">
+            <a th:href="@{|/subjects/${subject.id}|}" th:text="${subject.name}"></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

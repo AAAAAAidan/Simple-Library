@@ -40,17 +40,17 @@ public class FileController {
   }
 
   @PostMapping
-  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-    String fileName = file.getOriginalFilename();
+  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam MultipartFile file) {
+    String filename = file.getOriginalFilename();
 
     try {
       fileService.save(file);
       return ResponseEntity.status(HttpStatus.OK)
-          .body(new ResponseMessage("Uploaded file successfully: " + fileName));
+          .body(new ResponseMessage("Uploaded file successfully: " + filename));
     }
     catch (Exception e) {
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-          .body(new ResponseMessage("Could not upload file: " + fileName + "!"));
+          .body(new ResponseMessage("Could not upload file: " + filename + "!"));
     }
   }
 
@@ -61,8 +61,7 @@ public class FileController {
                                          .map(this::pathToFile)
                                          .collect(Collectors.toList());
 
-    return ResponseEntity.status(HttpStatus.OK)
-                         .body(fileData);
+    return ResponseEntity.status(HttpStatus.OK).body(fileData);
   }
 
   @DeleteMapping
@@ -75,8 +74,7 @@ public class FileController {
     String filename = path.getFileName().toString();
     fileData.setName(filename);
     fileData.setUrl(MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile", filename)
-                                           .build()
-                                           .toString());
+                                           .build().toString());
 
     try {
       fileData.setSize(Files.size(path));
@@ -92,12 +90,11 @@ public class FileController {
   @GetMapping("{filename:.+}")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    // TODO - Make this smarter!!!!!!
     Resource file = fileService.load(filename);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.IMAGE_PNG);
-    return ResponseEntity.ok()
-                         .headers(headers)
-                         .body(file);
+    return ResponseEntity.ok().headers(headers).body(file);
   }
 
 }

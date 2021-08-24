@@ -4,21 +4,16 @@
 <table class="full-width margin-bottom">
   <thead>
     <tr class="grid-5">
-      <td><i>Title</i> by Author</td>
-      <td><i>Title</i> by Author</td>
-      <td><i>Title</i> by Author</td>
-      <td><i>Title</i> by Author</td>
-      <td><i>Title</i> by Author</td>
+      <td th:each="book:${books}">
+        <i><a th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a></i>
+      </td>
     </tr>
   </thead>
   <tbody>
     <tr class="grid-5">
-      <!-- TODO - Add for each -->
-      <td><img alt="Book cover of Title by Author" /></td>
-      <td><img alt="Book cover of Title by Author" /></td>
-      <td><img alt="Book cover of Title by Author" /></td>
-      <td><img alt="Book cover of Title by Author" /></td>
-      <td><img alt="Book cover of Title by Author" /></td>
+      <td th:each="book:${books}">
+        <a th:href="@{|/books/${book.id}|}"><img th:src="${book.cover}" th:alt="${book.name}"/></a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -26,12 +21,9 @@
 <table class="full-width">
   <tbody>
     <tr class="grid-5">
-      <!-- TODO - Add for each -->
-      <td>Author</td>
-      <td>Author</td>
-      <td>Author</td>
-      <td>Author</td>
-      <td>Author</td>
+      <td th:each="author:${authors}">
+        <a th:href="@{|/authors/${author.id}|}" th:text="${author.name}"></a>
+      </td>
     </tr>
   </tbody>
 </table>

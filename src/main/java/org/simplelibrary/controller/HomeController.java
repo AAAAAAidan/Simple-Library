@@ -1,6 +1,12 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Author;
+import org.simplelibrary.model.Book;
+import org.simplelibrary.model.Subject;
+import org.simplelibrary.service.AuthorService;
+import org.simplelibrary.service.BookService;
+import org.simplelibrary.service.SubjectService;
 import org.simplelibrary.service.HomeService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,18 +25,44 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class HomeController extends TemplateView {
 
+  private AuthorService authorService;
+  private BookService bookService;
   private HomeService homeService;
+  private SubjectService subjectService;
 
   @Autowired
-  public HomeController(HomeService homeService) {
+  public HomeController(AuthorService authorService,
+                        BookService bookService,
+                        HomeService homeService,
+                        SubjectService subjectService) {
+    this.authorService = authorService;
+    this.bookService = bookService;
     this.homeService = homeService;
+    this.subjectService = subjectService;
   }
 
   // Index page
 
   @GetMapping({"/", "/index"})
   public String getIndex(Model model) {
-    // TODO - Get five random books and five random authors
+    List<Book> books = new ArrayList<>();
+    List<Author> authors = new ArrayList<>();
+    List<Subject> subjects = new ArrayList<>();
+
+    for (int i = 0; i < 5; i++) {
+      Book book = bookService.getByRandom();
+      book.setCover(bookService.getCoverPath(book.getId()));
+      books.add(book);
+    }
+
+    for (int i = 0; i < 25; i++) {
+      authors.add(authorService.getByRandom());
+      subjects.add(subjectService.getByRandom());
+    }
+
+    model.addAttribute("authors", authors);
+    model.addAttribute("books", books);
+    model.addAttribute("subjects", subjects);
     return loadView(model, "home/index");
   }
 
@@ -38,18 +71,13 @@ public class HomeController extends TemplateView {
   @GetMapping("/search")
   public String getSearch(Model model,
                           HttpServletRequest request,
-                          @RequestParam(value="terms", required=false) String terms,
-                          @RequestParam(value="filter", required=false) String filter,
-                          @RequestParam(value="sort", required=false) String sort,
-                          @RequestParam(value="order", required=false) String order,
-                          @RequestParam(value="page", required=false) Integer page) {
+                          @RequestParam(required=false) String terms,
+                          @RequestParam(required=false) String filter,
+                          @RequestParam(required=false) String order,
+                          @RequestParam(required=false) Integer page) {
 
     if (filter == null) {
       filter = "books";
-    }
-
-    if (sort == null) {
-      sort = "name";
     }
 
     if (terms == null) {
@@ -64,7 +92,8 @@ public class HomeController extends TemplateView {
       page = 1;
     }
 
-    List<?> results = homeService.getSearchResults(terms, filter, sort, order);
+    List<?> results = homeService.getSearchResults(terms, filter, order);
+    log.info(String.valueOf(results.size()));
     int resultCount = results.size();
     int lastPage = homeService.getLastPage(resultCount);
 
@@ -95,26 +124,22 @@ public class HomeController extends TemplateView {
 
     model.addAttribute("terms", terms);
     model.addAttribute("filter", filter);
-    model.addAttribute("sort", sort);
     model.addAttribute("order", order);
 
     return loadView(model, "home/search");
   }
 
   @PostMapping("/search")
-  public String postSearch(Model model,
-                           RedirectAttributes redirectAttributes,
-                           @RequestParam("terms") String terms,
-                           @RequestParam("filter") String filter,
-                           @RequestParam("sort") String sort,
-                           @RequestParam("order") String order) {
+  public String postSearch(RedirectAttributes redirectAttributes,
+                           @RequestParam String terms,
+                           @RequestParam String filter,
+                           @RequestParam String order) {
 
     terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
-    sort = sort.trim().toLowerCase();
     order = order.trim().toLowerCase();
 
-    String entry = String.format("Search %s for '%s' ordered by %s %s", filter,  terms, sort, order);
+    String entry = String.format("Search %s for '%s' ordered alphabetically %s", filter,  terms, order);
     log.info(entry);
 
     if (!terms.equals("")) {
@@ -123,10 +148,6 @@ public class HomeController extends TemplateView {
 
     if (!filter.equals("books")) {
       redirectAttributes.addAttribute("filter", filter);
-    }
-
-    if (!sort.equals("name")) {
-      redirectAttributes.addAttribute("sort", sort);
     }
 
     if (!order.equals("asc")) {

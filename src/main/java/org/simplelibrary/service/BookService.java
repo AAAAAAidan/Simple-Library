@@ -7,16 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
 public class BookService {
 
   private BookRepository bookRepository;
+  private FileService fileService;
 
   @Autowired
-  public BookService(BookRepository bookRepository) {
+  public BookService(BookRepository bookRepository,
+                     FileService fileService) {
     this.bookRepository = bookRepository;
+    this.fileService = fileService;
   }
 
   public void save(Book book) {
@@ -39,8 +43,34 @@ public class BookService {
     return bookRepository.getByName(name);
   }
 
+  public Book getByRandom() {
+    List<Book> books = bookRepository.findAll();
+    Random random = new Random();
+    return books.get(random.nextInt(books.size()));
+  }
+
   public List<Book> findAll() {
     return bookRepository.findAll();
+  }
+
+  public String getCoverPath(Integer id) {
+    String filename = "cover-" + id + ".png";
+    return fileService.getSrc(filename);
+  }
+
+  public String getReaderPath(Integer id) {
+    String filename = "reader-" + id + ".epub";
+    return fileService.getSrc(filename);
+  }
+
+  public String getReaderName(Integer id) {
+    String filename = "reader-" + id + ".epub";
+
+    if (!fileService.exists(filename)) {
+      filename = filename.replaceAll("-.*\\.", "-default.");
+    }
+
+    return filename;
   }
 
 }
