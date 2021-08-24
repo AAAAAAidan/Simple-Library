@@ -1,11 +1,9 @@
 <h2>Search the library!</h2>
 <div th:replace="home/searchbar"></div>
 <table id="search-results" class="full-width margin-bottom">
-  <tbody>
-    <tr th:each="result:${results}">
-      <td class="button-style"><a th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a></td>
-    </tr>
-  </tbody>
+  <tr th:each="result:${results}">
+    <td class="button-style"><a th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a></td>
+  </tr>
 </table>
 <div class="grid-2">
   <div style="text-align:left">

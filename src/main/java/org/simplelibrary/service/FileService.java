@@ -56,14 +56,6 @@ public class FileService {
     }
   }
 
-  public String getSrc(String filename) {
-    if (!exists(filename)) {
-      filename = filename.replaceAll("-.*\\.", "-default.");
-    }
-
-    return "files" + File.separator + filename;
-  }
-
   public String getDirectoryPath() {
     return getDirectoryPath(ROOT);
   }

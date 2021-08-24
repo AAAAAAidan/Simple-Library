@@ -1,11 +1,9 @@
 <h2 th:text="${author.name}"></h2>
 <b>Books</b>
 <table>
-  <tbody>
-    <tr th:each="book:${author.books}">
-      <td class="button-style">
-        <a th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a>
-      </td>
-    </tr>
-  </tbody>
+  <tr th:each="book:${author.books}">
+    <td class="button-style">
+      <a th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a>
+    </td>
+  </tr>
 </table>

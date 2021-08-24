@@ -53,24 +53,4 @@ public class BookService {
     return bookRepository.findAll();
   }
 
-  public String getCoverPath(Integer id) {
-    String filename = "cover-" + id + ".png";
-    return fileService.getSrc(filename);
-  }
-
-  public String getReaderPath(Integer id) {
-    String filename = "reader-" + id + ".epub";
-    return fileService.getSrc(filename);
-  }
-
-  public String getReaderName(Integer id) {
-    String filename = "reader-" + id + ".epub";
-
-    if (!fileService.exists(filename)) {
-      filename = filename.replaceAll("-.*\\.", "-default.");
-    }
-
-    return filename;
-  }
-
 }

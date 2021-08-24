@@ -1,49 +1,39 @@
 <h2 th:text="${book.name}"></h2>
-<div class="margin-bottom">
-  <!-- TODO - Fix this silly image src -->
-  <!-- <img th:src="${book.cover}" th:alt="${book.name}"/> -->
-  <table>
-    <tbody>
+<div class="grid-4">
+  <img th:src="@{|~/files/cover-${book.id}.png|}" th:alt="${book.name}"/>
+  <div>
+    <b>Actions</b>
+    <table>
       <tr>
-        <td>
-          <form th:action="@{~/books/read}" method="post">
-            <input type="hidden" name="id" th:value="${book.id}">
-            <input class="button-style" type="submit" value="Read">
-          </form>
-        </td>
-        <td>
-          <form th:action="@{~/books/download}" method="post">
-            <input type="hidden" name="id" th:value="${book.id}">
-            <input class="button-style" type="submit" value="Download">
-          </form>
+        <td class="button-style">
+          <a th:href="@{~/books/read(book='reader-' + ${book.id} + '.epub')}">Read</a>
         </td>
       </tr>
-    </tbody>
-  </table>
-</div>
-<div class="grid-2">
+      <tr>
+        <td class="button-style">
+          <a th:href="@{|~/files/reader-${book.id}.epub|}">Download</a>
+        </td>
+      </tr>
+    </table>
+  </div>
   <div>
     <b>Authors</b>
     <table>
-      <tbody>
-        <tr th:each="author:${book.authors}">
-          <td class="button-style">
-            <a th:href="@{|/authors/${author.id}|}" th:text="${author.name}"></a>
-          </td>
-        </tr>
-      </tbody>
+      <tr th:each="author:${book.authors}">
+        <td class="button-style">
+          <a th:href="@{|/authors/${author.id}|}" th:text="${author.name}"></a>
+        </td>
+      </tr>
     </table>
   </div>
   <div>
     <b>Subjects</b>
     <table>
-      <tbody>
-        <tr th:each="subject:${book.subjects}">
-          <td class="button-style">
-            <a th:href="@{|/subjects/${subject.id}|}" th:text="${subject.name}"></a>
-          </td>
-        </tr>
-      </tbody>
+      <tr th:each="subject:${book.subjects}">
+        <td class="button-style">
+          <a th:href="@{|/subjects/${subject.id}|}" th:text="${subject.name}"></a>
+        </td>
+      </tr>
     </table>
   </div>
 </div>

@@ -25,9 +25,6 @@ public class Account implements Serializable {
   @Column(name="account_id", nullable=false)
   private Integer id;
 
-  @Transient
-  private String profilePicture;
-
   @NonNull
   @Column(name="account_email", unique=true, length=320, nullable=false)
   private String email;

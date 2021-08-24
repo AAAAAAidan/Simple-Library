@@ -1,6 +1,8 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Account;
+import org.simplelibrary.security.AccountDetails;
 import org.simplelibrary.service.AccountService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,8 @@ public class AccountController extends TemplateView {
 
   @GetMapping("/account")
   public String getAccount(Model model) {
-    model.addAttribute("filepath", accountService.getProfilePicturePath());
+    model.addAttribute("account", accountService.getLoggedInAccount());
     return loadView(model, "accounts/account");
-  }
-
-  @GetMapping("/account/profilepicture")
-  public String getProfilePicture() {
-    // TODO - I should fix this
-    return "files/account-default.png";
   }
 
   @PostMapping("/account/profilepicture")

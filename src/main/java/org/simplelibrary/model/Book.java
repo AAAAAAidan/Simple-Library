@@ -26,25 +26,9 @@ public class Book implements Serializable {
   @Column(name="book_id", length=12, nullable=false)
   private Integer id;
 
-  @Transient
-  private String cover;
-
-  @Transient
-  private String reader;
-
   @NonNull
   @Column(name="book_name", unique=true, length=320, nullable=false)
   private String name;
-
-  @Column(name="book_description", length=3200)
-  private String description = null;
-
-  @Temporal(TemporalType.DATE)
-  @Column(name="book_publish_date")
-  private Date publishDate = null;
-
-  @Column(name="book_page_count")
-  private Integer pageCount = null;
 
   @Column(name="book_view_count")
   private Integer viewCount = 0;

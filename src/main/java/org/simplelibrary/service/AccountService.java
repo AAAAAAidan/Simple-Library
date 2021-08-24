@@ -38,9 +38,21 @@ public class AccountService {
     return accountRepository.getByEmail(email);
   }
 
-  public Integer getLoggedInId() {
+  public Account getLoggedInAccount() {
+    return accountRepository.getById(getLoggedInId());
+  }
+
+  public AccountDetails getLoggedInDetails() {
     AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return accountDetails.getId();
+    return accountDetails;
+  }
+
+  public String getLoggedInEmail() {
+    return getLoggedInDetails().getUsername();
+  }
+
+  public Integer getLoggedInId() {
+    return getLoggedInDetails().getId();
   }
 
   public void signUp(String email, String password) {
@@ -74,11 +86,6 @@ public class AccountService {
   public void saveProfilePicture(MultipartFile file) {
     String newFilename = "account-" + getLoggedInId() + ".png";
     fileService.saveAs(file, newFilename);
-  }
-
-  public String getProfilePicturePath() {
-    String filename = "account-" + getLoggedInId() + ".png";
-    return fileService.getSrc(filename);
   }
 
 }

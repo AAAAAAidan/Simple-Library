@@ -70,15 +70,11 @@ table {
   border-spacing: 0 4px;
 }
 
-th {
-  text-align: left;
-}
-
-th, td {
+td {
   padding: 4px 8px;
 }
 
-img {
+table img {
   max-height: 100%;
   width: 100%;
 }
@@ -117,6 +113,16 @@ img {
   grid-template-columns: 1fr 1fr;
 }
 
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
 .grid-5 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -140,6 +146,10 @@ img {
 
 .button-style:hover, .button-dark {
   background-color: #F0F0F0;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .help-text {

@@ -51,11 +51,10 @@ public class HomeController extends TemplateView {
 
     for (int i = 0; i < 5; i++) {
       Book book = bookService.getByRandom();
-      book.setCover(bookService.getCoverPath(book.getId()));
       books.add(book);
     }
 
-    for (int i = 0; i < 25; i++) {
+    for (int i = 0; i < 15; i++) {
       authors.add(authorService.getByRandom());
       subjects.add(subjectService.getByRandom());
     }

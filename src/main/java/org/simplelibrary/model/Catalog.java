@@ -29,10 +29,6 @@ public class Catalog implements Serializable {
   @Column(name="catalog_name", length=320, nullable=false)
   private String name;
 
-  @NonNull
-  @Column(name="catalog_description", length=3200, nullable=false)
-  private String description;
-
   @Column(name="catalog_privacy", nullable=false,
           columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
   private String privacy = "Private";

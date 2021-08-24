@@ -5,10 +5,7 @@ import org.simplelibrary.model.ResponseMessage;
 import org.simplelibrary.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,10 +87,20 @@ public class FileController {
   @GetMapping("{filename:.+}")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-    // TODO - Make this smarter!!!!!!
+    if (!fileService.exists(filename)) {
+      filename = filename.replaceAll("-.*\\.", "-default.");
+    }
+
     Resource file = fileService.load(filename);
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.IMAGE_PNG);
+
+    if (file.getFilename().contains(".png")) {
+      headers.setContentType(MediaType.IMAGE_PNG);
+    }
+    else {
+      headers.setContentDisposition(ContentDisposition.attachment().build());
+    }
+
     return ResponseEntity.ok().headers(headers).body(file);
   }
 

@@ -23,9 +23,6 @@ public class Setting implements Serializable {
   @Column(name="setting_id", nullable=false)
   private Integer settingId;
 
-  @Column(name="setting_profile_image", length=12)
-  private String profileImage = null;
-
   @Column(name="setting_search_results_per_page", nullable=false)
   private Integer searchResultsPerPage = 10;
 
