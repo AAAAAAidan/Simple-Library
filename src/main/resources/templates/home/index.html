@@ -4,7 +4,7 @@
 <table class="full-width margin-bottom">
   <tr class="grid-5">
     <td th:each="book:${books}">
-      <a th:href="@{|~/books/${book.id}|}"><img th:src="@{|~/files/cover-${book.id}.png|}" th:alt="${book.name}"/></a>
+      <a th:href="@{|~/books/${book.id}|}"><img th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/></a>
     </td>
   </tr>
 </table>

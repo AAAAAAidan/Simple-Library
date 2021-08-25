@@ -92,7 +92,6 @@ public class HomeController extends TemplateView {
     }
 
     List<?> results = homeService.getSearchResults(terms, filter, order);
-    log.info(String.valueOf(results.size()));
     int resultCount = results.size();
     int lastPage = homeService.getLastPage(resultCount);
 

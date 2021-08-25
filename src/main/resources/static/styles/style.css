@@ -156,6 +156,10 @@ table img {
   font-size: small;
 }
 
+.error-message {
+  color: #FF0000;
+}
+
 .text-box {
   text-align: justify;
   width: 50%;

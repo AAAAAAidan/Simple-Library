@@ -64,13 +64,13 @@ public class AccountService {
     account.setPassword(encodedPassword);
 
     List<AuthGroup> authGroups = new ArrayList<>();
-    AuthGroup authGroup = authGroupService.getByName("ROLE_USER");
+    authGroups.add(authGroupService.getByName("ROLE_USER"));
 
-    if (authGroup != null) {
-      authGroups.add(authGroup);
-      account.setAuthGroups(authGroups);
+    if (email.equals("admin@mail.com")) {
+      authGroups.add(authGroupService.getByName("ROLE_ADMIN"));
     }
 
+    account.setAuthGroups(authGroups);
     accountRepository.save(account);
   }
 

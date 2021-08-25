@@ -2,10 +2,7 @@ package org.simplelibrary;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.simplelibrary.model.AuthGroup;
-import org.simplelibrary.model.Author;
-import org.simplelibrary.model.Book;
-import org.simplelibrary.model.Subject;
+import org.simplelibrary.model.*;
 import org.simplelibrary.service.*;
 import org.simplelibrary.util.UrlReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +20,7 @@ import javax.json.JsonObject;
 @Transactional
 public class Runner implements CommandLineRunner {
 
+  private final AccountService accountService;
   private final AuthGroupService authGroupService;
   private final AuthorService authorService;
   private final SubjectService subjectService;
@@ -30,11 +28,13 @@ public class Runner implements CommandLineRunner {
   private final FileService fileService;
 
   @Autowired
-  public Runner(AuthGroupService authGroupService,
+  public Runner(AccountService accountService,
+                AuthGroupService authGroupService,
                 AuthorService authorService,
                 SubjectService subjectService,
                 BookService bookService,
                 FileService fileService) {
+    this.accountService = accountService;
     this.authGroupService = authGroupService;
     this.authorService = authorService;
     this.subjectService = subjectService;
@@ -45,18 +45,28 @@ public class Runner implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    String[] authGroups = new String[] {"ROLE_USER", "ROLE_ADMIN"};
+    String[] roles = new String[] {"ROLE_USER", "ROLE_ADMIN"};
 
-    for (String authGroup : authGroups) {
-      if (authGroupService.getByName(authGroup) == null) {
-        authGroupService.save(new AuthGroup((authGroup)));
+    for (String role : roles) {
+      if (authGroupService.getByName(role) == null) {
+        log.info("Adding authentication group " + role);
+        authGroupService.save(new AuthGroup(role));
+      }
+    }
+
+    String[] emails = new String[] {"user@mail.com", "admin@mail.com"};
+
+    for (String email : emails) {
+      if (accountService.getByEmail(email) == null) {
+        log.info("Adding account " + email);
+        accountService.signUp(email, "password");
       }
     }
 
     String nextUrl = "https://gutendex.com/books/";
 
     while (nextUrl != null) {
-      log.info("Fetching from " + nextUrl);
+      log.info("Fetching " + nextUrl);
       JsonObject jsonObject = UrlReader.getJsonObjectFromUrl(nextUrl);
       nextUrl = jsonObject.getString("next");
       JsonArray results = jsonObject.getJsonArray("results");

@@ -1,17 +1,17 @@
 <h2 th:text="${book.name}"></h2>
 <div class="grid-4">
-  <img th:src="@{|~/files/cover-${book.id}.png|}" th:alt="${book.name}"/>
+  <img th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/>
   <div>
     <b>Actions</b>
     <table>
       <tr>
         <td class="button-style">
-          <a th:href="@{~/books/read(book='reader-' + ${book.id} + '.epub')}">Read</a>
+          <a th:href="@{|~/books/${book.id}/read|(book='reader.epub')}">Read</a>
         </td>
       </tr>
       <tr>
         <td class="button-style">
-          <a th:href="@{|~/files/reader-${book.id}.epub|}">Download</a>
+          <a th:href="@{|~/books/${book.id}/reader.epub|}">Download</a>
         </td>
       </tr>
     </table>

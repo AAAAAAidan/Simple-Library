@@ -35,7 +35,7 @@ public class BookController extends TemplateView {
     return loadView(model, "books/book");
   }
 
-  @GetMapping("/books/read")
+  @GetMapping("/books/{id}/read")
   public String getBookReader(@RequestParam(required=false) String book) {
     return "books/bibi";
   }

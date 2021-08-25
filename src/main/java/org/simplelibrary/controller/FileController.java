@@ -2,6 +2,7 @@ package org.simplelibrary.controller;
 
 import org.simplelibrary.model.FileData;
 import org.simplelibrary.model.ResponseMessage;
+import org.simplelibrary.service.AccountService;
 import org.simplelibrary.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -26,17 +27,19 @@ import java.util.stream.Collectors;
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
 @RestController
-@RequestMapping("files")
 public class FileController {
 
   private final FileService fileService;
+  private final AccountService accountService;
 
   @Autowired
-  public FileController(FileService fileService) {
+  public FileController(FileService fileService,
+                        AccountService accountService) {
     this.fileService = fileService;
+    this.accountService = accountService;
   }
 
-  @PostMapping
+  @PostMapping("files")
   public ResponseEntity<ResponseMessage> uploadFile(@RequestParam MultipartFile file) {
     String filename = file.getOriginalFilename();
 
@@ -51,7 +54,7 @@ public class FileController {
     }
   }
 
-  @GetMapping
+  @GetMapping("files")
   public ResponseEntity<List<FileData>> getListFiles() {
     List<FileData> fileData = fileService.loadAll()
                                          .stream()
@@ -61,7 +64,7 @@ public class FileController {
     return ResponseEntity.status(HttpStatus.OK).body(fileData);
   }
 
-  @DeleteMapping
+  @DeleteMapping("files")
   public void delete() {
     fileService.deleteAll();
   }
@@ -84,9 +87,36 @@ public class FileController {
     return fileData;
   }
 
-  @GetMapping("{filename:.+}")
+  @GetMapping("files/{filename:.+}")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    Resource file = fileService.load(filename);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentDisposition(ContentDisposition.attachment().build());
+    return ResponseEntity.ok().headers(headers).body(file);
+  }
+
+  // The below method is for making files publicly available
+  // Whereas all of the methods above are admin restricted
+
+  @GetMapping({"books/{coverId}/cover.png",
+               "books/{readerId}/reader.epub",
+               "account/profile.png"})
+  @ResponseBody
+  public ResponseEntity<Resource> getPublicFile(@PathVariable(required=false) String coverId,
+                                                @PathVariable(required=false) String readerId) {
+    String filename;
+
+    if (coverId != null) {
+      filename =  "cover-" + coverId + ".png";
+    }
+    else if (readerId != null) {
+      filename =  "reader-" + readerId + ".epub";
+    }
+    else {
+      filename =  "account-" + accountService.getLoggedInId() + ".png";
+    }
+
     if (!fileService.exists(filename)) {
       filename = filename.replaceAll("-.*\\.", "-default.");
     }

@@ -3,7 +3,7 @@
 <table>
   <tr th:each="book:${subject.books}">
     <td class="button-style">
-      <a th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a>
+      <a th:href="@{|~/books/${book.id}|}" th:text="${book.name}"></a>
     </td>
   </tr>
 </table>
