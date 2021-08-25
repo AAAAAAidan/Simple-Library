@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.simplelibrary.model.Book;
 
-class TableUtilTests {
+class TableTests {
 
   private static Table<Book> table = new Table<Book>(Book.class);
 

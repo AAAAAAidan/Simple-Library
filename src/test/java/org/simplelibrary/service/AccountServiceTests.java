@@ -2,23 +2,25 @@ package org.simplelibrary.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.simplelibrary.model.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class AccountServiceTests {
 
-  @BeforeAll
-  static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterAll
-  static void tearDownAfterClass() throws Exception {
-  }
+  @Autowired
+  private AccountService accountService;
 
   @Test
-  void test() {
-    fail("Not yet implemented");
+  void testGetByEmail() {
+    String email = "user@mail.com";
+    Account realAccount = accountService.getByEmail(email);
+    assertEquals(realAccount.getEmail(), email);
+
+    Account fakeAccount = accountService.getByEmail("junk");
+    assertNull(fakeAccount);
   }
 
 }

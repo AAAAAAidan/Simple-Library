@@ -43,8 +43,7 @@ public class AccountService {
   }
 
   public AccountDetails getLoggedInDetails() {
-    AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return accountDetails;
+    return (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
   }
 
   public String getLoggedInEmail() {
