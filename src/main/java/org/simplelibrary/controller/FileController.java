@@ -2,13 +2,11 @@ package org.simplelibrary.controller;
 
 import org.simplelibrary.model.FileData;
 import org.simplelibrary.model.ResponseMessage;
+import org.simplelibrary.service.AccountService;
 import org.simplelibrary.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,43 +27,44 @@ import java.util.stream.Collectors;
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
 @RestController
-@RequestMapping("files")
 public class FileController {
 
   private final FileService fileService;
+  private final AccountService accountService;
 
   @Autowired
-  public FileController(FileService fileService) {
+  public FileController(FileService fileService,
+                        AccountService accountService) {
     this.fileService = fileService;
+    this.accountService = accountService;
   }
 
-  @PostMapping
-  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-    String fileName = file.getOriginalFilename();
+  @PostMapping("files")
+  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam MultipartFile file) {
+    String filename = file.getOriginalFilename();
 
     try {
       fileService.save(file);
       return ResponseEntity.status(HttpStatus.OK)
-          .body(new ResponseMessage("Uploaded file successfully: " + fileName));
+          .body(new ResponseMessage("Uploaded file successfully: " + filename));
     }
     catch (Exception e) {
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
-          .body(new ResponseMessage("Could not upload file: " + fileName + "!"));
+          .body(new ResponseMessage("Could not upload file: " + filename + "!"));
     }
   }
 
-  @GetMapping
+  @GetMapping("files")
   public ResponseEntity<List<FileData>> getListFiles() {
     List<FileData> fileData = fileService.loadAll()
                                          .stream()
                                          .map(this::pathToFile)
                                          .collect(Collectors.toList());
 
-    return ResponseEntity.status(HttpStatus.OK)
-                         .body(fileData);
+    return ResponseEntity.status(HttpStatus.OK).body(fileData);
   }
 
-  @DeleteMapping
+  @DeleteMapping("files")
   public void delete() {
     fileService.deleteAll();
   }
@@ -75,8 +74,7 @@ public class FileController {
     String filename = path.getFileName().toString();
     fileData.setName(filename);
     fileData.setUrl(MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile", filename)
-                                           .build()
-                                           .toString());
+                                           .build().toString());
 
     try {
       fileData.setSize(Files.size(path));
@@ -89,15 +87,51 @@ public class FileController {
     return fileData;
   }
 
-  @GetMapping("{filename:.+}")
+  @GetMapping("files/{filename:.+}")
   @ResponseBody
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {
     Resource file = fileService.load(filename);
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.IMAGE_PNG);
-    return ResponseEntity.ok()
-                         .headers(headers)
-                         .body(file);
+    headers.setContentDisposition(ContentDisposition.attachment().build());
+    return ResponseEntity.ok().headers(headers).body(file);
+  }
+
+  // The below method is for making files publicly available
+  // Whereas all of the methods above are admin restricted
+
+  @GetMapping({"books/{coverId}/cover.png",
+               "books/{readerId}/reader.epub",
+               "account/profile.png"})
+  @ResponseBody
+  public ResponseEntity<Resource> getPublicFile(@PathVariable(required=false) String coverId,
+                                                @PathVariable(required=false) String readerId) {
+    String filename;
+
+    if (coverId != null) {
+      filename =  "cover-" + coverId + ".png";
+    }
+    else if (readerId != null) {
+      filename =  "reader-" + readerId + ".epub";
+    }
+    else {
+      filename =  "account-" + accountService.getLoggedInId() + ".png";
+    }
+
+    if (!fileService.exists(filename)) {
+      filename = filename.replaceAll("-.*\\.", "-default.");
+    }
+
+    Resource file = fileService.load(filename);
+    HttpHeaders headers = new HttpHeaders();
+
+    if (file.getFilename().contains(".png")) {
+      headers.setContentType(MediaType.IMAGE_PNG);
+    }
+    else {
+      headers.setContentDisposition(ContentDisposition.attachment().build());
+    }
+
+    return ResponseEntity.ok().headers(headers).body(file);
   }
 
 }

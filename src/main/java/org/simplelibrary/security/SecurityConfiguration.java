@@ -40,6 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .authorizeRequests()
         .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+        .antMatchers("/files/**").hasAuthority("ROLE_ADMIN")
         .antMatchers("/account/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
       .and()
         .formLogin()
@@ -56,17 +57,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .clearAuthentication(true)
         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
         .logoutSuccessUrl("/")
-        .permitAll()
-      .and()
-        .exceptionHandling()
-        .accessDeniedPage("/403");
+        .permitAll();
   }
 
   @Override
   public void configure(final WebSecurity web) throws Exception {
     web
       .ignoring()
-      .antMatchers( "/files/**", "/resources/**", "/static/**", "/fonts/**", "/images/**", "/files/**", "/styles/**", "/scripts/**");
+      .antMatchers( "/bibi/**", "/fonts/**", "/images/**", "/scripts/**", "/styles/**");
   }
 
 }

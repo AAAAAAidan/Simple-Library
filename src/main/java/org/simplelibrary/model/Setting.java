@@ -23,9 +23,6 @@ public class Setting implements Serializable {
   @Column(name="setting_id", nullable=false)
   private Integer settingId;
 
-  @Column(name="setting_profile_image", length=12)
-  private String profileImage = null;
-
   @Column(name="setting_search_results_per_page", nullable=false)
   private Integer searchResultsPerPage = 10;
 
@@ -42,8 +39,8 @@ public class Setting implements Serializable {
   private Timestamp addDate;
 
   @Column(name="setting_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-one association to Account
   @ManyToOne

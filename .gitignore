@@ -6,6 +6,6 @@
 !/src/
 !/src/**
 
-# Ignore all media files but the defaults
-/src/main/resources/files/**
-!/src/main/resources/files/*default*
+# Ignore all uploaded files but the defaults
+/src/main/resources/uploads/*/*
+!/src/main/resources/uploads/*/*default*

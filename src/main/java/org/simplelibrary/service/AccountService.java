@@ -6,17 +6,12 @@ import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.repository.AccountRepository;
 import org.simplelibrary.security.AccountDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -25,9 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Service
 public class AccountService {
-
-  @Value("${upload.path}")
-  private String uploadPath;
 
   private AccountRepository accountRepository;
   private AuthGroupService authGroupService;
@@ -46,9 +38,21 @@ public class AccountService {
     return accountRepository.getByEmail(email);
   }
 
-  public Integer getLoggedInId() {
+  public Account getLoggedInAccount() {
+    return accountRepository.getById(getLoggedInId());
+  }
+
+  public AccountDetails getLoggedInDetails() {
     AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return accountDetails.getId();
+    return accountDetails;
+  }
+
+  public String getLoggedInEmail() {
+    return getLoggedInDetails().getUsername();
+  }
+
+  public Integer getLoggedInId() {
+    return getLoggedInDetails().getId();
   }
 
   public void signUp(String email, String password) {
@@ -60,13 +64,13 @@ public class AccountService {
     account.setPassword(encodedPassword);
 
     List<AuthGroup> authGroups = new ArrayList<>();
-    AuthGroup authGroup = authGroupService.getByName("ROLE_USER");
+    authGroups.add(authGroupService.getByName("ROLE_USER"));
 
-    if (authGroup != null) {
-      authGroups.add(authGroup);
-      account.setAuthGroups(authGroups);
+    if (email.equals("admin@mail.com")) {
+      authGroups.add(authGroupService.getByName("ROLE_ADMIN"));
     }
 
+    account.setAuthGroups(authGroups);
     accountRepository.save(account);
   }
 
@@ -79,19 +83,9 @@ public class AccountService {
     }
   }
 
-  public void uploadProfilePicture(MultipartFile file) {
-    String newFileName = "account-" + getLoggedInId() + ".png";
-    fileService.saveAs(file, newFileName);
+  public void saveProfilePicture(MultipartFile file) {
+    String newFilename = "account-" + getLoggedInId() + ".png";
+    fileService.saveAs(file, newFilename);
   }
 
-  public String getProfilePicturePath() {
-    String fileName = "account-" + getLoggedInId() + ".png";
-    Path filePath = Paths.get(uploadPath + File.separator + fileName);
-
-    if (!Files.exists(filePath)) {
-      fileName = fileName.replace(String.valueOf(getLoggedInId()), "default");
-    }
-
-    return "files" + File.separator + fileName;
-  }
 }

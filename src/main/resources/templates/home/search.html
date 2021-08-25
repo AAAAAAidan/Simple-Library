@@ -1,35 +1,9 @@
 <h2>Search the library!</h2>
-<form class="margin-bottom" action="search" method="post">
-  <input class="button-style" type="text" th:name="terms" th:value="${terms}" placeholder="Enter search terms"/>
-  <input class="button-style" type="submit" value="Search"/>
-  <select class="button-style" th:name="filter">
-    <option value="books">Books</option>
-    <option value="authors" th:selected="${filter=='authors'}">Authors</option>
-    <option value="subjects" th:selected="${filter=='subjects'}">Subjects</option>
-    <option value="lists" th:selected="${filter=='lists'}">Lists</option>
-  </select>
-  <select class="button-style" th:name="sort">
-    <!-- TODO - Add more sorting options, dork! -->
-    <option value="name">By name</option>
-  </select>
-  <select class="button-style" th:name="order">
-    <option value="asc">Ascending</option>
-    <option value="desc" th:selected="${order=='desc'}">Descending</option>
-  </select>
-</form>
-<table id="search-results" class="margin-bottom">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="result:${results}">
-      <td th:text="${result.id}"></td>
-      <td th:text="${result.name}"></td>
-    </tr>
-  </tbody>
+<div th:replace="home/searchbar"></div>
+<table id="search-results" class="full-width margin-bottom">
+  <tr th:each="result:${results}">
+    <td class="button-style"><a th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a></td>
+  </tr>
 </table>
 <div class="grid-2">
   <div style="text-align:left">

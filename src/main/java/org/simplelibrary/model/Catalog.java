@@ -29,10 +29,6 @@ public class Catalog implements Serializable {
   @Column(name="catalog_name", length=320, nullable=false)
   private String name;
 
-  @NonNull
-  @Column(name="catalog_description", length=3200, nullable=false)
-  private String description;
-
   @Column(name="catalog_privacy", nullable=false,
           columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
   private String privacy = "Private";
@@ -46,8 +42,8 @@ public class Catalog implements Serializable {
   private Timestamp addDate;
 
   @Column(name="catalog_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-one association to Account
   @ManyToOne

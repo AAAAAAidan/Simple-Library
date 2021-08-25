@@ -30,16 +30,6 @@ public class Book implements Serializable {
   @Column(name="book_name", unique=true, length=320, nullable=false)
   private String name;
 
-  @Column(name="book_description", length=3200)
-  private String description = null;
-
-  @Temporal(TemporalType.DATE)
-  @Column(name="book_publish_date")
-  private Date publishDate = null;
-
-  @Column(name="book_page_count")
-  private Integer pageCount = null;
-
   @Column(name="book_view_count")
   private Integer viewCount = 0;
 
@@ -51,15 +41,19 @@ public class Book implements Serializable {
   private Timestamp addDate;
 
   @Column(name="book_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-many association to Catalog
   @ManyToMany(mappedBy="books")
   private List<Catalog> catalogs;
 
-  // Bi-directional many-to-many association to Category
+  // Bi-directional many-to-many association to Author
   @ManyToMany(mappedBy="books")
-  private List<Category> categories;
+  private List<Author> authors;
+
+  // Bi-directional many-to-many association to Subject
+  @ManyToMany(mappedBy="books")
+  private List<Subject> subjects;
 
 }

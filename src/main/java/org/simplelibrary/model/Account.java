@@ -33,12 +33,6 @@ public class Account implements Serializable {
   @Column(name="account_password", length=60, nullable=false)
   private String password;
 
-  @Column(name="account_first_name", length=320)
-  private String firstName = null;
-
-  @Column(name="account_last_name", length=320)
-  private String lastName = null;
-
   @Column(name="account_last_login_date", nullable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp lastLoginDate;
@@ -48,8 +42,8 @@ public class Account implements Serializable {
   private Timestamp addDate;
 
   @Column(name="account_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-one association to Catalog
   @OneToMany(mappedBy="account")

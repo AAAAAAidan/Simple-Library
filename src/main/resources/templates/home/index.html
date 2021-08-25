@@ -1,36 +1,28 @@
-<h2 class="margin-bottom">Browse the books!</h2>
-<table class="margin-bottom">
-  <thead>
-    <tr class="grid-3">
-      <td><i>The Hobbit</i> by J.R.R. Tolkien</td>
-      <td><i>Good Night, Gorilla</i> by Peggy Rathman</td>
-      <td><i>Sneeze</i> by Naoki Urasawa</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="grid-3">
-      <td><img th:src="@{/images/thehobbit.jpg}" alt="Book cover of The Hobbit by J.R.R. Tolkien" /></td>
-      <td><img th:src="@{/images/goodnightgorilla.jpg}" alt="Book cover of Good Night, Gorilla by Peggy Rathman" /></td>
-      <td><img th:src="@{/images/sneeze.jpg}" alt="Book cover of Sneeze by Naoki Urasawa" /></td>
-    </tr>
-  </tbody>
+<h2>Search the library!</h2>
+<div th:replace="home/searchbar"></div>
+<h2>Browse the books!</h2>
+<table class="full-width margin-bottom">
+  <tr class="grid-5">
+    <td th:each="book:${books}">
+      <a th:href="@{|~/books/${book.id}|}"><img th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/></a>
+    </td>
+  </tr>
 </table>
-<h2>Here's some video!</h2>
-<table>
-  <thead>
-    <tr class="grid-2">
-      <td>"An Open Book" by Joel Dunn</td>
-      <td>"Piles And Layers Of Book For Reading Placed In A Book Shelves" by Matthias Groeneveld</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="grid-2">
-      <td>
-        <video controls>
-          <source th:src="@{/images/anopenbook.mp4}" type="video/mp4">
-        </video>
-      </td>
-      <td><img th:src="@{/images/pilesofbooks.gif}" alt="" /></td>
-    </tr>
-  </tbody>
+<h2>Ascertain the authors!</h2>
+<table class="full-width margin-bottom">
+  <tr class="grid-3">
+    <td th:each="author:${authors}">
+      <span>&bull; </span>
+      <a th:href="@{|~/authors/${author.id}|}" th:text="${author.name}"></a>
+    </td>
+  </tr>
+</table>
+<h2>See the subjects!</h2>
+<table class="full-width">
+  <tr class="grid-3">
+    <td th:each="subject:${subjects}">
+      <span>&bull; </span>
+      <a th:href="@{|~/subjects/${subject.id}|}" th:text="${subject.name}"></a>
+    </td>
+  </tr>
 </table>

@@ -1,11 +1,11 @@
 <div>
   <h2>Account</h2>
-  <img th:src="${filepath}" class="profile-picture" alt="Profile picture" />
-  <form th:action="@{/account/profilepicture}" method="post" enctype="multipart/form-data">
+  <img th:src="@{~/account/profile.png}" class="profile-picture" alt="Profile picture" />
+  <form th:action="@{~/account/profilepicture}" method="post" enctype="multipart/form-data">
     <input class="button-style" type="file" name="file" accept="image/png, image/jpeg"/>
-    <input class="button-style" type="submit" name="SUBMIT" />
+    <input class="clickable button-style" type="submit"/>
   </form>
   <div th:if="${message}">
-    <h2 th:text="${message}" />
+    <p class="help-text margin-bottom" th:text="${message}"></p>
   </div>
 </div>

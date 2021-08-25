@@ -1,0 +1,9 @@
+<h2 th:text="${subject.name}"></h2>
+<b>Books</b>
+<table>
+  <tr th:each="book:${subject.books}">
+    <td class="button-style">
+      <a th:href="@{|~/books/${book.id}|}" th:text="${book.name}"></a>
+    </td>
+  </tr>
+</table>

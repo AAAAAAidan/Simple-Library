@@ -7,16 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
 public class BookService {
 
   private BookRepository bookRepository;
+  private FileService fileService;
 
   @Autowired
-  public BookService(BookRepository bookRepository) {
+  public BookService(BookRepository bookRepository,
+                     FileService fileService) {
     this.bookRepository = bookRepository;
+    this.fileService = fileService;
   }
 
   public void save(Book book) {
@@ -37,6 +41,12 @@ public class BookService {
 
   public Book getByName(String name) {
     return bookRepository.getByName(name);
+  }
+
+  public Book getByRandom() {
+    List<Book> books = bookRepository.findAll();
+    Random random = new Random();
+    return books.get(random.nextInt(books.size()));
   }
 
   public List<Book> findAll() {

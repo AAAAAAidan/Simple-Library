@@ -1,9 +1,9 @@
 package org.simplelibrary.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Author;
 import org.simplelibrary.model.Book;
-import org.simplelibrary.model.Catalog;
-import org.simplelibrary.model.Category;
+import org.simplelibrary.model.Subject;
 import org.simplelibrary.util.Table;
 import org.springframework.stereotype.Service;
 
@@ -14,51 +14,33 @@ import java.util.List;
 @Service
 public class HomeService {
 
+  private final Table<Author> authorTable = new Table<>(Author.class);
   private final Table<Book> bookTable = new Table<>(Book.class);
-  private final Table<Category> categoryTable = new Table<>(Category.class);
-  private final Table<Catalog> catalogTable = new Table<>(Catalog.class);
+  private final Table<Subject> subjectTable = new Table<>(Subject.class);
 
-  public List<?> getSearchResults(String terms, String filter, String sort, String order) {
-    String termsFilter;
-    String sortColumn;
-    int resultCount;
+  public List<?> getSearchResults(String terms, String filter, String order) {
+    String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
+    String sortColumn = column + "_name";
+    String termsFilter = sortColumn + " contains " + terms;
+    log.info(sortColumn);
+    log.info(termsFilter);
 
     switch(filter) {
       case "authors":
+        return authorTable.filterBy(termsFilter)
+                          .sortBy(sortColumn)
+                          .inOrder(order)
+                          .select();
       case "subjects":
-        termsFilter = "category_name contains " + terms;
-        sortColumn = "category_name";
-
-        String categoryType = filter.substring(0, filter.length() - 1);
-        String[] filters = new String[2];
-        filters[0] = termsFilter;
-        filters[1] = "category_type contains " + categoryType;
-
-        List<Category> categories = categoryTable.filterBy(filters)
-                                                 .sortBy(sortColumn)
-                                                 .inOrder(order)
-                                                 .select();
-        return categories;
-
-      case "lists":
-        termsFilter = "catalog_name contains " + terms;
-        sortColumn = "catalog_name";
-
-        List<Catalog> lists = catalogTable.filterBy(termsFilter)
-                                          .sortBy(sortColumn)
-                                          .inOrder(order)
-                                          .select();
-        return lists;
-
+        return subjectTable.filterBy(termsFilter)
+                           .sortBy(sortColumn)
+                           .inOrder(order)
+                           .select();
       default:
-        termsFilter = "book_name contains " + terms;
-        sortColumn = "book_name";
-
-        List<Book> books = bookTable.filterBy(termsFilter)
-                                    .sortBy(sortColumn)
-                                    .inOrder(order)
-                                    .select();
-        return books;
+        return bookTable.filterBy(termsFilter)
+                        .sortBy(sortColumn)
+                        .inOrder(order)
+                        .select();
     }
   }
 
@@ -98,7 +80,6 @@ public class HomeService {
   }
 
   public List<?> limitSearchResultsByPage(List<?> results, int page) {
-
     if (results.size() == 0) {
       return results;
     }

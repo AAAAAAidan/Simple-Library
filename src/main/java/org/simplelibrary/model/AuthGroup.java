@@ -35,8 +35,8 @@ public class AuthGroup implements Serializable {
   private Timestamp addDate;
 
   @Column(name="auth_group_status", nullable=false,
-          columnDefinition="ENUM('Active', 'Inactive') DEFAULT 'Active'")
-  private String status = "Active";
+          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  private String status = "ACTIVE";
 
   // Bi-directional many-to-many association to Account
   @ManyToMany(fetch=FetchType.EAGER, mappedBy="authGroups")
