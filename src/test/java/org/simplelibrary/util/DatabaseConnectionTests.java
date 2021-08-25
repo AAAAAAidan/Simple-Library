@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-class DatabaseConnectionUtilTests extends DatabaseConnection {
-  
+class DatabaseConnectionTests extends DatabaseConnection {
+
   @Test
   @Order(1)
   void testConnect() {
