@@ -22,8 +22,6 @@ public class HomeService {
     String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
     String sortColumn = column + "_name";
     String termsFilter = sortColumn + " contains " + terms;
-    log.info(sortColumn);
-    log.info(termsFilter);
 
     switch(filter) {
       case "authors":

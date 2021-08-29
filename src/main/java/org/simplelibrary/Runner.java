@@ -132,26 +132,41 @@ public class Runner implements CommandLineRunner {
         String imageName = "cover-" + book.getId() + ".png";
 
         if (!fileService.exists(imageName)) {
-          log.info("Saving " + imageName);
-          String imageUrl = formats.getString("image/jpeg").replace("small", "medium");
-          String imageContentType = "image/png";
-          byte[] imageContent = UrlReader.getByteArrayFromUrl(imageUrl);
-          MultipartFile cover = new MockMultipartFile(imageName, imageName, imageContentType, imageContent);
-          fileService.save(cover);
+          try {
+            log.info("Saving " + imageName);
+            String imageUrl = formats.getString("image/jpeg").replace("small", "medium");
+            String imageContentType = "image/png";
+            byte[] imageContent = UrlReader.getByteArrayFromUrl(imageUrl);
+            MultipartFile cover = new MockMultipartFile(imageName, imageName, imageContentType, imageContent);
+            fileService.save(cover);
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+          }
         }
 
         String readerName = "reader-" + book.getId() + ".epub";
 
         if (!fileService.exists(readerName)) {
-          log.info("Saving " + readerName);
-          String readerUrl = formats.getString("application/epub+zip").replace("small", "medium");
-          String readerContentType = "application/epub+zip";
-          byte[] readerContent = UrlReader.getByteArrayFromUrl(readerUrl);
-          MultipartFile reader = new MockMultipartFile(readerName, readerName, readerContentType, readerContent);
-          fileService.save(reader);
+          try {
+            log.info("Saving " + readerName);
+            String readerUrl = formats.getString("application/epub+zip").replace("small", "medium");
+            String readerContentType = "application/epub+zip";
+            byte[] readerContent = UrlReader.getByteArrayFromUrl(readerUrl);
+            MultipartFile reader = new MockMultipartFile(readerName, readerName, readerContentType, readerContent);
+            fileService.save(reader);
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       }
+
       break; // For now, 31 books is fine
+
+      // if (nextUrl.contains("page=39")) {
+      //   break; // For now, 39 pages is fine
+      // }
     }
     log.info("Finished adding titles");
   }
