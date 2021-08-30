@@ -64,11 +64,6 @@ public class AccountService {
 
     List<AuthGroup> authGroups = new ArrayList<>();
     authGroups.add(authGroupService.getByName("ROLE_USER"));
-
-    if (email.equals("admin@mail.com")) {
-      authGroups.add(authGroupService.getByName("ROLE_ADMIN"));
-    }
-
     account.setAuthGroups(authGroups);
     accountRepository.save(account);
   }
