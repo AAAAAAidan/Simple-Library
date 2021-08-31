@@ -102,7 +102,15 @@
     <!-- Google Cloud -->
     <dependency>
       <groupId>com.google.cloud</groupId>
+      <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
       <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.google.cloud.sql</groupId>
+        <artifactId>mysql-socket-factory</artifactId>
     </dependency>
 
   </dependencies>
