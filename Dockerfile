@@ -20,4 +20,4 @@ FROM adoptopenjdk/openjdk11:alpine-jre
 COPY --from=builder /app/target/simplelibrary-*.jar /simplelibrary.jar
 
 # Run the web service on container startup.
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/simplelibrary.jar", "-Dspring.profiles.active=prod"]
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=prod", "-jar", "/simplelibrary.jar"]
