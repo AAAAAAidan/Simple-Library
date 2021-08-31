@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Author;
 import org.simplelibrary.model.Book;
 import org.simplelibrary.model.Subject;
-import org.simplelibrary.util.Table;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,31 +14,26 @@ import java.util.List;
 @Service
 public class HomeService {
 
-  private final Table<Author> authorTable = new Table<>(Author.class);
-  private final Table<Book> bookTable = new Table<>(Book.class);
-  private final Table<Subject> subjectTable = new Table<>(Subject.class);
+  private TableService tableService;
+
+  @Autowired
+  public HomeService(TableService tableService) {
+    this.tableService = tableService;
+  }
 
   public List<?> getSearchResults(String terms, String filter, String order) {
     String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
     String sortColumn = column + "_name";
     String termsFilter = sortColumn + " contains " + terms;
+    TableService searchTableService = tableService.filterBy(termsFilter).sortBy(sortColumn).inOrder(order);
 
-    switch(filter) {
+    switch (filter) {
       case "authors":
-        return authorTable.filterBy(termsFilter)
-                          .sortBy(sortColumn)
-                          .inOrder(order)
-                          .select();
+        return searchTableService.select(Author.class);
       case "subjects":
-        return subjectTable.filterBy(termsFilter)
-                           .sortBy(sortColumn)
-                           .inOrder(order)
-                           .select();
+        return searchTableService.select(Subject.class);
       default:
-        return bookTable.filterBy(termsFilter)
-                        .sortBy(sortColumn)
-                        .inOrder(order)
-                        .select();
+        return searchTableService.select(Book.class);
     }
   }
 
@@ -78,7 +73,7 @@ public class HomeService {
   }
 
   public List<?> limitSearchResultsByPage(List<?> results, int page) {
-    if (results.size() == 0) {
+    if (results.isEmpty()) {
       return results;
     }
 

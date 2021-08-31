@@ -8,11 +8,5 @@
     <class>org.simplelibrary.model.Catalog</class>
     <class>org.simplelibrary.model.Subject</class>
     <class>org.simplelibrary.model.Setting</class>
-    <properties>
-      <property name="javax.persistence.jdbc.driver" value="com.google.cloud.sql.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:google:rdbms://mysql-instance1/simplelibrary"/>
-      <property name="javax.persistence.jdbc.user" value="root"/>
-      <property name="javax.persistence.jdbc.password" value="Password"/>
-    </properties>
   </persistence-unit>
 </persistence>
