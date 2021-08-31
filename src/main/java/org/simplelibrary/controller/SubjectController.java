@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class SubjectController extends TemplateView {
 
-  private SubjectService subjectService;
+  private final SubjectService subjectService;
 
   @Autowired
   public SubjectController(SubjectService subjectService) {

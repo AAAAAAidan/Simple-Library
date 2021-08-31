@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CatalogController extends TemplateView {
 
-  private CatalogService catalogService;
+  private final CatalogService catalogService;
 
   @Autowired
   public CatalogController(CatalogService catalogService) {

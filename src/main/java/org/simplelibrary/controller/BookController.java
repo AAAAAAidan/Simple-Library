@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BookController extends TemplateView {
 
-  private BookService bookService;
+  private final BookService bookService;
 
   @Autowired
   public BookController(BookService bookService) {

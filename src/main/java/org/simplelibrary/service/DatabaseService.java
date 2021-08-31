@@ -14,13 +14,13 @@ public class DatabaseService {
   @Value("${database}")
   private String database;
 
-  @Value("${spring.datasource.driver-class-name}")
+  @Value("${driver}")
   private String driver;
-  @Value("${spring.datasource.url}")
+  @Value("${url}")
   private String url;
-  @Value("${spring.datasource.username}")
+  @Value("${user}")
   private String user;
-  @Value("${spring.datasource.password}")
+  @Value("${password}")
   private String password;
 
   private final Properties properties = new Properties();

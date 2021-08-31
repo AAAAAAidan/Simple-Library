@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthGroupService {
 
-  private AuthGroupRepository authGroupRepository;
+  private final AuthGroupRepository authGroupRepository;
 
   @Autowired
   public AuthGroupService(AuthGroupRepository authGroupRepository) {

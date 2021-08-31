@@ -25,10 +25,10 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class HomeController extends TemplateView {
 
-  private AuthorService authorService;
-  private BookService bookService;
-  private HomeService homeService;
-  private SubjectService subjectService;
+  private final AuthorService authorService;
+  private final BookService bookService;
+  private final HomeService homeService;
+  private final SubjectService subjectService;
 
   @Autowired
   public HomeController(AuthorService authorService,

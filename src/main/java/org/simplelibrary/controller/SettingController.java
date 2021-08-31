@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class SettingController extends TemplateView {
 
-  private SettingService settingService;
+  private final SettingService settingService;
 
   @Autowired
   public SettingController(SettingService settingService) {

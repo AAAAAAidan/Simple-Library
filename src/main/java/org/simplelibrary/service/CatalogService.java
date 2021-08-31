@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CatalogService {
 
-  private CatalogRepository catalogRepository;
+  private final CatalogRepository catalogRepository;
 
   @Autowired
   public CatalogService(CatalogRepository catalogRepository) {

@@ -12,8 +12,8 @@ import java.util.*;
 @Slf4j
 public class AccountDetails implements UserDetails {
 
-  private Account account;
-  private List<AuthGroup> authGroups;
+  private final Account account;
+  private final List<AuthGroup> authGroups;
 
   public AccountDetails(Account account, List<AuthGroup> authGroups) {
     this.account = account;

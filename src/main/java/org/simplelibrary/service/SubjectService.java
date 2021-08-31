@@ -15,7 +15,7 @@ import java.util.Random;
 @Service
 public class SubjectService {
 
-  private SubjectRepository subjectRepository;
+  private final SubjectRepository subjectRepository;
 
   @Autowired
   public SubjectService(SubjectRepository subjectRepository) {

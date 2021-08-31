@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class HomeService {
 
-  private TableService tableService;
+  private final TableService tableService;
 
   @Autowired
   public HomeService(TableService tableService) {

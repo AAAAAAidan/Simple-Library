@@ -2,7 +2,6 @@ package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Author;
-import org.simplelibrary.model.Book;
 import org.simplelibrary.service.AuthorService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class AuthorController extends TemplateView {
 
-  private AuthorService authorService;
+  private final AuthorService authorService;
 
   @Autowired
   public AuthorController(AuthorService authorService) {

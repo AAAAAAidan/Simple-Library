@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class AccountService {
 
-  private AccountRepository accountRepository;
-  private AuthGroupService authGroupService;
-  private FileService fileService;
+  private final AccountRepository accountRepository;
+  private final AuthGroupService authGroupService;
+  private final FileService fileService;
 
   @Autowired
   public AccountService(AccountRepository accountRepository,

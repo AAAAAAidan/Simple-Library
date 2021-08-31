@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
