@@ -114,6 +114,7 @@ public class FileService {
     try {
       Path file = Paths.get(getDirectoryPath(filename)).resolve(filename);
       Resource resource = new UrlResource(file.toUri());
+      log.info("Loading " + resource.toString());
 
       if (resource.exists() || resource.isReadable()) {
         return resource;
