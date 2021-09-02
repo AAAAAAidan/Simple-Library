@@ -3,25 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <groupId>org</groupId>
+  <artifactId>simplelibrary</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>simplelibrary</name>
+  <description>Digital book library project built with Spring Boot</description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.5.3</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
 
-  <groupId>org</groupId>
-  <artifactId>simplelibrary</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>simplelibrary</name>
-  <description>Digital book library project for Spring Boot</description>
-
   <properties>
-    <java.version>10</java.version>
-    <maven.compiler.source>10</maven.compiler.source>
-    <maven.compiler.target>10</maven.compiler.target>
-    <tomcat.version>9.0.52</tomcat.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <!-- Google Cloud Dependency Management -->
@@ -110,6 +107,10 @@
       <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-nio</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.cloud.sql</groupId>
       <artifactId>mysql-socket-factory</artifactId>
     </dependency>
@@ -120,16 +121,39 @@
     <plugins>
 
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>
+                ${project.build.directory}/lib
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
         <configuration>
-          <addResources>true</addResources>
-          <excludes>
-            <exclude>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-            </exclude>
-          </excludes>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <mainClass>
+                org.simplelibrary.Application
+              </mainClass>
+            </manifest>
+          </archive>
         </configuration>
       </plugin>
 

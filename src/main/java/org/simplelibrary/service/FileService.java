@@ -1,8 +1,7 @@
 package org.simplelibrary.service;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +17,7 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,25 +41,23 @@ public class FileService {
   public void init() {
     try {
       uploadPaths.put(ROOT, uploadPath);
-      uploadPaths.put(ACCOUNT, uploadPath + File.separator + "accounts");
-      uploadPaths.put(COVER, uploadPath + File.separator + "covers");
-      uploadPaths.put(READER, uploadPath + File.separator + "readers");
+      uploadPaths.put(ACCOUNT, uploadPath + "/accounts");
+      uploadPaths.put(COVER, uploadPath + "/covers");
+      uploadPaths.put(READER, uploadPath + "/readers");
 
-      Files.createDirectories(Paths.get(uploadPaths.get(ROOT)));
-      Files.createDirectories(Paths.get(uploadPaths.get(ACCOUNT)));
-      Files.createDirectories(Paths.get(uploadPaths.get(COVER)));
-      Files.createDirectories(Paths.get(uploadPaths.get(READER)));
+      if (!uploadPath.contains("://")) {
+        Files.createDirectories(Paths.get(uploadPaths.get(ROOT)));
+        Files.createDirectories(Paths.get(uploadPaths.get(ACCOUNT)));
+        Files.createDirectories(Paths.get(uploadPaths.get(COVER)));
+        Files.createDirectories(Paths.get(uploadPaths.get(READER)));
+      }
     }
     catch (IOException e) {
       throw new RuntimeException("Could not create upload folders!");
     }
   }
 
-  public String getDirectoryPath() {
-    return getDirectoryPath(ROOT);
-  }
-
-  public String getDirectoryPath(String filename) {
+  private String getDirectoryString(String filename) {
     String path;
 
     if (filename.contains("-")) {
@@ -78,13 +75,28 @@ public class FileService {
     return path;
   }
 
+  private Path getDirectoryPath(String filename) {
+    Path path;
+    String directory = getDirectoryString(filename);
+
+    if (uploadPath.contains("://")) {
+      path = Paths.get(URI.create(directory));
+    }
+    else {
+      path = Paths.get(directory);
+    }
+
+    return path;
+  }
+
   public void save(MultipartFile file) {
     saveAs(file, file.getOriginalFilename());
   }
 
   public void saveAs(MultipartFile file, String filename) {
     try {
-      Path path = Paths.get(getDirectoryPath(filename));
+      Path path = getDirectoryPath(filename);
+      log.info("Saving to " + path.toString());
 
       if (!Files.exists(path)) {
         init();
@@ -99,6 +111,24 @@ public class FileService {
     }
   }
 
+  public Resource load(String filename) {
+    try {
+      Path path = getDirectoryPath(filename).resolve(filename);
+      log.info("Loading " + path.toUri());
+      Resource resource = new PathResource(path.toUri());
+
+      if (resource.exists() || resource.isReadable()) {
+        return resource;
+      }
+      else {
+        throw new RuntimeException("Could not read the file!");
+      }
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Error: " + e.getMessage());
+    }
+  }
+
   public boolean exists(String filename) {
     try {
       load(filename);
@@ -110,30 +140,14 @@ public class FileService {
     }
   }
 
-  public Resource load(String filename) {
-    try {
-      Path file = Paths.get(getDirectoryPath(filename)).resolve(filename);
-      Resource resource = new UrlResource(file.toUri());
-      log.info("Loading " + resource.toString());
-
-      if (resource.exists() || resource.isReadable()) {
-        return resource;
-      }
-      else {
-        throw new RuntimeException("Could not read the file!");
-      }
-    }
-    catch (MalformedURLException e) {
-      throw new RuntimeException("Error: " + e.getMessage());
-    }
-  }
-
   public void deleteAll() {
     deleteAll(ROOT);
   }
 
   public void deleteAll(String directory) {
-    FileSystemUtils.deleteRecursively(Paths.get(getDirectoryPath(directory)).toFile());
+    Path path = getDirectoryPath(directory);
+    log.info("Deleting all from " + path.toString());
+    FileSystemUtils.deleteRecursively(path.toFile());
   }
 
   public List<Path> loadAll() {
@@ -142,7 +156,8 @@ public class FileService {
 
   public List<Path> loadAll(String directory) {
     try {
-      Path root = Paths.get(getDirectoryPath(directory));
+      Path root = getDirectoryPath(directory);
+      log.info("Loading all from " + root.toString());
 
       if (Files.exists(root)) {
         return Files.walk(root, 1)
