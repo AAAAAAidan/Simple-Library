@@ -217,7 +217,7 @@ public class TableService extends DatabaseConnection {
   }
 
   public <T> List<T> select(Class<T> tableClass) {
-    String sql = String.format("SELECT * FROM %s t %s", tableClass.getSimpleName(), getAllClauses());
+    String sql = String.format("SELECT * FROM %s t %s", tableClass.getSimpleName().toLowerCase(), getAllClauses());
     this.connect();
     Query query = getSelectQuery(sql, tableClass);
     List<T> results = query.getResultList();
@@ -264,7 +264,7 @@ public class TableService extends DatabaseConnection {
 
     columnsToValues = columnsToValues.substring(0, columnsToValues.lastIndexOf(","));
     paramCount = 1000;
-    String sql = String.format("UPDATE %s t SET %s %s", tableClass.getSimpleName(), columnsToValues, getWhereClause());
+    String sql = String.format("UPDATE %s t SET %s %s", tableClass.getSimpleName().toLowerCase(), columnsToValues, getWhereClause());
     this.begin();
     Query query = getSelectQuery(sql);
 
@@ -280,7 +280,7 @@ public class TableService extends DatabaseConnection {
   // Delete methods
 
   public <T> int delete(Class<T> tableName) {
-    String sql = String.format("DELETE FROM %s t %s", tableName.getSimpleName(), getWhereClause());
+    String sql = String.format("DELETE FROM %s t %s", tableName.getSimpleName().toLowerCase(), getWhereClause());
     this.begin();
     Query query = getSelectQuery(sql);
     int result = query.executeUpdate();

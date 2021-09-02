@@ -14,9 +14,6 @@ public class DatabaseService {
   @Value("${database}")
   private String database;
 
-  @Value("${spring.cloud.gcp.sql.instance-connection-name:null}")
-  private String instance;
-
   @Value("${spring.datasource.driver-class-name}")
   private String driver;
   @Value("${spring.datasource.url}")
@@ -30,21 +27,10 @@ public class DatabaseService {
 
   @PostConstruct
   public void init() {
-    log.info(driver);
-    log.info(url);
-
-    if (!instance.equals("null")) {
-      driver = "com.google.cloud.sql.Driver";
-      url = "jdbc:google:rdbms://" + instance + "/" + database;
-    }
-
     properties.setProperty("javax.persistence.jdbc.driver", driver);
     properties.setProperty("javax.persistence.jdbc.url", url);
     properties.setProperty("javax.persistence.jdbc.user", user);
     properties.setProperty("javax.persistence.jdbc.password", password);
-
-    log.info(driver);
-    log.info(url);
   }
 
   public String getDatabase() {
