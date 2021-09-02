@@ -31,6 +31,11 @@ public class DatabaseService {
     properties.setProperty("javax.persistence.jdbc.url", url);
     properties.setProperty("javax.persistence.jdbc.user", user);
     properties.setProperty("javax.persistence.jdbc.password", password);
+    log.info(database);
+    log.info(driver);
+    log.info(url);
+    log.info(user);
+    log.info(password);
   }
 
   public String getDatabase() {
