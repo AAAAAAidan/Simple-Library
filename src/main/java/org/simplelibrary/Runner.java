@@ -1,3 +1,6 @@
+// This code is purely used to initialize the database and files
+// It will enventually be moved into an admin page
+//
 // package org.simplelibrary;
 //
 // import lombok.extern.slf4j.Slf4j;
@@ -73,59 +76,57 @@
 //
 //       for (int resultIndex = 0; resultIndex < results.size(); resultIndex++) {
 //         JsonObject result = results.getJsonObject(resultIndex);
-//         boolean copyright = result.getBoolean("copyright");
+//         boolean hasCopyright = result.getBoolean("copyright");
+//         boolean hasEpub = result.getJsonObject("formats").containsKey("application/epub+zip");
 //         String title = result.getString("title");
 //         Book book = new Book(title);
 //
-//         // Ignore any books that aren't public domain or are already in the database
-//         if (copyright || bookService.existsByName(title)) {
-//           String reason;
-//
-//           if (copyright) {
-//             reason = " (copyright)";
-//           }
-//           else {
-//             reason = " (duplicate)";
-//           }
-//
-//           log.info("Skipping " + title + reason);
+//         // Ignore any books that aren't public domain or don't have an epub file
+//         if (hasCopyright || !hasEpub) {
+//           log.info("Skipping " + title);
 //           continue;
 //         }
+//         else if (!bookService.existsByName(title)) {
+//           // Else if the book hasn't been added to the database yet
+//           log.info("Adding " + title);
+//           bookService.save(book);
+//           JsonArray authors = result.getJsonArray("authors");
 //
-//         log.info("Adding " + title);
-//         bookService.save(book);
-//         JsonArray authors = result.getJsonArray("authors");
+//           for (int authorIndex = 0; authorIndex < authors.size(); authorIndex++) {
+//             JsonObject authorObject = authors.getJsonObject(authorIndex);
+//             String name = authorObject.getString("name");
+//             Author author;
 //
-//         for (int authorIndex = 0; authorIndex < authors.size(); authorIndex++) {
-//           JsonObject authorObject = authors.getJsonObject(authorIndex);
-//           String name = authorObject.getString("name");
-//           Author author;
+//             if (authorService.existsByName(name)) {
+//               author = authorService.getByName(name);
+//             }
+//             else {
+//               author = new Author(name);
+//             }
 //
-//           if (authorService.existsByName(name)) {
-//             author = authorService.getByName(name);
+//             authorService.mapToBook(author, book);
 //           }
-//           else {
-//             author = new Author(name);
-//           }
 //
-//           authorService.mapToBook(author, book);
+//           JsonArray subjects = result.getJsonArray("subjects");
+//
+//           for (int subjectIndex = 0; subjectIndex < subjects.size(); subjectIndex++) {
+//             String name = subjects.getString(subjectIndex);
+//             name = name.replaceAll("\\(.*", "").replaceAll("--.*", "").trim();
+//             Subject subject;
+//
+//             if (subjectService.existsByName(name)) {
+//               subject = subjectService.getByName(name);
+//             }
+//             else {
+//               subject = new Subject(name);
+//             }
+//
+//             subjectService.mapToBook(subject, book);
+//           }
 //         }
-//
-//         JsonArray subjects = result.getJsonArray("subjects");
-//
-//         for (int subjectIndex = 0; subjectIndex < subjects.size(); subjectIndex++) {
-//           String name = subjects.getString(subjectIndex);
-//           name = name.replaceAll("\\(.*", "").replaceAll("--.*", "").trim();
-//           Subject subject;
-//
-//           if (subjectService.existsByName(name)) {
-//             subject = subjectService.getByName(name);
-//           }
-//           else {
-//             subject = new Subject(name);
-//           }
-//
-//           subjectService.mapToBook(subject, book);
+//         else {
+//           // Else the book must already exist in the database
+//           book = bookService.getByName(book.getName());
 //         }
 //
 //         JsonObject formats = result.getJsonObject("formats");
@@ -144,13 +145,16 @@
 //             e.printStackTrace();
 //           }
 //         }
+//         else {
+//           log.info(imageName + " already exists");
+//         }
 //
 //         String readerName = "reader-" + book.getId() + ".epub";
 //
 //         if (!fileService.exists(readerName)) {
 //           try {
 //             log.info("Saving " + readerName);
-//             String readerUrl = formats.getString("application/epub+zip").replace("small", "medium");
+//             String readerUrl = formats.getString("application/epub+zip");
 //             String readerContentType = "application/epub+zip";
 //             byte[] readerContent = UrlReader.getByteArrayFromUrl(readerUrl);
 //             MultipartFile reader = new MockMultipartFile(readerName, readerName, readerContentType, readerContent);
@@ -159,6 +163,9 @@
 //           catch (Exception e) {
 //             e.printStackTrace();
 //           }
+//         }
+//         else {
+//           log.info(readerName + " already exists");
 //         }
 //       }
 //
