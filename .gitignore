@@ -1,11 +1,7 @@
-# Ignore all but the necessary project files
-*
-!.gitignore
-!README.md
-!pom.xml
+# Ignore all folders except the source
+/*/
 !/src/
-!/src/**
 
-# Ignore all uploaded files but the defaults
-/src/main/resources/uploads/*/*
-!/src/main/resources/uploads/*/*default*
+# Ignore all uploaded files except the defaults
+/src/main/uploads/*/*
+!/src/main/uploads/*/*default*

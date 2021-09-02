@@ -1,8 +1,6 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.simplelibrary.model.Account;
-import org.simplelibrary.security.AccountDetails;
 import org.simplelibrary.service.AccountService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class AccountController extends TemplateView {
 
-  private AccountService accountService;
+  private final AccountService accountService;
 
   @Autowired
   public AccountController(AccountService accountService) {

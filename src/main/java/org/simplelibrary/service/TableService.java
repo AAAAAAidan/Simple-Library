@@ -1,4 +1,7 @@
-package org.simplelibrary.util;
+package org.simplelibrary.service;
+
+import org.simplelibrary.util.DatabaseConnection;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,60 +10,19 @@ import java.util.regex.Pattern;
 import javax.persistence.Query;
 
 // Experimental usage of JPQL for querying and updating tables.
-// Will only be used for the search page, where repositories would be inefficient.
-public class Table<T> extends DatabaseConnection {
+// Will only be used for the search page, where repositories may be inefficient.
+@Service
+public class TableService extends DatabaseConnection {
 
   // Table fields
 
-  private Class<T> tableClass = null;
-  private String tableName = null;
   private String[] filters = null;
   private String[] sortColumns = null;
   private String order = null;
   private Integer limit= null;
   private Integer offset = null;
 
-  // Constructors
-
-  public Table() {
-  }
-
-  public Table(Class<T> tableClass) {
-    this.tableClass = tableClass;
-  }
-
-  public Table(Class<T> tableClass, String tableName, String[] filters,
-               String[] sortColumns, String order, Integer limit, Integer offset) {
-    this.tableClass = tableClass;
-    this.tableName = tableName;
-    this.filters = filters;
-    this.sortColumns = sortColumns;
-    this.order = order;
-    this.limit = limit;
-    this.offset = offset;
-  }
-
   // Standard getters and setters
-
-  public Class<T> getTableClass() {
-    return tableClass;
-  }
-
-  public void setTableClass(Class<T> tableClass) {
-    this.tableClass = tableClass;
-  }
-
-  public String getTableName() {
-    if (tableName == null) {
-      tableName = tableClass.getSimpleName();
-    }
-
-    return tableName;
-  }
-
-  public void setTableName(String tableName) {
-    this.tableName = tableName;
-  }
 
   public String[] getFilters() {
     return filters;
@@ -90,7 +52,7 @@ public class Table<T> extends DatabaseConnection {
     return order;
   }
 
-  public void setOrder(String sort) {
+  public void setOrder(String order) {
     this.order = order;
   }
 
@@ -119,8 +81,8 @@ public class Table<T> extends DatabaseConnection {
     if (filters != null) {
       sql += "WHERE ";
 
-      for (int i = 0; i < filters.length; i++) {
-        String filter = filters[i].toLowerCase();
+      for (String filter : filters) {
+        filter = filter.toLowerCase();
 
         if (filter.contains("=")) {
           String column = filter.split("=")[0].trim();
@@ -150,7 +112,7 @@ public class Table<T> extends DatabaseConnection {
         }
       }
 
-      if (acceptedSortColumns.size() > 0) {
+      if (!acceptedSortColumns.isEmpty()) {
         sql += "ORDER BY t.";
 
         for (String column : acceptedSortColumns) {
@@ -202,23 +164,22 @@ public class Table<T> extends DatabaseConnection {
   }
 
   private String getAllClauses() {
-    String sql = String.format("%s %s %s %s %s", getWhereClause(),
-        getSortClause(), getOrderClause(),
-        getLimitClause(), getOffsetClause());
-    return sql;
+    return String.format("%s %s %s %s %s", getWhereClause(),
+                         getSortClause(), getOrderClause(),
+                         getLimitClause(), getOffsetClause());
   }
 
   // Query methods
 
   private Query getSelectQuery(String sql) {
-    return getSelectQuery(sql, false);
+    return getSelectQuery(sql, null);
   }
 
-  private Query getSelectQuery(String sql, boolean isNative) {
+  private Query getSelectQuery(String sql, Class<?> tableClass) {
     Query query = null;
     int paramCount = 0;
 
-    if (isNative == true) {
+    if (tableClass != null) {
       query = entityManager.createNativeQuery(sql, tableClass);
     }
     else {
@@ -226,14 +187,13 @@ public class Table<T> extends DatabaseConnection {
     }
 
     if (filters != null) {
-      for (int i = 0; i < filters.length; i++) {
-        String filter = filters[i].toLowerCase();
+      for (String filter : filters) {
+        filter = filter.toLowerCase();
 
         if (filter.contains("=")) {
           String value = filter.split("=")[1].trim();
           query.setParameter(++paramCount, value);
-        }
-        else if (filter.contains("contains")) {
+        } else if (filter.contains("contains")) {
           String value = "%" + filter.split("contains")[1].trim() + "%";
           query.setParameter(++paramCount, value);
         }
@@ -245,10 +205,10 @@ public class Table<T> extends DatabaseConnection {
 
   // Select methods
 
-  public T selectOne() {
-    List<T> results = select();
+  public <T> T selectOne(Class<T> tableClass) {
+    List<T> results = select(tableClass);
 
-    if (results.size() == 0) {
+    if (results.isEmpty()) {
       return null;
     }
     else {
@@ -256,10 +216,10 @@ public class Table<T> extends DatabaseConnection {
     }
   }
 
-  public List<T> select() {
-    String sql = String.format("SELECT * FROM %s t %s", getTableName(), getAllClauses());
+  public <T> List<T> select(Class<T> tableClass) {
+    String sql = String.format("SELECT * FROM %s t %s", tableClass.getSimpleName().toLowerCase(), getAllClauses());
     this.connect();
-    Query query = getSelectQuery(sql, true);
+    Query query = getSelectQuery(sql, tableClass);
     List<T> results = query.getResultList();
     this.disconnect();
     return results;
@@ -267,13 +227,13 @@ public class Table<T> extends DatabaseConnection {
 
   // Insert methods
 
-  public int insert(T entity) {
-    List<T> entities = new ArrayList<T>();
+  public <T> int insert(T entity) {
+    List<T> entities = new ArrayList<>();
     entities.add(entity);
     return insert(entities);
   }
 
-  public int insert(List<T> entities) {
+  public <T> int insert(List<T> entities) {
     this.begin();
 
     for (T entity : entities) {
@@ -286,11 +246,11 @@ public class Table<T> extends DatabaseConnection {
 
   // Update methods
 
-  public int update(String column, String value) {
-    return update(new String[] {column}, new String[] {value});
+  public <T> int update(Class<T> tableClass, String column, String value) {
+    return update(tableClass, new String[] {column}, new String[] {value});
   }
 
-  public int update(String[] columns, String[] values) {
+  public <T> int update(Class<T> tableClass, String[] columns, String[] values) {
     if (columns.length != values.length) {
       return 0;
     }
@@ -304,7 +264,7 @@ public class Table<T> extends DatabaseConnection {
 
     columnsToValues = columnsToValues.substring(0, columnsToValues.lastIndexOf(","));
     paramCount = 1000;
-    String sql = String.format("UPDATE %s t SET %s %s", getTableName(), columnsToValues, getWhereClause());
+    String sql = String.format("UPDATE %s t SET %s %s", tableClass.getSimpleName().toLowerCase(), columnsToValues, getWhereClause());
     this.begin();
     Query query = getSelectQuery(sql);
 
@@ -319,8 +279,8 @@ public class Table<T> extends DatabaseConnection {
 
   // Delete methods
 
-  public int delete() {
-    String sql = String.format("DELETE FROM %s t %s", getTableName(), getWhereClause());
+  public <T> int delete(Class<T> tableName) {
+    String sql = String.format("DELETE FROM %s t %s", tableName.getSimpleName().toLowerCase(), getWhereClause());
     this.begin();
     Query query = getSelectQuery(sql);
     int result = query.executeUpdate();
@@ -330,41 +290,44 @@ public class Table<T> extends DatabaseConnection {
 
   // Filter methods
 
-  public Table<T> filterBy(String filter) {
+  public TableService filterBy(String filter) {
     return filterBy(new String[] {filter});
   }
 
-  public Table<T> filterBy(String[] filters) {
-    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
+  public TableService filterBy(String[] filters) {
+    this.setFilters(filters);
+    return this;
   }
 
   // Sort methods
 
-  public Table<T> sortBy(String sortColumn) {
+  public TableService sortBy(String sortColumn) {
     return sortBy(new String[] {sortColumn});
   }
 
-  public Table<T> sortBy(String[] sortColumns) {
-    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
+  public TableService sortBy(String[] sortColumns) {
+    this.setSortColumns(sortColumns);
+    return this;
   }
 
   // Order methods
 
-  public Table<T> inOrder(String order) {
+  public TableService inOrder(String order) {
     order = Pattern.matches("(?i)(-|d|desc|descending)", order) ? "DESC" : "ASC";
-    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
+    this.setOrder(order);
+    return this;
   }
 
   // Range methods
 
-  public Table<T> limitTo(Integer limit) {
-    return fromRange(0, limit - 1);
+  public TableService limitTo(Integer limit) {
+    return inRange(0, limit - 1);
   }
 
-  public Table<T> fromRange(Integer start, Integer end) {
-    Integer limit = end - start + 1;
-    Integer offset = start;
-    return new Table<T>(tableClass, tableName, filters, sortColumns, order, limit, offset);
+  public TableService inRange(Integer start, Integer end) {
+    this.setLimit(end - start + 1);
+    this.setOffset(start);
+    return this;
   }
 
 }

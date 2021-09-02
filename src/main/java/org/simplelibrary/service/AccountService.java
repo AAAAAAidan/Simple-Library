@@ -21,9 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class AccountService {
 
-  private AccountRepository accountRepository;
-  private AuthGroupService authGroupService;
-  private FileService fileService;
+  private final AccountRepository accountRepository;
+  private final AuthGroupService authGroupService;
+  private final FileService fileService;
 
   @Autowired
   public AccountService(AccountRepository accountRepository,
@@ -64,11 +64,6 @@ public class AccountService {
 
     List<AuthGroup> authGroups = new ArrayList<>();
     authGroups.add(authGroupService.getByName("ROLE_USER"));
-
-    if (email.equals("admin@mail.com")) {
-      authGroups.add(authGroupService.getByName("ROLE_ADMIN"));
-    }
-
     account.setAuthGroups(authGroups);
     accountRepository.save(account);
   }

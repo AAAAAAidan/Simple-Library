@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SettingService {
 
-  private SettingRepository settingRepository;
+  private final SettingRepository settingRepository;
 
   @Autowired
   public SettingService(SettingRepository settingRepository) {

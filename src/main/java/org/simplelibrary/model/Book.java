@@ -4,7 +4,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class Book implements Serializable {
   private Integer id;
 
   @NonNull
-  @Column(name="book_name", unique=true, length=320, nullable=false)
+  @Column(name="book_name", unique=true, length=640, nullable=false)
   private String name;
 
   @Column(name="book_view_count")

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class AuthGroupController {
 
-  private AuthGroupService authGroupService;
+  private final AuthGroupService authGroupService;
 
   @Autowired
   public AuthGroupController(AuthGroupService authGroupService) {

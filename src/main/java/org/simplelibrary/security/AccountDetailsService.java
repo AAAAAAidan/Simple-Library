@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class AccountDetailsService implements UserDetailsService {
 
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
   public AccountDetailsService(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;

@@ -1,23 +1,26 @@
 package org.simplelibrary.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.simplelibrary.service.DatabaseService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Properties;
 
 public abstract class DatabaseConnection {
 
-  protected EntityManagerFactory entityManagerFactory = null;
-  protected EntityManager entityManager = null;
+  protected EntityManagerFactory entityManagerFactory;
+  protected EntityManager entityManager;
 
-  private final String DATABASE = "simplelibrary";
+  @Autowired
+  DatabaseService databaseService;
 
   // Connect to the database
   public void connect() {
-    entityManagerFactory = Persistence.createEntityManagerFactory(DATABASE);
+    String database = databaseService.getDatabase();
+    Properties properties = databaseService.getProperties();
+    entityManagerFactory = Persistence.createEntityManagerFactory(database, properties);
     entityManager = entityManagerFactory.createEntityManager();
   }
 

@@ -15,7 +15,7 @@ import java.util.Random;
 @Service
 public class AuthorService {
 
-  private AuthorRepository authorRepository;
+  private final AuthorRepository authorRepository;
 
   @Autowired
   public AuthorService(AuthorRepository authorRepository) {

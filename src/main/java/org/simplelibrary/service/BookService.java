@@ -13,14 +13,11 @@ import java.util.Random;
 @Service
 public class BookService {
 
-  private BookRepository bookRepository;
-  private FileService fileService;
+  private final BookRepository bookRepository;
 
   @Autowired
-  public BookService(BookRepository bookRepository,
-                     FileService fileService) {
+  public BookService(BookRepository bookRepository) {
     this.bookRepository = bookRepository;
-    this.fileService = fileService;
   }
 
   public void save(Book book) {
