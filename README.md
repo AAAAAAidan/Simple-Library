@@ -2,7 +2,13 @@
 
 A digital book library web application for my full stack Java development case study. The application contains search functionality through a database of books, authors, and subjects, all of which can be individually viewed on their own pages. The book selection is restricted to those in the public domain, all of which can be downloaded and read through the application. For additional details, see the software requirements specification document in external links, which includes the database schema and user stories, among other details.
 
-### Technical Requirements
+### Local Development
+
+Use the following command to run locally. Requires Maven and Java 11.
+
+    mvn spring-boot:run
+
+### Technical Overview
 
 * Contains 7 JPA entity models (Book, Author, Subject, Catalog, Account, Setting, AuthGroup), 4 many-to-many join tables, and two generic models (FileData, ResponseMessage). Getters, setters, and constructors are generated using Lombok. Validation is done through the associated controllers.
 * All entity models have associated repositories, services, and controllers. FileData has services and a REST controller.
