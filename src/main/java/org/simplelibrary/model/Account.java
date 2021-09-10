@@ -49,10 +49,6 @@ public class Account implements Serializable {
   @OneToMany(mappedBy="account")
   private List<Catalog> catalogs;
 
-  // Bi-directional many-to-one association to Setting
-  @OneToMany(mappedBy="account")
-  private List<Setting> settings;
-
   // Bi-directional many-to-many association to AuthGroup
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
@@ -72,18 +68,6 @@ public class Account implements Serializable {
     getCatalogs().remove(catalog);
     catalog.setAccount(null);
     return catalog;
-  }
-
-  public Setting addSetting(Setting setting) {
-    getSettings().add(setting);
-    setting.setAccount(this);
-    return setting;
-  }
-
-  public Setting removeSetting(Setting setting) {
-    getSettings().remove(setting);
-    setting.setAccount(null);
-    return setting;
   }
 
 }

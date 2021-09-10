@@ -62,7 +62,7 @@
 //     for (String email : emails) {
 //       if (accountService.getByEmail(email) == null) {
 //         log.info("Adding account " + email);
-//         accountService.signUp(email, "password");
+//         accountService.saveAccount(email, "password");
 //       }
 //     }
 //

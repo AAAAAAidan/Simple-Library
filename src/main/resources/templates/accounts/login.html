@@ -4,8 +4,8 @@
   <input class="button-style" type="text" placeholder="Enter your email" name="email">
   <label for="password">Password</label>
   <input class="button-style" type="password" placeholder="Enter your Password" name="password">
-  <div th:if="${message}">
-    <p class="help-text error-message margin-bottom" th:text="${message}"></p>
+  <div th:if="${error}">
+    <p class="help-message error-message" th:text="${error}"></p>
   </div>
   <input class="clickable button-style" type="submit" value="Login"/>
 </form>

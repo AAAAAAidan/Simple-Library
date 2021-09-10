@@ -128,11 +128,11 @@ table img {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-.element-list * {
+.element-list *:not(a, img) {
   display: block;
 }
 
-.element-list input, .element-list li {
+.element-list *:not(label, img) {
   margin-bottom: 16px;
 }
 
@@ -152,7 +152,7 @@ table img {
   cursor: pointer;
 }
 
-.help-text {
+.help-message {
   font-size: small;
 }
 
@@ -194,7 +194,7 @@ table img {
     padding: 16px;
   }
 
-  .help-text {
+  .help-message {
     font-size: medium;
   }
 

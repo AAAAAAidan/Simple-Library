@@ -7,6 +7,5 @@
     <class>org.simplelibrary.model.Book</class>
     <class>org.simplelibrary.model.Catalog</class>
     <class>org.simplelibrary.model.Subject</class>
-    <class>org.simplelibrary.model.Setting</class>
   </persistence-unit>
 </persistence>

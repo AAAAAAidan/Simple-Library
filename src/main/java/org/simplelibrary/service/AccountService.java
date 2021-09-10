@@ -29,6 +29,7 @@ public class AccountService {
   private final AccountDetailsService accountDetailsService;
   private final AuthGroupService authGroupService;
   private final FileService fileService;
+  private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
 
   @Autowired
   public AccountService(AccountRepository accountRepository,
@@ -41,41 +42,7 @@ public class AccountService {
     this.fileService = fileService;
   }
 
-  public Account getByEmail(String email) {
-    return accountRepository.getByEmail(email);
-  }
-
-  public List<String> getEmailMessages(String email) {
-    List<String> emailMessages = new ArrayList<>();
-
-    if (getByEmail(email) != null) {
-      emailMessages.add("That email is already taken!");
-    }
-
-    if (!Pattern.matches("[A-Za-z0-9]+@+[A-Za-z0-9]+.+[A-Za-z]+", email)) {
-      emailMessages.add("The email must contain a valid email address!");
-    }
-
-    return emailMessages;
-  }
-
-  public List<String> getPasswordMessages(String password, String passwordConfirm) {
-    List<String> passwordMessages = new ArrayList<>();
-
-    if (!password.equals(passwordConfirm)) {
-      passwordMessages.add("The passwords entered do not match!");
-    }
-
-    if (password.length() < 8) {
-      passwordMessages.add("The password must contain 8 or more characters!");
-    }
-
-    return passwordMessages;
-  }
-
-  public Account getLoggedInAccount() {
-    return accountRepository.getById(getLoggedInId());
-  }
+  // Account getters
 
   public AccountDetails getLoggedInDetails() {
     return (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -93,28 +60,69 @@ public class AccountService {
     return getLoggedInDetails().getPassword();
   }
 
-  public void signUp(String email, String password) {
-    Account account = new Account();
-    account.setEmail(email);
-
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
-    String encodedPassword = passwordEncoder.encode(password);
-    account.setPassword(encodedPassword);
-
-    List<AuthGroup> authGroups = new ArrayList<>();
-    authGroups.add(authGroupService.getByName("ROLE_USER"));
-    account.setAuthGroups(authGroups);
-    accountRepository.save(account);
+  public Account getLoggedInAccount() {
+    return accountRepository.getById(getLoggedInId());
   }
 
-  public void logIn(HttpServletRequest request, String email, String password) {
-    try {
-      request.login(email, password);
-    }
-    catch (ServletException e) {
-      e.printStackTrace();
-    }
+  public Account getByEmail(String email) {
+    return accountRepository.getByEmail(email);
   }
+
+  // Account validators
+
+  public List<String> getEmailErrors(String email) {
+    List<String> emailErrors = new ArrayList<>();
+
+    if (getByEmail(email) != null) {
+      emailErrors.add("That email is already taken!");
+    }
+
+    if (!Pattern.matches("[A-Za-z0-9]+@+[A-Za-z0-9]+.+[A-Za-z]+", email)) {
+      emailErrors.add("The email must contain a valid email address!");
+    }
+
+    return emailErrors;
+  }
+
+  public List<String> getPasswordErrors(String password, String passwordConfirm) {
+    List<String> passwordErrors = new ArrayList<>();
+
+    if (!password.equals(passwordConfirm)) {
+      passwordErrors.add("The passwords entered do not match!");
+    }
+
+    if (password.length() < 8) {
+      passwordErrors.add("The password must contain 8 or more characters!");
+    }
+
+    return passwordErrors;
+  }
+
+  public List<String> getPasswordValidationErrors(String password) {
+    List<String> passwordValidationErrors = new ArrayList<>();
+
+    if (!passwordEncoder.matches(password, getLoggedInPassword())) {
+      passwordValidationErrors.add("The password entered is incorrect!");
+    }
+
+    return passwordValidationErrors;
+  }
+
+  public List<String> getFileErrors(MultipartFile file) {
+    List<String> emailErrors = new ArrayList<>();
+
+    if (Pattern.matches(".*.(png|jpg|jpeg)", file.getOriginalFilename())) {
+      emailErrors.add("The file must be .png or .jpg!");
+    }
+
+    if (file.getSize() > 5000000) {
+      emailErrors.add("The file size must be 5 megabytes or less!");
+    }
+
+    return emailErrors;
+  }
+
+  // Account updaters
 
   public void saveAuthentication(String email) {
     AccountDetails accountDetails = (AccountDetails) accountDetailsService.loadUserByUsername(email);
@@ -122,9 +130,14 @@ public class AccountService {
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 
-  public void saveProfilePicture(MultipartFile file) {
-    String newFilename = "account-" + getLoggedInId() + ".png";
-    fileService.saveAs(file, newFilename);
+  public void saveAccount(String email, String password) {
+    List<AuthGroup> authGroups = new ArrayList<>();
+    authGroups.add(authGroupService.getByName("ROLE_USER"));
+    Account account = new Account();
+    account.setEmail(email);
+    account.setPassword(passwordEncoder.encode(password));
+    account.setAuthGroups(authGroups);
+    accountRepository.save(account);
   }
 
   public void saveEmail(String email) {
@@ -135,10 +148,14 @@ public class AccountService {
 
   public void savePassword(String password) {
     Account account = getLoggedInAccount();
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(4);
     String encodedPassword = passwordEncoder.encode(password);
     account.setPassword(encodedPassword);
     accountRepository.save(account);
+  }
+
+  public void saveProfilePicture(MultipartFile file) {
+    String newFilename = "account-" + getLoggedInId() + ".png";
+    fileService.saveAs(file, newFilename);
   }
 
 }
