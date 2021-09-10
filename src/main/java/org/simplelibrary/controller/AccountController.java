@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ public class AccountController extends TemplateView {
 
   @GetMapping("/account")
   public String getAccount(Model model) {
-    model.addAttribute("account", accountService.getLoggedInAccount());
+    model.addAttribute("email", accountService.getLoggedInEmail());
     return loadView(model, "accounts/account");
   }
 
@@ -42,12 +41,60 @@ public class AccountController extends TemplateView {
 
     if (Pattern.matches(".*.(png|jpg|jpeg)", filename)) {
       accountService.saveProfilePicture(file);
-      redirectAttributes.addFlashAttribute("message", "Successfully uploaded " + file.getOriginalFilename());
+      redirectAttributes.addFlashAttribute("successMessage", "Your profile picture has been saved!");
     }
     else {
-      redirectAttributes.addFlashAttribute("message", "File must be .png or .jpg");
+      redirectAttributes.addFlashAttribute("fileMessage", "File must be .png or .jpg");
     }
 
+    return "redirect:/account";
+  }
+
+  @PostMapping("/account/email")
+  public String postEmail(Model model,
+                          RedirectAttributes redirectAttributes,
+                          @RequestParam String email) {
+
+    List<String> emailMessages = accountService.getEmailMessages(email);
+
+    if (emailMessages.size() == 0) {
+      accountService.saveEmail(email);
+      accountService.saveAuthentication(email);
+      redirectAttributes.addFlashAttribute("successMessage", "Your email has been saved!");
+    }
+    else {
+      redirectAttributes.addFlashAttribute("emailMessages", emailMessages);
+    }
+
+    return "redirect:/account";
+  }
+
+  @PostMapping("/account/password")
+  public String postPassword(Model model,
+                             RedirectAttributes redirectAttributes,
+                             @RequestParam String passwordOld,
+                             @RequestParam String passwordNew,
+                             @RequestParam String passwordConfirm) {
+
+    List<String> passwordMessages = accountService.getPasswordMessages(passwordNew, passwordConfirm);
+
+    if (passwordMessages.size() == 0) {
+      accountService.savePassword(passwordNew);
+      accountService.saveAuthentication(accountService.getLoggedInEmail());
+      redirectAttributes.addFlashAttribute("successMessage", "Your password has been saved!");
+    }
+    else {
+      redirectAttributes.addFlashAttribute("passwordMessages", passwordMessages);
+    }
+
+    return "redirect:/account";
+  }
+
+  @PostMapping("/account/settings")
+  public String postSettings(Model model,
+                             RedirectAttributes redirectAttributes) {
+
+    redirectAttributes.addFlashAttribute("successMessage", "Your settings have been saved!");
     return "redirect:/account";
   }
 
@@ -64,25 +111,8 @@ public class AccountController extends TemplateView {
                            @RequestParam String password,
                            @RequestParam String passwordConfirm) {
 
-    List<String> emailMessages = new ArrayList<>();
-
-    if (accountService.getByEmail(email) != null) {
-      emailMessages.add("That email is already taken!");
-    }
-
-    if (!Pattern.matches("[A-Za-z0-9]+@+[A-Za-z0-9]+.+[A-Za-z]+", email)) {
-      emailMessages.add("The email must contain a valid email address!");
-    }
-
-    List<String> passwordMessages = new ArrayList<>();
-
-    if (!password.equals(passwordConfirm)) {
-      passwordMessages.add("The passwords entered do not match!");
-    }
-
-    if (password.length() < 8) {
-      passwordMessages.add("The password must contain 8 or more characters!");
-    }
+    List<String> emailMessages = accountService.getEmailMessages(email);
+    List<String> passwordMessages = accountService.getPasswordMessages(password, passwordConfirm);
 
     if (emailMessages.size() == 0 && passwordMessages.size() == 0) {
       accountService.signUp(email, password);
@@ -99,6 +129,7 @@ public class AccountController extends TemplateView {
   @GetMapping("/login")
   public String getLogin(Model model,
                          @RequestParam(required=false) String error) {
+
     if (error != null) {
       model.addAttribute("message", "Account not found!");
     }

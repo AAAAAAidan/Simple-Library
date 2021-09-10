@@ -156,6 +156,10 @@ table img {
   font-size: small;
 }
 
+.success-message {
+  color: #00DD00;
+}
+
 .error-message {
   color: #FF0000;
 }
@@ -166,8 +170,8 @@ table img {
 }
 
 .profile-picture {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
 }
 
 /* ID selectors */

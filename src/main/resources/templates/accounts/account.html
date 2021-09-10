@@ -1,11 +1,41 @@
-<div>
-  <h2>Account</h2>
-  <img th:src="@{~/account/profile.png}" class="profile-picture" alt="Profile picture" />
-  <form th:action="@{~/account/profilepicture}" method="post" enctype="multipart/form-data">
-    <input class="button-style" type="file" name="file" accept="image/png, image/jpeg"/>
-    <input class="clickable button-style" type="submit"/>
-  </form>
-  <div th:if="${message}">
-    <p class="help-text margin-bottom" th:text="${message}"></p>
+<div class="element-list">
+  <h2 th:text="${email}"></h2>
+  <div th:if="${successMessage}">
+    <p class="help-text success-message margin-bottom" th:text="${successMessage}"></p>
   </div>
+  <h4>Change Profile Picture</h4>
+  <form th:action="@{~/account/profilepicture}" method="post" enctype="multipart/form-data">
+    <img th:src="@{~/account/profile.png}" class="profile-picture margin-bottom" alt="Profile picture" />
+    <input class="button-style" type="file" name="file" accept="image/png, image/jpeg"/>
+    <div th:if="${fileMessage}">
+      <p class="help-text error-message margin-bottom" th:text="${message}"></p>
+    </div>
+    <input class="clickable button-style" type="submit" value="Save profile picture"/>
+  </form>
+  <h4>Change Email</h4>
+  <form th:action="@{~/account/email}" method="post">
+    <label for="email">New email</label>
+    <input class="button-style" type="text" name="email"/>
+    <div th:each="emailMessage:${emailMessages}">
+      <p class="help-text error-message margin-bottom" th:text="${emailMessage}"></p>
+    </div>
+    <input class="clickable button-style" type="submit" value="Save email"/>
+  </form>
+  <h4>Change Password</h4>
+  <form th:action="@{~/account/password}" method="post">
+    <label for="passwordOld">Old password</label>
+    <input class="button-style" type="password" name="passwordOld"/>
+    <label for="passwordNew">New password</label>
+    <input class="button-style" type="password" name="passwordNew"/>
+    <label for="passwordConfirm">Confirm password</label>
+    <input class="button-style" type="password" name="passwordConfirm"/>
+    <div th:each="passwordMessage:${passwordMessages}">
+      <p class="help-text error-message margin-bottom" th:text="${passwordMessage}"></p>
+    </div>
+    <input class="clickable button-style" type="submit" value="Save password"/>
+  </form>
+  <h4>Change Settings</h4>
+  <form th:action="@{~/account/settings}" method="post">
+    <input class="clickable button-style" type="submit" value="Save settings"/>
+  </form>
 </div>
