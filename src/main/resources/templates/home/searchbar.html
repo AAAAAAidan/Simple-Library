@@ -1,4 +1,4 @@
-<form class="margin-bottom" action="search" method="post">
+<form id="searchForm" class="margin-bottom" action="search" method="post">
   <input class="button-style" type="text" th:name="terms" th:value="${terms}" placeholder="Enter search terms"/>
   <input class="clickable button-style" type="submit" value="Search"/>
   <select class="clickable button-style" th:name="filter">
@@ -10,4 +10,5 @@
     <option value="asc">A-Z</option>
     <option value="desc" th:selected="${order=='desc'}">Z-A</option>
   </select>
+  <input id="resultsPerPage" type="hidden" th:name="resultsPerPage" th:value="${resultsPerPage}">
 </form>

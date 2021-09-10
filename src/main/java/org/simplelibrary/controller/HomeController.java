@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
+@SessionAttributes({"resultsPerPage"})
 public class HomeController extends TemplateView {
 
   private final AuthorService authorService;
@@ -75,6 +78,8 @@ public class HomeController extends TemplateView {
                           @RequestParam(required=false) String order,
                           @RequestParam(required=false) Integer page) {
 
+    int resultsPerPage = (int) model.getAttribute("resultsPerPage");
+
     if (filter == null) {
       filter = "books";
     }
@@ -93,15 +98,14 @@ public class HomeController extends TemplateView {
 
     List<?> results = homeService.getSearchResults(terms, filter, order);
     int resultCount = results.size();
-    int lastPage = homeService.getLastPage(resultCount);
+    int lastPage = homeService.getLastPageNumber(resultCount, resultsPerPage);
 
     if (page > lastPage) {
       page = lastPage;
     }
 
-    results = homeService.limitSearchResultsByPage(results, page);
-    List<String> resultPages = homeService.getSearchResultPages(resultCount, page);
-
+    List<String> resultPages = homeService.getPageNumbers(resultCount, page, resultsPerPage);
+    results = homeService.limitResultsByPage(results, page, resultsPerPage);
     String currentUrl = request.getContextPath();
     String parameters = request.getQueryString();
 
@@ -115,29 +119,31 @@ public class HomeController extends TemplateView {
 
     model.addAttribute("currentUrl", currentUrl);
     model.addAttribute("page", page);
-
-    model.addAttribute("results", results);
-    model.addAttribute("resultCount", resultCount);
-    model.addAttribute("resultPages", resultPages);
-
     model.addAttribute("terms", terms);
     model.addAttribute("filter", filter);
     model.addAttribute("order", order);
-
+    model.addAttribute("resultsPerPage", resultsPerPage);
+    model.addAttribute("results", results);
+    model.addAttribute("resultCount", resultCount);
+    model.addAttribute("resultPages", resultPages);
     return loadView(model, "home/search");
   }
 
   @PostMapping("/search")
   public String postSearch(RedirectAttributes redirectAttributes,
+                           @RequestParam Integer resultsPerPage,
                            @RequestParam String terms,
                            @RequestParam String filter,
                            @RequestParam String order) {
+
+    redirectAttributes.addFlashAttribute("resultsPerPage", resultsPerPage);
 
     terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
     order = order.trim().toLowerCase();
 
-    String entry = String.format("Search %s for '%s' ordered alphabetically %s", filter,  terms, order);
+    String entry = String.format("Get %s results from %s for '%s' ordered alphabetically %s",
+                                 resultsPerPage, filter,  terms, order);
     log.info(entry);
 
     if (!terms.equals("")) {
@@ -163,6 +169,11 @@ public class HomeController extends TemplateView {
   @GetMapping("/help")
   public String getHelp(Model model) {
     return loadView(model, "home/help");
+  }
+
+  @ModelAttribute("resultsPerPage")
+  public Integer resultsPerPageInit(){
+    return 10;
   }
 
 }
