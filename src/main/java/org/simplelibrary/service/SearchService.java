@@ -12,12 +12,12 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class HomeService {
+public class SearchService {
 
   private final TableService tableService;
 
   @Autowired
-  public HomeService(TableService tableService) {
+  public SearchService(TableService tableService) {
     this.tableService = tableService;
   }
 

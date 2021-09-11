@@ -12,14 +12,14 @@ import java.util.List;
 
 @Slf4j
 @SpringBootTest
-class HomeServiceTests {
+class SearchServiceTests {
 
   @Autowired
-  private HomeService homeService;
+  private SearchService searchService;
 
   @Test
   void testGetSearchResults() {
-    List<Account> accounts = (List<Account>) homeService.getSearchResults("", "books", "");
+    List<Account> accounts = (List<Account>) searchService.getSearchResults("", "books", "");
     assertTrue(accounts.size() >= 10);
   }
 
