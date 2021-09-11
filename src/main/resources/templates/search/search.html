@@ -1,0 +1,25 @@
+<h2>Search the library!</h2>
+<div th:replace="search/searchbar"></div>
+<table id="search-results" class="full-width margin-bottom">
+  <tr th:each="result:${results}">
+    <td class="button-style"><a th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a></td>
+  </tr>
+</table>
+<div class="grid-2">
+  <div style="text-align:left;margin-top:7px">
+    <span th:each="pageNumber:${resultPages}" th:switch="${pageNumber}">
+      <span th:case="..."> . . . </span>
+      <span th:case="${page}" class="button-style button-dark" th:text="${pageNumber}"></span>
+      <a th:case="*" class="button-style" th:href="@{${currentUrl}(page=${pageNumber})}" th:text="${pageNumber}"></a>
+    </span>
+  </div>
+  <div style="text-align:right">
+    Showing
+    <select id="resultsPerPageSelector" class="clickable button-style" form="searchForm">
+      <option value="10">10</option>
+      <option value="20" th:selected="${resultsPerPage==20}">20</option>
+      <option value="50" th:selected="${resultsPerPage==50}">50</option>
+      <option value="100" th:selected="${resultsPerPage==100}">100</option>
+    </select>
+    out of <span th:text="${resultCount}"></span> results</div>
+</div>

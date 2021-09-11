@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @Controller
@@ -30,7 +27,7 @@ public class AccountController extends TemplateView {
 
   @GetMapping("/account")
   public String getAccount(Model model) {
-    model.addAttribute("account", accountService.getLoggedInAccount());
+    model.addAttribute("email", accountService.getLoggedInEmail());
     return loadView(model, "accounts/account");
   }
 
@@ -39,13 +36,57 @@ public class AccountController extends TemplateView {
                                    @RequestParam MultipartFile file) {
 
     String filename = file.getOriginalFilename();
+    List<String> fileErrors = accountService.getFileErrors(file);
 
-    if (Pattern.matches(".*.(png|jpg|jpeg)", filename)) {
+    if (fileErrors.isEmpty()) {
       accountService.saveProfilePicture(file);
-      redirectAttributes.addFlashAttribute("message", "Successfully uploaded " + file.getOriginalFilename());
+      redirectAttributes.addFlashAttribute("successMessage", "Your profile picture has been saved!");
     }
     else {
-      redirectAttributes.addFlashAttribute("message", "File must be .png or .jpg");
+      redirectAttributes.addFlashAttribute("fileErrors", fileErrors);
+    }
+
+    return "redirect:/account";
+  }
+
+  @PostMapping("/account/email")
+  public String postEmail(Model model,
+                          RedirectAttributes redirectAttributes,
+                          @RequestParam String email) {
+
+    List<String> emailErrors = accountService.getEmailErrors(email);
+
+    if (emailErrors.isEmpty()) {
+      accountService.saveEmail(email);
+      accountService.saveAuthentication(email);
+      redirectAttributes.addFlashAttribute("successMessage", "Your email has been saved!");
+    }
+    else {
+      redirectAttributes.addFlashAttribute("emailNew", email);
+      redirectAttributes.addFlashAttribute("emailErrors", emailErrors);
+    }
+
+    return "redirect:/account";
+  }
+
+  @PostMapping("/account/password")
+  public String postPassword(Model model,
+                             RedirectAttributes redirectAttributes,
+                             @RequestParam String passwordOld,
+                             @RequestParam String passwordNew,
+                             @RequestParam String passwordConfirm) {
+
+    List<String> passwordValidationErrors = accountService.getPasswordValidationErrors(passwordOld);
+    List<String> passwordErrors = accountService.getPasswordErrors(passwordNew, passwordConfirm);
+
+    if (passwordValidationErrors.isEmpty() && passwordErrors.isEmpty()) {
+      accountService.savePassword(passwordNew);
+      accountService.saveAuthentication(accountService.getLoggedInEmail());
+      redirectAttributes.addFlashAttribute("successMessage", "Your password has been saved!");
+    }
+    else {
+      redirectAttributes.addFlashAttribute("passwordValidationErrors", passwordValidationErrors);
+      redirectAttributes.addFlashAttribute("passwordErrors", passwordErrors);
     }
 
     return "redirect:/account";
@@ -58,40 +99,23 @@ public class AccountController extends TemplateView {
 
   @PostMapping("/signup")
   public String postSignup(Model model,
-                           HttpServletRequest request,
                            RedirectAttributes redirectAttributes,
                            @RequestParam String email,
                            @RequestParam String password,
                            @RequestParam String passwordConfirm) {
 
-    List<String> emailMessages = new ArrayList<>();
+    List<String> emailErrors = accountService.getEmailErrors(email);
+    List<String> passwordErrors = accountService.getPasswordErrors(password, passwordConfirm);
 
-    if (accountService.getByEmail(email) != null) {
-      emailMessages.add("That email is already taken!");
-    }
-
-    if (!Pattern.matches("[A-Za-z0-9]+@+[A-Za-z0-9]+.+[A-Za-z]+", email)) {
-      emailMessages.add("The email must contain a valid email address!");
-    }
-
-    List<String> passwordMessages = new ArrayList<>();
-
-    if (!password.equals(passwordConfirm)) {
-      passwordMessages.add("The passwords entered do not match!");
-    }
-
-    if (password.length() < 8) {
-      passwordMessages.add("The password must contain 8 or more characters!");
-    }
-
-    if (emailMessages.size() == 0 && passwordMessages.size() == 0) {
-      accountService.signUp(email, password);
-      accountService.logIn(request, email, password);
+    if (emailErrors.isEmpty() && passwordErrors.isEmpty()) {
+      accountService.saveAccount(email, password);
+      accountService.saveAuthentication(email);
       return "redirect:/index";
     }
     else {
-      redirectAttributes.addFlashAttribute("emailMessages", emailMessages);
-      redirectAttributes.addFlashAttribute("passwordMessages", passwordMessages);
+      redirectAttributes.addFlashAttribute("email", email);
+      redirectAttributes.addFlashAttribute("emailErrors", emailErrors);
+      redirectAttributes.addFlashAttribute("passwordErrors", passwordErrors);
       return "redirect:/signup";
     }
   }
@@ -99,8 +123,9 @@ public class AccountController extends TemplateView {
   @GetMapping("/login")
   public String getLogin(Model model,
                          @RequestParam(required=false) String error) {
+
     if (error != null) {
-      model.addAttribute("message", "Account not found!");
+      model.addAttribute("error", "Account not found!");
     }
 
     return loadView(model, "accounts/login");

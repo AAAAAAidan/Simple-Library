@@ -1,7 +1,8 @@
-package org.simplelibrary.security;
+package org.simplelibrary.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Account;
+import org.simplelibrary.model.AccountDetails;
 import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.repository.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;

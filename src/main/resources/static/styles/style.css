@@ -128,11 +128,11 @@ table img {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-.element-list * {
+.element-list *:not(a, img) {
   display: block;
 }
 
-.element-list input, .element-list li {
+.element-list *:not(label, img) {
   margin-bottom: 16px;
 }
 
@@ -152,8 +152,12 @@ table img {
   cursor: pointer;
 }
 
-.help-text {
+.help-message {
   font-size: small;
+}
+
+.success-message {
+  color: #00DD00;
 }
 
 .error-message {
@@ -166,8 +170,8 @@ table img {
 }
 
 .profile-picture {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
 }
 
 /* ID selectors */
@@ -190,7 +194,7 @@ table img {
     padding: 16px;
   }
 
-  .help-text {
+  .help-message {
     font-size: medium;
   }
 

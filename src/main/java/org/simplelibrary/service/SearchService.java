@@ -12,12 +12,12 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class HomeService {
+public class SearchService {
 
   private final TableService tableService;
 
   @Autowired
-  public HomeService(TableService tableService) {
+  public SearchService(TableService tableService) {
     this.tableService = tableService;
   }
 
@@ -37,19 +37,19 @@ public class HomeService {
     }
   }
 
-  public Integer getLastPage(int resultCount) {
-    int lastPage = resultCount / 10;
+  public Integer getLastPageNumber(int resultCount, int resultsPerPage) {
+    int lastPage = resultCount / resultsPerPage;
 
-    if (resultCount % 10 != 0) {
+    if (resultCount % resultsPerPage != 0) {
       lastPage++;
     }
 
     return lastPage;
   }
 
-  public List<String> getSearchResultPages(int resultCount, int currentPage) {
+  public List<String> getPageNumbers(int resultCount, int currentPage, int resultsPerPage) {
     List<String> resultPages = new ArrayList<>();
-    int lastPage = getLastPage(resultCount);
+    int lastPage = getLastPageNumber(resultCount, resultsPerPage);
     int pageCounter = 0;
 
     while (++pageCounter <= lastPage) {
@@ -72,12 +72,12 @@ public class HomeService {
     return resultPages;
   }
 
-  public List<?> limitSearchResultsByPage(List<?> results, int page) {
+  public List<?> limitResultsByPage(List<?> results, int page, int resultsPerPage) {
     if (results.isEmpty()) {
       return results;
     }
 
-    int fromIndex = page * 10 - 10;
+    int fromIndex = page * resultsPerPage - resultsPerPage;
 
     if (fromIndex < 0) {
       fromIndex = 0;
@@ -87,7 +87,7 @@ public class HomeService {
       fromIndex = results.size();
     }
 
-    int toIndex = fromIndex + 10;
+    int toIndex = fromIndex + resultsPerPage;
 
     if (toIndex > results.size()) {
       toIndex = results.size();
