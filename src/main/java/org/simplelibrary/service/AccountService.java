@@ -2,10 +2,10 @@ package org.simplelibrary.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Account;
+import org.simplelibrary.model.AccountDetails;
 import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.repository.AccountRepository;
-import org.simplelibrary.security.AccountDetails;
-import org.simplelibrary.security.AccountDetailsService;
+import org.simplelibrary.service.AccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -111,11 +111,11 @@ public class AccountService {
   public List<String> getFileErrors(MultipartFile file) {
     List<String> emailErrors = new ArrayList<>();
 
-    if (Pattern.matches(".*.(png|jpg|jpeg)", file.getOriginalFilename())) {
+    if (!Pattern.matches(".*.(png|jpg|jpeg)", file.getOriginalFilename())) {
       emailErrors.add("The file must be .png or .jpg!");
     }
 
-    if (file.getSize() > 5000000) {
+    if (file.getSize() > 5000000L) {
       emailErrors.add("The file size must be 5 megabytes or less!");
     }
 

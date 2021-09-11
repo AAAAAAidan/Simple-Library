@@ -1,4 +1,4 @@
-package org.simplelibrary.security;
+package org.simplelibrary.model;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.AuthGroup;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Slf4j
 public class AccountDetails implements UserDetails {
 
   private final Account account;

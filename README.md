@@ -8,6 +8,12 @@ Use the following command to run locally. Requires Maven and Java 11.
 
     mvn spring-boot:run
 
+Alternatively, you can use the following to more closely simulate the web deployment process.
+
+    rm -r target
+    mvn package -DskipTests
+    java -jar target/*.jar
+
 ### Technical Overview
 
 * Contains 6 JPA entity models (Book, Author, Subject, Catalog, Account, AuthGroup), 4 many-to-many join tables, and two generic models (FileData, ResponseMessage). Getters, setters, and constructors are generated using Lombok. Validation is done through the associated controllers.

@@ -1,4 +1,4 @@
-package org.simplelibrary.exception;
+package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.view.TemplateView;
