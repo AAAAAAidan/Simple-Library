@@ -1,0 +1,27 @@
+<div id="listPopup" class="pop-up">
+  <div class="grid-2">
+    <h2>Save to list</h2>
+    <div class="align-right">
+      <button class="button-style" onclick="closeListPopup()">X</button>
+    </div>
+  </div>
+  <table class="full-width">
+    <!-- TODO - use th:each="list:${lists}" -->
+    <tr>
+      <td>
+        <button id="list1" class="button-style" onclick="updateList('list1')">&#9744; Name of List</button>
+      </td>
+      <td class="align-right">
+        <button class="button-style" onclick="deleteList('list1')">Delete</button>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input id="newListId" class="button-style" type="text" placeholder="Enter new list name">
+      </td>
+      <td class="align-right">
+        <button class="button-style" onclick="saveList()">Create</button>
+      </td>
+    </tr>
+  </table>
+</div>

@@ -2,8 +2,8 @@
 <b>Books</b>
 <table>
   <tr th:each="book:${author.books}">
-    <td class="button-style">
-      <a th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a>
+    <td>
+      <a class="button-style" th:href="@{|/books/${book.id}|}" th:text="${book.name}"></a>
     </td>
   </tr>
 </table>

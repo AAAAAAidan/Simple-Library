@@ -12,8 +12,7 @@
 <table class="full-width margin-bottom">
   <tr class="grid-3">
     <td th:each="author:${authors}">
-      <span>&bull; </span>
-      <a th:href="@{|~/authors/${author.id}|}" th:text="${author.name}"></a>
+      <a class="button-style" th:href="@{|~/authors/${author.id}|}" th:text="${author.name}"></a>
     </td>
   </tr>
 </table>
@@ -21,8 +20,7 @@
 <table class="full-width">
   <tr class="grid-3">
     <td th:each="subject:${subjects}">
-      <span>&bull; </span>
-      <a th:href="@{|~/subjects/${subject.id}|}" th:text="${subject.name}"></a>
+      <a class="button-style" th:href="@{|~/subjects/${subject.id}|}" th:text="${subject.name}"></a>
     </td>
   </tr>
 </table>

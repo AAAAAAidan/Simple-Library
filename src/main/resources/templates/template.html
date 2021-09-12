@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="ISO-8859-1" />
+    <meta name="description" content="A small digital library of books in the public domain." />
     <title>Simple Library</title>
     <!-- Icon by Good Ware - https://www.flaticon.com/free-icon/book_864685 -->
-    <link rel="shortcut icon" type="image/png" th:href="@{~/images/favicon.ico}"/>
+    <link rel="shortcut icon" type="image/png" th:href="@{~/images/favicon.ico}" />
     <link th:href="@{~/styles/style.css}" rel="stylesheet">
     <script th:src="@{~/scripts/script.js}"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -32,6 +33,10 @@
     </header>
     <main class="inner-content">
       <div th:replace="${content}"></div>
+      <!-- TODO - use th:if="${lists}" -->
+      <div id="listOverlay" class="overlay">
+        <div th:replace="lists/savetolist"></div>
+      </div>
     </main>
     <footer class="outer-content">
       <a th:href="@{~/search}">Search</a>
