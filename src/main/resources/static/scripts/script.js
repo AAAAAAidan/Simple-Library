@@ -1,14 +1,61 @@
-var overlayId = "listOverlay";
-var uncheckedBox = "☐";
-var checkedBox = "☑";
-var itemId = "";
-var itemType = "";
+// Table of Contents
+// 1. Classes
+// 2. Utilities
+// 3. Lists
+// 4. Search
+
+/////////////
+// Classes //
+/////////////
+
+class RequestMessage {
+  constructor(id, value) {
+    this.id = id;
+    this.value = value;
+  }
+}
+
+///////////////
+// Utilities //
+///////////////
+
+async function fetchResponseData(url, method, data) {
+  const response = await fetch(url, {
+    method: method,
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (response.status == 200) {
+      return response.json();
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+  return null;
+}
+
+///////////
+// Lists //
+///////////
+
+var itemSourceId;
+var itemSourceType;
+var elementId;
+var catalogMap = {};
 
 function openListPopup(id, type) {
-  document.getElementById(overlayId).style.display = "block";
-  document.getElementById(overlayId).addEventListener('click', function(e){checkForOverlayClick(e)});
-  itemId = id;
-  itemType = type;
+  document.getElementById("listOverlay").style.display = "block";
+  document.getElementById("listOverlay").addEventListener('click', function(e){checkForOverlayClick(e)});
+  itemSourceId = id;
+  itemSourceType = type;
 }
 
 function checkForOverlayClick(click) {
@@ -18,14 +65,14 @@ function checkForOverlayClick(click) {
 }
 
 function closeListPopup() {
-  document.getElementById(overlayId).style.display = "none";
+  document.getElementById("listOverlay").style.display = "none";
 }
 
 function updateList(listId) {
-  var element = document.getElementById(listId);
+  elementId = "box" + listId;
 
-  if (element.innerHTML.indexOf(uncheckedBox) != -1) {
-    saveToList(listId);
+  if (document.getElementById(elementId).innerHTML.includes("☐")) {
+    saveToList(listId, elementId);
   }
   else {
     deleteFromList(listId);
@@ -33,32 +80,75 @@ function updateList(listId) {
 }
 
 function saveList() {
-  var newListId = document.getElementById("newListId").value;
-  console.log("Save lists/" + newListId)
+  var newListName = document.getElementById("newListName").value;
+  var url = "lists/save";
+  var method = "POST";
+  var data = new RequestMessage(null, newListName);
+  var responseData = fetchResponseData(url, method, data);
+
+  if (responseData) {
+    var listId = responseData.
+    console.log("Created list " + newListName);
+  }
+  else {
+    console.log("Failed to create list " + newListName);
+  }
 }
 
 function saveToList(listId) {
-  console.log("Save " + itemType + "/" + itemId + " to lists/" + listId)
-  var oldValue = document.getElementById(listId).innerHTML;
-  document.getElementById(listId).innerHTML = oldValue.replace(uncheckedBox, checkedBox);
+  var url = "lists/" + listId;
+  var method = "POST";
+  var data = new RequestMessage(itemSourceId, itemSourceType);
+  var responseData = fetchResponseData(url, method, data);
+
+  if (responseData) {
+    document.getElementById(elementId).innerHTML = "☑";
+    console.log("Added to list " + listId);
+  }
+  else {
+    console.log("Failed to add to list " + listId);
+  }
 }
 
 function deleteList(listId) {
-  console.log("Delete lists/" + listId)
+  var url = "lists/" + listId;
+  var method = "DELETE";
+  var responseData = fetchResponseData(url, method)
+
+  if (responseData) {
+    console.log("Deleted list " + listId);
+  }
+  else {
+    console.log("Failed to delete list " + listId);
+  }
 }
 
+// TODO - Fix this
 function deleteFromList(listId) {
-  console.log("Delete " + itemType + "/" + itemId + " from lists/" + listId)
-  var oldValue = document.getElementById(listId).innerHTML;
-  document.getElementById(listId).innerHTML = oldValue.replace(checkedBox, uncheckedBox);
+  var itemId = document.getElementById(elementId);
+  var url = "lists/" + listId + "/" + itemId;
+  var method = "DELETE";
+  var responseData = fetchResponseData(url, method);
+
+  if (responseData) {
+    document.getElementById(elementId).innerHTML = "☐";
+    console.log("Removed item from list " + listId);
+  }
+  else {
+    console.log("Failed to remove item from list " + listId);
+  }
 }
+
+////////////
+// Search //
+////////////
 
 // For the search page only
 if (document.location.pathname.match("search")) {
   document.addEventListener('click', checkResultsPerPageSelection);
 }
 
-// Check for changes to the results per page
+// Check for changes to the results per page selection
 function checkResultsPerPageSelection() {
   var oldSelection = document.getElementById("resultsPerPage").value;
   var newSelection = document.getElementById("resultsPerPageSelector").value;

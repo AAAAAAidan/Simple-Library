@@ -33,8 +33,7 @@
     </header>
     <main class="inner-content">
       <div th:replace="${content}"></div>
-      <!-- TODO - use th:if="${lists}" -->
-      <div id="listOverlay" class="overlay">
+      <div id="listOverlay" class="overlay" th:if="${lists}">
         <div th:replace="lists/savetolist"></div>
       </div>
     </main>

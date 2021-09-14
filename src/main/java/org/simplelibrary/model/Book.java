@@ -43,10 +43,6 @@ public class Book implements Serializable {
           columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
   private String status = "ACTIVE";
 
-  // Bi-directional many-to-many association to Catalog
-  @ManyToMany(mappedBy="books")
-  private List<Catalog> catalogs;
-
   // Bi-directional many-to-many association to Author
   @ManyToMany(mappedBy="books")
   private List<Author> authors;

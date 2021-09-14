@@ -1,11 +1,11 @@
 <h2>Search the library!</h2>
 <div th:replace="search/searchbar"></div>
-<table class="full-width margin-bottom">
+<table class="full-width-table margin-bottom">
   <tr th:each="result:${results}">
-    <td>
+    <td class="full-width">
       <a class="button-style" th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a>
     </td>
-    <td>
+    <td sec:authorize="isAuthenticated()">
       <button class="button-style" th:attr="onclick=|openListPopup('${result.id}','${filter}')|">Save</button>
     </td>
   </tr>

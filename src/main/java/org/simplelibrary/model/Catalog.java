@@ -30,8 +30,8 @@ public class Catalog implements Serializable {
   private String name;
 
   @Column(name="catalog_privacy", nullable=false,
-          columnDefinition="ENUM('Private', 'Public') DEFAULT 'Private'")
-  private String privacy = "Private";
+          columnDefinition="ENUM('PRIVATE', 'PUBLIC') DEFAULT 'PRIVATE'")
+  private String privacy = "PRIVATE";
 
   @Column(name="catalog_last_update", nullable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -50,13 +50,20 @@ public class Catalog implements Serializable {
   @JoinColumn(name="account_id")
   private Account account;
 
-  // Bi-directional many-to-many association to Book
-  @ManyToMany
-  @JoinTable(
-    name="book_catalog_map",
-    joinColumns={ @JoinColumn(name="catalog_id") },
-    inverseJoinColumns={ @JoinColumn(name="book_id") }
-  )
-  private List<Book> books;
+  // Bi-directional many-to-one association to CatalogItem
+  @OneToMany(mappedBy="catalog")
+  private List<CatalogItem> catalogItems;
+
+  public CatalogItem addCatalogItem(CatalogItem catalogItem) {
+    getCatalogItems().add(catalogItem);
+    catalogItem.setCatalog(this);
+    return catalogItem;
+  }
+
+  public CatalogItem removeCatalogItem(CatalogItem catalogItem) {
+    getCatalogItems().remove(catalogItem);
+    catalogItem.setCatalog(null);
+    return catalogItem;
+  }
 
 }

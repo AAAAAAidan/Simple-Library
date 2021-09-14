@@ -1,0 +1,12 @@
+Icons by Good Ware - https://www.flaticon.com/authors/good-ware
+ - logo.png        - book_864685
+ - favicon.ico     - book_864685
+ - books.png       - book_5525074
+ - authors.png     - actors_4532523 - actress_4532524 - icon_702983
+ - subjects.png    - beach_4208594
+ - lists.png       - command_4812971 - exam_5219409
+ - closed.png      - closed_1555069
+ - warning.png     - warning_1084814
+
+Icons by Those Icons - https://www.flaticon.com/authors/those-icons
+ - closed.png        - closed_638535

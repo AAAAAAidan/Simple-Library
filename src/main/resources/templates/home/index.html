@@ -1,7 +1,7 @@
 <h2>Search the library!</h2>
 <div th:replace="search/searchbar"></div>
 <h2>Browse the books!</h2>
-<table class="full-width margin-bottom">
+<table class="full-width-table margin-bottom">
   <tr class="grid-5">
     <td th:each="book:${books}">
       <a th:href="@{|~/books/${book.id}|}"><img th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/></a>
@@ -9,7 +9,7 @@
   </tr>
 </table>
 <h2>Ascertain the authors!</h2>
-<table class="full-width margin-bottom">
+<table class="full-width-table margin-bottom">
   <tr class="grid-3">
     <td th:each="author:${authors}">
       <a class="button-style" th:href="@{|~/authors/${author.id}|}" th:text="${author.name}"></a>
@@ -17,7 +17,7 @@
   </tr>
 </table>
 <h2>See the subjects!</h2>
-<table class="full-width">
+<table class="full-width-table">
   <tr class="grid-3">
     <td th:each="subject:${subjects}">
       <a class="button-style" th:href="@{|~/subjects/${subject.id}|}" th:text="${subject.name}"></a>

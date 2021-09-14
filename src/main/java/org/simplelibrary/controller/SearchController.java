@@ -1,6 +1,9 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Account;
+import org.simplelibrary.model.Catalog;
+import org.simplelibrary.service.AccountService;
 import org.simplelibrary.service.SearchService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchController extends TemplateView {
 
   private final SearchService searchService;
+  private final AccountService accountService;
 
   @Autowired
-  public SearchController(SearchService searchService) {
+  public SearchController(SearchService searchService,
+                          AccountService accountService) {
     this.searchService = searchService;
+    this.accountService = accountService;
   }
 
   @GetMapping("/search")
@@ -79,6 +85,11 @@ public class SearchController extends TemplateView {
       }
     }
 
+    boolean isLoggedIn = accountService.isLoggedIn();
+    Account loggedInAccount = isLoggedIn ? accountService.getLoggedInAccount() : null;
+    List<Catalog> lists = isLoggedIn ? loggedInAccount.getCatalogs() : null;
+
+    model.addAttribute("lists", lists);
     model.addAttribute("currentUrl", currentUrl);
     model.addAttribute("page", page);
     model.addAttribute("terms", terms);
@@ -88,6 +99,7 @@ public class SearchController extends TemplateView {
     model.addAttribute("results", results);
     model.addAttribute("resultCount", resultCount);
     model.addAttribute("resultPages", resultPages);
+
     return loadView(model, "search/search");
   }
 

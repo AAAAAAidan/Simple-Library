@@ -116,6 +116,10 @@ table img {
   width: 100%;
 }
 
+.full-width-table {
+  width: calc(100% + 8px);
+}
+
 .align-right {
   text-align: right;
 }
@@ -138,14 +142,6 @@ table img {
 .grid-5 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-}
-
-.grid-table td {
-  margin: 2px;
-}
-
-.grid-table tr {
-  margin: -2px;
 }
 
 .element-list *:not(a, img) {
