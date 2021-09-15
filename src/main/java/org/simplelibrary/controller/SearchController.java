@@ -64,6 +64,10 @@ public class SearchController extends TemplateView {
       page = 1;
     }
 
+    String entry = String.format("Get %s results from page %s of %s for '%s' ordered %s",
+                                 resultsPerPage, page, filter,  terms, order);
+    log.info(entry);
+
     List<?> results = searchService.getSearchResults(terms, filter, order);
     int resultCount = results.size();
     int lastPage = searchService.getLastPageNumber(resultCount, resultsPerPage);
@@ -119,10 +123,6 @@ public class SearchController extends TemplateView {
     terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
     order = order.trim().toLowerCase();
-
-    String entry = String.format("Get %s results from %s for '%s' ordered alphabetically %s",
-                                 resultsPerPage, filter,  terms, order);
-    log.info(entry);
 
     if (!terms.equals("")) {
       redirectAttributes.addAttribute("terms", terms);

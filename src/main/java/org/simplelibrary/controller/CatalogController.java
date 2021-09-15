@@ -65,13 +65,15 @@ public class CatalogController extends TemplateView {
   @PostMapping("/lists/save")
   public ResponseEntity<Catalog> getCatalog(@RequestBody RequestMessage requestMessage) {
     if (!accountService.isLoggedIn()) {
-      return null;
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
 
     String catalogName = requestMessage.getValue();
 
     try {
-      Catalog catalog = catalogService.saveAndFlush(new Catalog(catalogName));
+      Catalog catalog = new Catalog(catalogName);
+      catalog.setAccount(accountService.getLoggedInAccount());
+      catalogService.saveAndFlush(catalog);
       log.info("Created catalog: " + catalogName);
       catalog.setAccount(null); // Plain JavaScript can't parse this
       return ResponseEntity.status(HttpStatus.OK).body(catalog);
@@ -86,14 +88,18 @@ public class CatalogController extends TemplateView {
   public ResponseEntity<CatalogItem> postCatalogItem(@PathVariable Integer id,
                                                      @RequestBody RequestMessage requestMessage) {
     if (!accountService.isLoggedIn()) {
-      return null;
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
 
     try {
       Catalog catalog = catalogService.getById(id);
+
+      if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+      }
+
       CatalogItem catalogItem = new CatalogItem(requestMessage.getId(), requestMessage.getValue());
-      catalogItem = catalogItemService.saveAndFlush(catalogItem);
-      catalog.addCatalogItem(catalogItem);
+      catalog.addCatalogItem(catalogItemService.saveAndFlush(catalogItem));
       catalogService.saveAndFlush(catalog);
       log.info("Added item to catalog " + id);
       catalogItem.setCatalog(null); // Plain JavaScript can't parse this
@@ -113,6 +119,11 @@ public class CatalogController extends TemplateView {
 
     Account loggedInAccount = accountService.getLoggedInAccount();
     Catalog catalog = catalogService.getById(id);
+
+    if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
+      return "redirect:/lists";
+    }
+
     List<Catalog> catalogs = loggedInAccount.getCatalogs();
     List<CatalogItem> catalogItems = catalog.getCatalogItems();
 
@@ -153,17 +164,18 @@ public class CatalogController extends TemplateView {
   @DeleteMapping("/lists/{id}")
   public ResponseEntity<Catalog> deleteCatalog(@PathVariable Integer id) {
     if (!accountService.isLoggedIn()) {
-      return null;
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
 
     try {
       Catalog catalog = catalogService.getById(id);
 
       if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
-        return null;
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
       }
 
-      catalogService.deleteById(id);
+      catalog.setAccount(null);
+      catalogService.saveAndFlush(catalog);
       log.info("Deleted catalog " + id);
       return ResponseEntity.status(HttpStatus.OK).body(new Catalog()); // Temporary fix
     }
@@ -177,20 +189,19 @@ public class CatalogController extends TemplateView {
   public ResponseEntity<CatalogItem> deleteCatalogItem(@PathVariable Integer id,
                                                        @PathVariable Integer itemId) {
     if (!accountService.isLoggedIn()) {
-      return null;
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
 
     try {
       Catalog catalog = catalogService.getById(id);
 
       if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
-        return null;
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
       }
 
       CatalogItem catalogItem = catalogItemService.getById(itemId);
-      catalog.removeCatalogItem(catalogItem);
-      catalogService.saveAndFlush(catalog);
-      catalogItemService.deleteById(itemId);
+      catalogItem.setCatalog(null);
+      catalogItemService.saveAndFlush(catalogItem);
       log.info("Removed item from catalog " + id);
       return ResponseEntity.status(HttpStatus.OK).body(new CatalogItem()); // Temporary fix
     }

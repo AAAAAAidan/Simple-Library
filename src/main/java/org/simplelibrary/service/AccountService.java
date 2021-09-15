@@ -130,6 +130,10 @@ public class AccountService {
 
   // Account updaters
 
+  public Account saveAndFlush(Account account) {
+    return accountRepository.saveAndFlush(account);
+  }
+
   public void saveAuthentication(String email) {
     AccountDetails accountDetails = (AccountDetails) accountDetailsService.loadUserByUsername(email);
     Authentication authentication = new UsernamePasswordAuthenticationToken(accountDetails, accountDetails.getPassword(), accountDetails.getAuthorities());

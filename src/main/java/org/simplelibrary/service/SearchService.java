@@ -41,7 +41,7 @@ public class SearchService {
         if (!accountService.isLoggedIn()) { return new ArrayList<Catalog>(); }
         String accountFilter = "account_id=" + accountService.getLoggedInId();
         String[] filters = {termsFilter, accountFilter};
-        return searchTableService.select(Catalog.class);
+        return searchTableService.filterBy(filters).select(Catalog.class);
       default:
         return searchTableService.select(Book.class);
     }

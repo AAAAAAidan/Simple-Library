@@ -11,17 +11,13 @@ import org.springframework.stereotype.Service;
 public class CatalogService {
 
   private final CatalogRepository catalogRepository;
-  private final AccountService accountService;
 
   @Autowired
-  public CatalogService(CatalogRepository catalogRepository,
-                        AccountService accountService) {
+  public CatalogService(CatalogRepository catalogRepository) {
     this.catalogRepository = catalogRepository;
-    this.accountService = accountService;
   }
 
   public Catalog saveAndFlush(Catalog catalog) {
-    catalog.setAccount(accountService.getLoggedInAccount());
     return catalogRepository.saveAndFlush(catalog);
   }
 
