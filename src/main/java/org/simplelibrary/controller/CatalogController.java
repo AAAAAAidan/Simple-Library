@@ -120,7 +120,8 @@ public class CatalogController extends TemplateView {
     Account loggedInAccount = accountService.getLoggedInAccount();
     Catalog catalog = catalogService.getById(id);
 
-    if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
+    if (catalog.getAccount() == null ||
+       !catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
       return "redirect:/lists";
     }
 
