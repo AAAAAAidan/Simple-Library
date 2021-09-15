@@ -1,0 +1,18 @@
+<h2 th:text="${list.name}"></h2>
+<div sec:authorize="isAuthenticated()">
+  <button class="button-style margin-bottom" th:attr="onclick=|openListPopup(${list.id},'lists')|">Save</button>
+</div>
+<h4>Items</h4>
+<table class="full-width-table">
+  <tr th:each="item:${list.catalogItems}">
+    <td class="full-width">
+      <a class="button-style grid-small-big" th:href="@{|~/${item.sourceFilter}/${item.sourceId}|}">
+        <img class="icon" th:src="@{|~/images/${item.sourceFilter}.png|}" />
+        <span th:text="${item.sourceName}"></span>
+      </a>
+    </td>
+    <td>
+      <button class="button-style" th:attr="onclick=|openListPopup(${item.sourceId},'${item.sourceFilter}')|">Save</button>
+    </td>
+  </tr>
+</table>

@@ -1,6 +1,9 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Account;
+import org.simplelibrary.model.Catalog;
+import org.simplelibrary.service.AccountService;
 import org.simplelibrary.service.SearchService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +25,13 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchController extends TemplateView {
 
   private final SearchService searchService;
+  private final AccountService accountService;
 
   @Autowired
-  public SearchController(SearchService searchService) {
+  public SearchController(SearchService searchService,
+                          AccountService accountService) {
     this.searchService = searchService;
+    this.accountService = accountService;
   }
 
   @GetMapping("/search")
@@ -58,6 +64,10 @@ public class SearchController extends TemplateView {
       page = 1;
     }
 
+    String entry = String.format("Get %s results from page %s of %s for '%s' ordered %s",
+                                 resultsPerPage, page, filter,  terms, order);
+    log.info(entry);
+
     List<?> results = searchService.getSearchResults(terms, filter, order);
     int resultCount = results.size();
     int lastPage = searchService.getLastPageNumber(resultCount, resultsPerPage);
@@ -79,6 +89,11 @@ public class SearchController extends TemplateView {
       }
     }
 
+    boolean isLoggedIn = accountService.isLoggedIn();
+    Account loggedInAccount = isLoggedIn ? accountService.getLoggedInAccount() : null;
+    List<Catalog> catalogs = isLoggedIn ? loggedInAccount.getCatalogs() : null;
+
+    model.addAttribute("lists", catalogs);
     model.addAttribute("currentUrl", currentUrl);
     model.addAttribute("page", page);
     model.addAttribute("terms", terms);
@@ -88,6 +103,7 @@ public class SearchController extends TemplateView {
     model.addAttribute("results", results);
     model.addAttribute("resultCount", resultCount);
     model.addAttribute("resultPages", resultPages);
+
     return loadView(model, "search/search");
   }
 
@@ -107,10 +123,6 @@ public class SearchController extends TemplateView {
     terms = terms.trim().toLowerCase();
     filter = filter.trim().toLowerCase();
     order = order.trim().toLowerCase();
-
-    String entry = String.format("Get %s results from %s for '%s' ordered alphabetically %s",
-                                 resultsPerPage, filter,  terms, order);
-    log.info(entry);
 
     if (!terms.equals("")) {
       redirectAttributes.addAttribute("terms", terms);

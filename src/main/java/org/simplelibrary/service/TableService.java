@@ -1,5 +1,6 @@
 package org.simplelibrary.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.util.DatabaseConnection;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import javax.persistence.Query;
 
 // Experimental usage of JPQL for querying and updating tables.
 // Will only be used for the search page, where repositories may be inefficient.
+@Slf4j
 @Service
 public class TableService extends DatabaseConnection {
 
@@ -218,6 +220,7 @@ public class TableService extends DatabaseConnection {
 
   public <T> List<T> select(Class<T> tableClass) {
     String sql = String.format("SELECT * FROM %s t %s", tableClass.getSimpleName().toLowerCase(), getAllClauses());
+    log.debug(sql);
     this.connect();
     Query query = getSelectQuery(sql, tableClass);
     List<T> results = query.getResultList();

@@ -17,13 +17,8 @@ public class AppErrorController extends TemplateView implements ErrorController 
   @RequestMapping("/error")
   public String handleError(Model model, HttpServletRequest request) {
     Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-
-    if (status != null) {
-      int statusCode = Integer.parseInt(status.toString());
-      return loadView(model, "errors/" + statusCode);
-    }
-
-    return loadView(model, "errors/500");
+    model.addAttribute("errorStatusCode", status.toString());
+    return loadView(model, "errors/error");
   }
 
 }

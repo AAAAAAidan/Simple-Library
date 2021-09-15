@@ -5,6 +5,7 @@
     <option value="books">Books</option>
     <option value="authors" th:selected="${filter=='authors'}">Authors</option>
     <option value="subjects" th:selected="${filter=='subjects'}">Subjects</option>
+    <option value="lists" sec:authorize="isAuthenticated()" th:selected="${filter=='lists'}">Lists</option>
   </select>
   <select class="clickable button-style" th:name="order">
     <option value="asc">A-Z</option>

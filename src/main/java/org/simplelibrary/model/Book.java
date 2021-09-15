@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Table(name="book")
 public class Book implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -42,10 +43,6 @@ public class Book implements Serializable {
   @Column(name="book_status", nullable=false,
           columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
   private String status = "ACTIVE";
-
-  // Bi-directional many-to-many association to Catalog
-  @ManyToMany(mappedBy="books")
-  private List<Catalog> catalogs;
 
   // Bi-directional many-to-many association to Author
   @ManyToMany(mappedBy="books")

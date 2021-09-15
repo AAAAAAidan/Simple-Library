@@ -5,8 +5,8 @@ import org.simplelibrary.model.Account;
 import org.simplelibrary.model.AccountDetails;
 import org.simplelibrary.model.AuthGroup;
 import org.simplelibrary.repository.AccountRepository;
-import org.simplelibrary.service.AccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,6 +43,12 @@ public class AccountService {
   }
 
   // Account getters
+
+  public boolean isLoggedIn() {
+    return SecurityContextHolder.getContext().getAuthentication() != null &&
+           SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+           !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
+  }
 
   public AccountDetails getLoggedInDetails() {
     return (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -123,6 +129,10 @@ public class AccountService {
   }
 
   // Account updaters
+
+  public Account saveAndFlush(Account account) {
+    return accountRepository.saveAndFlush(account);
+  }
 
   public void saveAuthentication(String email) {
     AccountDetails accountDetails = (AccountDetails) accountDetailsService.loadUserByUsername(email);

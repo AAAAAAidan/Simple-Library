@@ -1,0 +1,44 @@
+<div id="listPopup" class="pop-up">
+  <div class="grid-2">
+    <h2>Save to list</h2>
+    <div class="align-right">
+      <button class="button-style" onclick="closeListPopup('list1')">Cancel</button>
+    </div>
+  </div>
+  <table class="full-width-table">
+    <tr>
+      <td class="full-width">
+        <input id="newListName" class="button-style" type="text" placeholder="Enter new list name">
+      </td>
+      <td class="align-right">
+        <button class="button-style" onclick="saveList()">Create</button>
+      </td>
+    </tr>
+    <tr th:each="list:${lists}" th:id="|list${list.id}|" class="list-row">
+      <td class="hidden">
+        <span th:each="item:${list.catalogItems}" th:id="|item${item.id}|" th:class="|${item.sourceFilter}${item.sourceId}|"></span>
+      </td>
+      <td class="full-width">
+        <button class="button-style" th:onclick="|updateList(${list.id})|">
+          <span th:id="|box${list.id}|"></span>
+          <span th:text="${list.name}"></span>
+        </button>
+      </td>
+      <td class="align-right">
+        <button class="button-style" th:onclick="|deleteList(${list.id})|">Delete</button>
+      </td>
+    </tr>
+    <tr id="listTemplate" style="display:none">
+      <td class="hidden"></td>
+      <td class="full-width">
+        <button class="button-style">
+          <span></span>
+          <span></span>
+        </button>
+      </td>
+      <td class="align-right">
+        <button class="button-style">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>

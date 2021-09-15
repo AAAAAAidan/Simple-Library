@@ -1,9 +1,15 @@
 <h2 th:text="${subject.name}"></h2>
-<b>Books</b>
-<table>
+<div sec:authorize="isAuthenticated()">
+  <button class="button-style margin-bottom" th:attr="onclick=|openListPopup(${subject.id},'subjects')|">Save</button>
+</div>
+<h4>Books</h4>
+<table class="full-width-table">
   <tr th:each="book:${subject.books}">
-    <td class="button-style">
-      <a th:href="@{|~/books/${book.id}|}" th:text="${book.name}"></a>
+    <td class="full-width">
+      <a class="button-style" th:href="@{|~/books/${book.id}|}" th:text="${book.name}"></a>
+    </td>
+    <td sec:authorize="isAuthenticated()">
+      <button class="button-style" th:attr="onclick=|openListPopup(${book.id},'books')|">Save</button>
     </td>
   </tr>
 </table>
