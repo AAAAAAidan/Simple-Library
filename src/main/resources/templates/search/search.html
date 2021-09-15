@@ -3,10 +3,13 @@
 <table class="full-width-table margin-bottom">
   <tr th:each="result:${results}">
     <td class="full-width">
-      <a class="button-style" th:href="@{|/${filter}/${result.id}|}" th:text="${result.name}"></a>
+      <a class="button-style grid-small-big" th:href="@{|/${filter}/${result.id}|}">
+        <img class="icon" th:src="@{|~/images/${filter}.png|}" />
+        <span th:text="${result.name}"></span>
+      </a>
     </td>
     <td sec:authorize="isAuthenticated()">
-      <button class="button-style" th:attr="onclick=|openListPopup('${result.id}','${filter}')|">Save</button>
+      <button class="button-style" th:attr="onclick=|openListPopup(${result.id},'${filter}')|">Save</button>
     </td>
   </tr>
 </table>
@@ -14,7 +17,7 @@
   <div style="margin-top:7px">
     <span th:each="pageNumber:${resultPages}" th:switch="${pageNumber}">
       <span th:case="..."> . . . </span>
-      <span th:case="${page}" class="button-style button-dark" th:text="${pageNumber}"></span>
+      <span th:case="${page}" class="button-style button-style-dark" th:text="${pageNumber}"></span>
       <a th:case="*" class="button-style" th:href="@{${currentUrl}(page=${pageNumber})}" th:text="${pageNumber}"></a>
     </span>
   </div>

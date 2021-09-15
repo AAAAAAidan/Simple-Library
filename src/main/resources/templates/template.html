@@ -19,7 +19,9 @@
   </head>
   <body>
     <header class="outer-content">
-      <h1 id="title"><a th:href="@{~/index}">Simple Library</a></h1>
+      <h1 id="title">
+        <a th:href="@{~/index}">Simple Library</a>
+      </h1>
       <ul>
         <div sec:authorize="isAnonymous()">
           <li><a th:href="@{~/signup}">Signup</a></li>

@@ -14,15 +14,30 @@
         <button class="button-style" onclick="saveList()">Create</button>
       </td>
     </tr>
-    <tr th:each="list:${lists}">
+    <tr th:each="list:${lists}" th:id="|list${list.id}|" class="list-row">
+      <td class="hidden">
+        <span th:each="item:${list.catalogItems}" th:id="|item${item.id}|" th:class="|${item.sourceFilter}${item.sourceId}|"></span>
+      </td>
       <td class="full-width">
-        <button class="button-style" th:attr="onclick=|updateList('${list.id}')|">
-          <span th:id="|box${list.id}|">&#9744;</span>
+        <button class="button-style" th:onclick="|updateList(${list.id})|">
+          <span th:id="|box${list.id}|"></span>
           <span th:text="${list.name}"></span>
         </button>
       </td>
       <td class="align-right">
-        <button class="button-style" th:attr="onclick=|deleteList('${list.id}')|">Delete</button>
+        <button class="button-style" th:onclick="|deleteList(${list.id})|">Delete</button>
+      </td>
+    </tr>
+    <tr id="listTemplate" style="display:none">
+      <td class="hidden"></td>
+      <td class="full-width">
+        <button class="button-style">
+          <span></span>
+          <span></span>
+        </button>
+      </td>
+      <td class="align-right">
+        <button class="button-style">Delete</button>
       </td>
     </tr>
   </table>

@@ -1,12 +1,17 @@
 package org.simplelibrary.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.simplelibrary.model.Account;
 import org.simplelibrary.model.Catalog;
 import org.simplelibrary.model.CatalogItem;
 import org.simplelibrary.model.RequestMessage;
 import org.simplelibrary.model.ResponseMessage;
+import org.simplelibrary.service.AccountService;
+import org.simplelibrary.service.AuthorService;
+import org.simplelibrary.service.BookService;
 import org.simplelibrary.service.CatalogService;
 import org.simplelibrary.service.CatalogItemService;
+import org.simplelibrary.service.SubjectService;
 import org.simplelibrary.view.TemplateView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,35 +28,53 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 public class CatalogController extends TemplateView {
 
+  private final AccountService accountService;
+  private final AuthorService authorService;
+  private final BookService bookService;
   private final CatalogService catalogService;
   private final CatalogItemService catalogItemService;
+  private final SubjectService subjectService;
 
   @Autowired
-  public CatalogController(CatalogService catalogService,
-                           CatalogItemService catalogItemService) {
+  public CatalogController(AccountService accountService,
+                           AuthorService authorService,
+                           BookService bookService,
+                           CatalogService catalogService,
+                           CatalogItemService catalogItemService,
+                           SubjectService subjectService) {
+    this.accountService = accountService;
+    this.authorService = authorService;
+    this.bookService = bookService;
     this.catalogService = catalogService;
     this.catalogItemService = catalogItemService;
+    this.subjectService = subjectService;
   }
 
   @GetMapping("/lists")
-  public String getLists(RedirectAttributes redirectAttributes) {
+  public String getCatalogs(RedirectAttributes redirectAttributes) {
     redirectAttributes.addAttribute("filter", "lists");
-    return "redirect:search";
+    return "redirect:/search";
   }
 
-  @PostMapping(value="/lists/save")
-  public ResponseEntity<Catalog> getList(@RequestBody RequestMessage requestMessage) {
-    String listName = requestMessage.getValue();
+  @PostMapping("/lists/save")
+  public ResponseEntity<Catalog> getCatalog(@RequestBody RequestMessage requestMessage) {
+    if (!accountService.isLoggedIn()) {
+      return null;
+    }
+
+    String catalogName = requestMessage.getValue();
 
     try {
-      Catalog newList = catalogService.saveAndFlush(new Catalog(listName));
-      newList.setAccount(null); // Plain JavaScript can't parse this
-      log.info("Created list: " + listName);
-      return ResponseEntity.status(HttpStatus.OK).body(newList);
+      Catalog catalog = catalogService.saveAndFlush(new Catalog(catalogName));
+      log.info("Created catalog: " + catalogName);
+      catalog.setAccount(null); // Plain JavaScript can't parse this
+      return ResponseEntity.status(HttpStatus.OK).body(catalog);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -59,18 +82,22 @@ public class CatalogController extends TemplateView {
     }
   }
 
-  @PostMapping("/lists/{id}")
-  public ResponseEntity<CatalogItem> postListItem(@PathVariable Integer id,
-                                                  @RequestBody RequestMessage requestMessage) {
+  @PostMapping("/lists/{id}/save")
+  public ResponseEntity<CatalogItem> postCatalogItem(@PathVariable Integer id,
+                                                     @RequestBody RequestMessage requestMessage) {
+    if (!accountService.isLoggedIn()) {
+      return null;
+    }
+
     try {
-      Catalog list = catalogService.getById(id);
-      CatalogItem listItem = new CatalogItem(requestMessage.getId(), requestMessage.getValue());
-      listItem = catalogItemService.saveAndFlush(listItem);
-      list.addCatalogItem(listItem);
-      catalogService.saveAndFlush(list);
-      String successEntry = "Added item to list " + id;
-      log.info(successEntry);
-      return ResponseEntity.status(HttpStatus.OK).body(listItem);
+      Catalog catalog = catalogService.getById(id);
+      CatalogItem catalogItem = new CatalogItem(requestMessage.getId(), requestMessage.getValue());
+      catalogItem = catalogItemService.saveAndFlush(catalogItem);
+      catalog.addCatalogItem(catalogItem);
+      catalogService.saveAndFlush(catalog);
+      log.info("Added item to catalog " + id);
+      catalogItem.setCatalog(null); // Plain JavaScript can't parse this
+      return ResponseEntity.status(HttpStatus.OK).body(catalogItem);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -79,41 +106,97 @@ public class CatalogController extends TemplateView {
   }
 
   @GetMapping("/lists/{id}")
-  public String getList(Model model, @PathVariable Integer id) {
-    Catalog list = catalogService.getById(id);
-    model.addAttribute("list", list);
-    return loadView(model, "lists/list");
+  public String getCatalog(Model model, @PathVariable Integer id) {
+    if (!accountService.isLoggedIn()) {
+      return "redirect:/lists";
+    }
+
+    Account loggedInAccount = accountService.getLoggedInAccount();
+    Catalog catalog = catalogService.getById(id);
+    List<Catalog> catalogs = loggedInAccount.getCatalogs();
+    List<CatalogItem> catalogItems = catalog.getCatalogItems();
+
+    for (CatalogItem item : catalogItems) {
+      Integer sourceId = item.getSourceId();
+      String sourceName = sourceId.toString();
+
+      switch (item.getSourceFilter()) {
+        case "books":
+          sourceName = bookService.getById(sourceId).getName();
+          break;
+        case "authors":
+          sourceName = authorService.getById(sourceId).getName();
+          break;
+        case "subjects":
+          sourceName = subjectService.getById(sourceId).getName();
+          break;
+        case "lists":
+        case "catalogs":
+          sourceName = catalogService.getById(sourceId).getName();
+      }
+
+      item.setSourceName(sourceName);
+    }
+
+    catalog.setCatalogItems(catalogItems);
+    model.addAttribute("list", catalog);
+    model.addAttribute("lists", catalogs);
+
+    if (accountService.isLoggedIn() ) {
+      return loadView(model, "lists/list");
+    }
+    else {
+      return "redirect:/lists";
+    }
   }
 
   @DeleteMapping("/lists/{id}")
-  public ResponseEntity<ResponseMessage> deleteList(@PathVariable Integer id) {
+  public ResponseEntity<Catalog> deleteCatalog(@PathVariable Integer id) {
+    if (!accountService.isLoggedIn()) {
+      return null;
+    }
+
     try {
+      Catalog catalog = catalogService.getById(id);
+
+      if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
+        return null;
+      }
+
       catalogService.deleteById(id);
-      String successEntry = "Deleted list " + id;
-      log.info(successEntry);
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(successEntry));
+      log.info("Deleted catalog " + id);
+      return ResponseEntity.status(HttpStatus.OK).body(new Catalog()); // Temporary fix
     }
     catch (Exception e) {
       e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("Failed to create list"));
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
   }
 
-  @DeleteMapping("/lists/{id}/{itemid}")
-  public ResponseEntity<ResponseMessage> deleteListItem(@PathVariable Integer id,
-                                                        @PathVariable Integer itemid) {
+  @DeleteMapping("/lists/{id}/{itemId}")
+  public ResponseEntity<CatalogItem> deleteCatalogItem(@PathVariable Integer id,
+                                                       @PathVariable Integer itemId) {
+    if (!accountService.isLoggedIn()) {
+      return null;
+    }
+
     try {
-      Catalog list = catalogService.getById(id);
-      CatalogItem listItem = catalogItemService.saveAndFlush(listItem);
-      list.addCatalogItem(listItem);
-      catalogService.saveAndFlush(list);
-      String successEntry = "Added item to list " + id;
-      log.info(successEntry);
-      return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(successEntry));
+      Catalog catalog = catalogService.getById(id);
+
+      if (!catalog.getAccount().getId().equals(accountService.getLoggedInId())) {
+        return null;
+      }
+
+      CatalogItem catalogItem = catalogItemService.getById(itemId);
+      catalog.removeCatalogItem(catalogItem);
+      catalogService.saveAndFlush(catalog);
+      catalogItemService.deleteById(itemId);
+      log.info("Removed item from catalog " + id);
+      return ResponseEntity.status(HttpStatus.OK).body(new CatalogItem()); // Temporary fix
     }
     catch (Exception e) {
       e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("Failed to add item to list"));
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
     }
   }
 

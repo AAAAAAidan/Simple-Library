@@ -1,10 +1,39 @@
-<h2>Search the library!</h2>
-<div th:replace="search/searchbar"></div>
+<h2>Look in the library!</h2>
+<table class="full-width-table gallery-table margin-bottom">
+  <tr th:class="${isLoggedIn ? 'grid-4' : 'grid-3'}">
+    <td>
+      <a href="/books">
+        <img class="margin-bottom" src="/images/books.png" alt="Book icon"/>
+        <div class="button-style">Books</div>
+      </a>
+    </td>
+    <td>
+      <a href="/authors">
+        <img class="margin-bottom" src="/images/authors.png" alt="Author icon"/>
+        <div class="button-style">Authors</div>
+      </a>
+    </td>
+    <td>
+      <a href="/subjects">
+        <img class="margin-bottom" src="/images/subjects.png" alt="Subject icon"/>
+        <div class="button-style">Subjects</div>
+      </a>
+    </td>
+    <td sec:authorize="isAuthenticated()">
+      <a href="/lists">
+        <img class="margin-bottom" src="/images/lists.png" alt="List icon"/>
+        <div class="button-style">Lists</div>
+      </a>
+    </td>
+  </tr>
+</table>
 <h2>Browse the books!</h2>
-<table class="full-width-table margin-bottom">
+<table class="full-width-table gallery-table margin-bottom">
   <tr class="grid-5">
     <td th:each="book:${books}">
-      <a th:href="@{|~/books/${book.id}|}"><img th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/></a>
+      <a th:href="@{|~/books/${book.id}|}">
+        <img class="margin-bottom" th:src="@{|~/books/${book.id}/cover.png|}" th:alt="${book.name}"/>
+      </a>
     </td>
   </tr>
 </table>

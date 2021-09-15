@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org</groupId>
   <artifactId>simplelibrary</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <name>simplelibrary</name>
   <description>Digital book library project built with Spring Boot</description>
 

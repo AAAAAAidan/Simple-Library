@@ -1,0 +1,8 @@
+Icons by Good Ware - https://www.flaticon.com/authors/good-ware
+ - logo.png        - https://www.flaticon.com/free-icon/book_864685
+ - favicon.ico     - https://www.flaticon.com/free-icon/book_864685
+ - books.png       - https://www.flaticon.com/free-icon/book_5525074
+ - authors.png     - https://www.flaticon.com/free-icon/actors_4532523
+ - subjects.png    - https://www.flaticon.com/free-icon/beach_4208594
+ - lists.png       - https://www.flaticon.com/free-icon/command_4812971
+ - closed.png      - https://www.flaticon.com/free-icon/closed_1555069

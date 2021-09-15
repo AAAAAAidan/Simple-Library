@@ -6,6 +6,7 @@
     <class>org.simplelibrary.model.Author</class>
     <class>org.simplelibrary.model.Book</class>
     <class>org.simplelibrary.model.Catalog</class>
+    <class>org.simplelibrary.model.CatalogItem</class>
     <class>org.simplelibrary.model.Subject</class>
   </persistence-unit>
 </persistence>

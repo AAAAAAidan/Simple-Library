@@ -87,9 +87,9 @@ public class SearchController extends TemplateView {
 
     boolean isLoggedIn = accountService.isLoggedIn();
     Account loggedInAccount = isLoggedIn ? accountService.getLoggedInAccount() : null;
-    List<Catalog> lists = isLoggedIn ? loggedInAccount.getCatalogs() : null;
+    List<Catalog> catalogs = isLoggedIn ? loggedInAccount.getCatalogs() : null;
 
-    model.addAttribute("lists", lists);
+    model.addAttribute("lists", catalogs);
     model.addAttribute("currentUrl", currentUrl);
     model.addAttribute("page", page);
     model.addAttribute("terms", terms);

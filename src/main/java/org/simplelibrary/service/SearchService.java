@@ -3,6 +3,7 @@ package org.simplelibrary.service;
 import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Author;
 import org.simplelibrary.model.Book;
+import org.simplelibrary.model.Catalog;
 import org.simplelibrary.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,18 @@ import java.util.List;
 @Service
 public class SearchService {
 
+  private final AccountService accountService;
   private final TableService tableService;
 
   @Autowired
-  public SearchService(TableService tableService) {
+  public SearchService(AccountService accountService,
+                       TableService tableService) {
+    this.accountService = accountService;
     this.tableService = tableService;
   }
 
   public List<?> getSearchResults(String terms, String filter, String order) {
+    filter = filter.replace("list", "catalog"); // usage of "list" is for front end only
     String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
     String sortColumn = column + "_name";
     String termsFilter = sortColumn + " contains " + terms;
@@ -32,6 +37,11 @@ public class SearchService {
         return searchTableService.select(Author.class);
       case "subjects":
         return searchTableService.select(Subject.class);
+      case "catalogs":
+        if (!accountService.isLoggedIn()) { return new ArrayList<Catalog>(); }
+        String accountFilter = "account_id=" + accountService.getLoggedInId();
+        String[] filters = {termsFilter, accountFilter};
+        return searchTableService.select(Catalog.class);
       default:
         return searchTableService.select(Book.class);
     }

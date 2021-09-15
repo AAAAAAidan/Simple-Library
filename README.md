@@ -16,7 +16,7 @@ Alternatively, you can use the following to more closely simulate the web deploy
 
 ### Technical Overview
 
-* Contains 6 JPA entity models (Book, Author, Subject, Catalog, Account, AuthGroup), 4 many-to-many join tables, and two generic models (FileData, ResponseMessage). Getters, setters, and constructors are generated using Lombok. Validation is done through the associated controllers.
+* Contains 7 JPA entity models (Book, Author, Subject, Catalog, CatalogItem, Account, AuthGroup), 3 many-to-many join tables, and 4 generic models (AccountDetails, FileData, RequestMessage, ResponseMessage). Getters, setters, and constructors are generated using Lombok. Validation is done through the associated controllers.
 
 * All entity models have associated repositories, services, and controllers. FileData has services and a REST controller.
 

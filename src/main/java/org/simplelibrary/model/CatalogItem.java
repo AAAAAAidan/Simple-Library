@@ -1,6 +1,7 @@
 package org.simplelibrary.model;
 
 import lombok.*;
+// import org.springframework.data.annotation.
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -33,6 +34,9 @@ public class CatalogItem implements Serializable {
   @NonNull
   @Column(name="catalog_item_source_filter", length=32, nullable=false)
   private String sourceFilter;
+
+  @Transient
+  private String sourceName;
 
   @Column(name="catalog_item_add_date", nullable=false, updatable=false, insertable=false,
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

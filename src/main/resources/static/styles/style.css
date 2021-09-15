@@ -31,7 +31,7 @@ body {
   min-height: 100%;
   display: flex;
   flex-flow: column;
-  font-size: medium;
+  font-size: 1.2rem;
 }
 
 header {
@@ -62,6 +62,10 @@ a {
   text-decoration: none;
 }
 
+p {
+  text-align: justify;
+}
+
 button {
   cursor: pointer;
 }
@@ -80,11 +84,6 @@ table td {
 
 table a {
   display: block;
-}
-
-table img {
-  max-height: 100%;
-  width: 100%;
 }
 
 /* Class selectors */
@@ -108,8 +107,12 @@ table img {
   padding: 32px 80px;
 }
 
-.margin-bottom, h1, h2, h3, h4, h5, h6 {
+.margin-bottom, h1, h2, h3 {
   margin-bottom: 16px;
+}
+
+.margin-bottom-small, h4, h5, h6 {
+  margin-bottom: 4px;
 }
 
 .full-width {
@@ -120,8 +123,17 @@ table img {
   width: calc(100% + 8px);
 }
 
+.full-width-table button {
+  text-align: left;
+  width: 100%;
+}
+
 .align-right {
   text-align: right;
+}
+
+.hidden {
+  display: none;
 }
 
 .grid-2 {
@@ -144,6 +156,12 @@ table img {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
+.grid-small-big {
+  display: grid;
+  grid-template-columns: 1fr 777fr;
+  grid-gap: 16px;
+}
+
 .element-list *:not(a, img) {
   display: block;
 }
@@ -152,16 +170,29 @@ table img {
   margin-bottom: 16px;
 }
 
+.gallery-table td {
+  display: block;
+  margin: auto;
+  max-width: 200px;
+  text-align: center;
+}
+
+.gallery-table img {
+  width: 100%;
+}
+
 .button-style {
   border: 2px solid #444444;
   border-radius: 2px;
   background: none;
   padding: 4px;
-  font-size: medium;
+  color: #222222 !important;
+  font-size: 1.2rem;
 }
 
-.button-style:hover, .button-dark {
+.button-style:hover, .button-style-dark {
   background-color: #F0F0F0;
+  color: #3366BB !important;
 }
 
 .clickable {
@@ -169,7 +200,7 @@ table img {
 }
 
 .help-message {
-  font-size: small;
+  font-size: 1.0rem;
 }
 
 .success-message {
@@ -178,11 +209,6 @@ table img {
 
 .error-message {
   color: #FF0000;
-}
-
-.text-box {
-  text-align: justify;
-  width: 50%;
 }
 
 .overlay {
@@ -208,6 +234,18 @@ table img {
   overflow: auto;
 }
 
+.icon {
+  margin-left: 2px;
+  margin-right: -8px;
+  height: 1.1em;
+}
+
+.icon-big {
+  display: block;
+  margin: auto;
+  max-width: 200px;
+}
+
 .profile-picture {
   width: 100px;
   height: 100px;
@@ -218,7 +256,7 @@ table img {
 #title {
   margin: 0;
   font-family: "Source Code Pro", monospace;
-  font-size: xx-large;
+  font-size: 2.4rem;
 }
 
 /* Special selectors */
@@ -226,7 +264,7 @@ table img {
 @media only screen and (max-width: 1024px) {
 
   body, .button-style {
-    font-size: large;
+    font-size: 1.8rem;
   }
 
   .outer-content, .inner-content {
@@ -234,11 +272,11 @@ table img {
   }
 
   .help-message {
-    font-size: medium;
+    font-size: 1.5rem;
   }
 
   #title {
-    font-size: xxx-large;
+    font-size: 3.6rem;
   }
 
 }

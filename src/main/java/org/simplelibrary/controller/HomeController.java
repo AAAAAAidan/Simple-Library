@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Author;
 import org.simplelibrary.model.Book;
 import org.simplelibrary.model.Subject;
+import org.simplelibrary.service.AccountService;
 import org.simplelibrary.service.AuthorService;
 import org.simplelibrary.service.BookService;
 import org.simplelibrary.service.SubjectService;
@@ -20,17 +21,19 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@SessionAttributes({"resultsPerPage"})
 public class HomeController extends TemplateView {
 
+  private final AccountService accountService;
   private final AuthorService authorService;
   private final BookService bookService;
   private final SubjectService subjectService;
 
   @Autowired
-  public HomeController(AuthorService authorService,
+  public HomeController(AccountService accountService,
+                        AuthorService authorService,
                         BookService bookService,
                         SubjectService subjectService) {
+    this.accountService = accountService;
     this.authorService = authorService;
     this.bookService = bookService;
     this.subjectService = subjectService;
@@ -57,6 +60,7 @@ public class HomeController extends TemplateView {
     model.addAttribute("authors", authors);
     model.addAttribute("books", books);
     model.addAttribute("subjects", subjects);
+    model.addAttribute("isLoggedIn", accountService.isLoggedIn());
     return loadView(model, "home/index");
   }
 
@@ -70,11 +74,6 @@ public class HomeController extends TemplateView {
   @GetMapping("/help")
   public String getHelp(Model model) {
     return loadView(model, "home/help");
-  }
-
-  @ModelAttribute("resultsPerPage")
-  public Integer resultsPerPageInit(){
-    return 10;
   }
 
 }

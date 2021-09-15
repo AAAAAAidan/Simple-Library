@@ -1,0 +1,12 @@
+<h2>Error <span th:text="${errorStatusCode}"></span></h2>
+<div class="grid-2">
+  <div th:switch="${errorStatusCode}">
+    <p th:case="400">The server was unable to process your request.</p>
+    <p th:case="401">You are not authorized to access this resource.</p>
+    <p th:case="403">You do not have permission to access this resource.</p>
+    <p th:case="404">Page not found.</p>
+    <p th:case="500">The server is unavailable at this time.</p>
+    <p th:case="*">An error occured while processing your request.</p>
+  </div>
+  <img class="icon-big" src="/images/closed.png" alt="Open book logo"/>
+</div>
