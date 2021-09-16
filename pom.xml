@@ -21,10 +21,10 @@
     <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
-  <!-- Google Cloud Dependency Management -->
   <dependencyManagement>
     <dependencies>
 
+      <!-- Google Cloud Dependency Management -->
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>spring-cloud-gcp-dependencies</artifactId>
