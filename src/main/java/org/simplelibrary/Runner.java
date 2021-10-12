@@ -1,5 +1,5 @@
-// This code is purely used to initialize the database and files
-// It will enventually be moved into an admin page
+// // This code is purely used to initialize the database and files
+// // It will enventually be moved into an admin page
 //
 // package org.simplelibrary;
 //
