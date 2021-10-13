@@ -10,13 +10,16 @@ import java.util.regex.Pattern;
 
 import javax.persistence.Query;
 
-// Experimental usage of JPQL for querying and updating tables.
-// Will only be used for the search page, where repositories may be inefficient.
+/**
+* Experimental JPQL service class for querying and updating tables.
+*/
 @Slf4j
 @Service
 public class TableService extends DatabaseConnection {
 
-  // Table fields
+  //////////////////
+  // Table fields //
+  //////////////////
 
   private String[] filters = null;
   private String[] sortColumns = null;
@@ -24,58 +27,127 @@ public class TableService extends DatabaseConnection {
   private Integer limit= null;
   private Integer offset = null;
 
-  // Standard getters and setters
+  //////////////////////////////////
+  // Standard getters and setters //
+  //////////////////////////////////
 
+  /**
+   * Get all filters.
+   *
+   * @return the filters
+   */
   public String[] getFilters() {
     return filters;
   }
 
+  /**
+   * Set the filter.
+   *
+   * @param filter the filter to save
+   */
   public void setFilter(String filter) {
     this.filters = new String[] {filter};
   }
 
+  /**
+   * Set the filters.
+   *
+   * @param filters the filters to save
+   */
   public void setFilters(String[] filters) {
     this.filters = filters;
   }
 
+  /**
+   * Get all sort columns.
+   *
+   * @return the sort columns
+   */
   public String[] getSortColumns() {
     return sortColumns;
   }
 
+  /**
+   * Set the sort column.
+   *
+   * @param sortColumn the sort column to save
+   */
   public void setSortColumn(String sortColumns) {
     this.sortColumns = new String[] {sortColumns};
   }
 
+  /**
+   * Set the sort columns.
+   *
+   * @param sortColumns the sort columns to save
+   */
   public void setSortColumns(String[] sortColumns) {
     this.sortColumns = sortColumns;
   }
 
+  /**
+   * Get the order.
+   *
+   * @return the order
+   */
   public String getOrder() {
     return order;
   }
 
+  /**
+   * Set the order.
+   *
+   * @param order the order to save
+   */
   public void setOrder(String order) {
     this.order = order;
   }
 
+  /**
+   * Get the order.
+   *
+   * @return the order
+   */
   public Integer getOffset() {
     return offset;
   }
 
+  /**
+   * Set the offset.
+   *
+   * @param offset the offset to save
+   */
   public void setOffset(Integer offset) {
     this.offset = offset;
   }
 
+  /**
+   * Get the limit.
+   *
+   * @return the limit
+   */
   public Integer getLimit() {
     return limit;
   }
 
+  /**
+   * Set the limit.
+   *
+   * @param limit the limit to save
+   */
   public void setLimit(Integer limit) {
     this.limit = limit;
   }
 
-  // SQL clause methods
+  ////////////////////////
+  // SQL clause methods //
+  ////////////////////////
 
+  /**
+   * Get the JPQL WHERE clause.
+   *
+   * @return the WHERE clause
+   */
   private String getWhereClause() {
     String sql = "";
     int paramCount = 0;
@@ -102,6 +174,11 @@ public class TableService extends DatabaseConnection {
     return sql;
   }
 
+  /**
+   * Get the JPQL SORT clause.
+   *
+   * @return the SORT clause
+   */
   private String getSortClause() {
     String sql = "";
 
@@ -130,6 +207,11 @@ public class TableService extends DatabaseConnection {
     return sql;
   }
 
+  /**
+   * Get the JPQL ORDER clause.
+   *
+   * @return the ORDER clause
+   */
   private String getOrderClause() {
     String sql = "";
 
@@ -145,6 +227,11 @@ public class TableService extends DatabaseConnection {
     return sql;
   }
 
+  /**
+   * Get the JPQL LIMIT clause.
+   *
+   * @return the LIMIT clause
+   */
   private String getLimitClause() {
     String sql = "";
 
@@ -155,6 +242,11 @@ public class TableService extends DatabaseConnection {
     return sql;
   }
 
+  /**
+   * Get the JPQL OFFSET clause.
+   *
+   * @return the OFFSET clause
+   */
   private String getOffsetClause() {
     String sql = "";
 
@@ -165,18 +257,38 @@ public class TableService extends DatabaseConnection {
     return sql;
   }
 
+  /**
+   * Get all JPQL clauses.
+   *
+   * @return the clauses
+   */
   private String getAllClauses() {
     return String.format("%s %s %s %s %s", getWhereClause(),
                          getSortClause(), getOrderClause(),
                          getLimitClause(), getOffsetClause());
   }
 
-  // Query methods
+  ///////////////////
+  // Query methods //
+  ///////////////////
 
+  /**
+   * Get the JPQL SELECT query.
+   *
+   * @param sql the SQL query
+   * @return the SELECT query
+   */
   private Query getSelectQuery(String sql) {
     return getSelectQuery(sql, null);
   }
 
+  /**
+   * Get the JPQL SELECT query.
+   *
+   * @param sql the SQL query
+   * @param tableClass the JPA entity class
+   * @return the SELECT query
+   */
   private Query getSelectQuery(String sql, Class<?> tableClass) {
     Query query = null;
     int paramCount = 0;
@@ -205,8 +317,16 @@ public class TableService extends DatabaseConnection {
     return query;
   }
 
-  // Select methods
+  ////////////////////
+  // Select methods //
+  ////////////////////
 
+  /**
+   * Selects a single row from a table.
+   *
+   * @param tableClass the JPA entity to select from
+   * @return the object selected
+   */
   public <T> T selectOne(Class<T> tableClass) {
     List<T> results = select(tableClass);
 
@@ -218,6 +338,12 @@ public class TableService extends DatabaseConnection {
     }
   }
 
+  /**
+   * Selects rows from a table.
+   *
+   * @param tableClass the JPA entity to select from
+   * @return the list of the objects selected
+   */
   public <T> List<T> select(Class<T> tableClass) {
     String sql = String.format("SELECT * FROM %s t %s", tableClass.getSimpleName().toLowerCase(), getAllClauses());
     log.debug(sql);
@@ -228,14 +354,28 @@ public class TableService extends DatabaseConnection {
     return results;
   }
 
-  // Insert methods
+  ////////////////////
+  // Insert methods //
+  ////////////////////
 
+  /**
+   * Inserts a single row to a table.
+   *
+   * @param entity the JPA entity object to insert
+   * @return the number of rows inserted
+   */
   public <T> int insert(T entity) {
     List<T> entities = new ArrayList<>();
     entities.add(entity);
     return insert(entities);
   }
 
+  /**
+   * Inserts multiple rows to a table.
+   *
+   * @param entities the JPA entity entities to insert
+   * @return the number of rows inserted
+   */
   public <T> int insert(List<T> entities) {
     this.begin();
 
@@ -247,12 +387,30 @@ public class TableService extends DatabaseConnection {
     return entities.size();
   }
 
-  // Update methods
+  ////////////////////
+  // Update methods //
+  ////////////////////
 
+  /**
+   * Updates a single column in a table.
+   *
+   * @param tableClass the JPA entity entity table to update
+   * @param column the column to update
+   * @param value the value to save in the update
+   * @return the number of rows updated
+   */
   public <T> int update(Class<T> tableClass, String column, String value) {
     return update(tableClass, new String[] {column}, new String[] {value});
   }
 
+  /**
+   * Updates multiple columns in a table.
+   *
+   * @param tableClass the JPA entity entity table to update
+   * @param column the column to update
+   * @param value the value to save in the update
+   * @return the number of rows updated
+   */
   public <T> int update(Class<T> tableClass, String[] columns, String[] values) {
     if (columns.length != values.length) {
       return 0;
@@ -280,8 +438,16 @@ public class TableService extends DatabaseConnection {
     return result;
   }
 
-  // Delete methods
+  ////////////////////
+  // Delete methods //
+  ////////////////////
 
+  /**
+   * Deletes rows from a table.
+   *
+   * @param tableClass the JPA entity entity table to delete from
+   * @return the number of rows deleted
+   */
   public <T> int delete(Class<T> tableName) {
     String sql = String.format("DELETE FROM %s t %s", tableName.getSimpleName().toLowerCase(), getWhereClause());
     this.begin();
@@ -291,42 +457,92 @@ public class TableService extends DatabaseConnection {
     return result;
   }
 
-  // Filter methods
+  ////////////////////
+  // Filter methods //
+  ////////////////////
 
+  /**
+   * Returns a table service with an updated filter.
+   *
+   * @param filter the filter to save
+   * @return the updated table service
+   */
   public TableService filterBy(String filter) {
     return filterBy(new String[] {filter});
   }
 
+  /**
+   * Returns a table service with updated filters.
+   *
+   * @param filters the filters to save
+   * @return the updated table service
+   */
   public TableService filterBy(String[] filters) {
     this.setFilters(filters);
     return this;
   }
 
-  // Sort methods
+  //////////////////
+  // Sort methods //
+  //////////////////
 
+  /**
+   * Returns a table service with an updated sort column.
+   *
+   * @param sortColumn the sort column to save
+   * @return the updated table service
+   */
   public TableService sortBy(String sortColumn) {
     return sortBy(new String[] {sortColumn});
   }
 
+  /**
+   * Returns a table service with updated sort columns.
+   *
+   * @param sortColumns the sort columns to save
+   * @return the updated table service
+   */
   public TableService sortBy(String[] sortColumns) {
     this.setSortColumns(sortColumns);
     return this;
   }
 
-  // Order methods
+  ///////////////////
+  // Order methods //
+  ///////////////////
 
+  /**
+   * Returns a table service with an updated order.
+   *
+   * @param order the order to save
+   * @return the updated table service
+   */
   public TableService inOrder(String order) {
     order = Pattern.matches("(?i)(-|d|desc|descending)", order) ? "DESC" : "ASC";
     this.setOrder(order);
     return this;
   }
 
-  // Range methods
+  ///////////////////
+  // Range methods //
+  ///////////////////
 
+  /**
+   * Returns a table service with an updated limit.
+   *
+   * @param limit the limit to save
+   * @return the updated table service
+   */
   public TableService limitTo(Integer limit) {
     return inRange(0, limit - 1);
   }
 
+  /**
+   * Returns a table service with an updated range.
+   *
+   * @param range the range to save
+   * @return the updated table service
+   */
   public TableService inRange(Integer start, Integer end) {
     this.setLimit(end - start + 1);
     this.setOffset(start);

@@ -7,6 +7,9 @@ import lombok.Setter;
 
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
+/**
+ * Temporary class for file data.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.json.JsonObject;
 import java.io.IOException;
 
+/**
+ * Testing class for URL reader utilities.
+ */
 @Slf4j
 @SpringBootTest
 class UrlReaderTests {

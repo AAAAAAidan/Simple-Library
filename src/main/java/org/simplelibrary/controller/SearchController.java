@@ -19,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Controller class for search pages.
+ */
 @Slf4j
 @Controller
 @SessionAttributes({"resultsPerPage"})

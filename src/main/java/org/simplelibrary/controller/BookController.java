@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Controller class for book related services.
+ */
 @Slf4j
 @Controller
 public class BookController extends TemplateView {

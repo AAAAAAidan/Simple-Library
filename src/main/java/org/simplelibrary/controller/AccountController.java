@@ -14,6 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Controller class for account related services.
+ */
 @Slf4j
 @Controller
 public class AccountController extends TemplateView {

@@ -24,6 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
+/**
+* Service class for working with files.
+*/
 @Slf4j
 @Service
 public class FileService {
@@ -57,6 +60,12 @@ public class FileService {
     }
   }
 
+  /**
+   * Gets the file directory string based on the provided filename.
+   *
+   * @param filename the name of the file
+   * @return the directory string
+   */
   private String getDirectoryString(String filename) {
     String path;
 
@@ -75,6 +84,12 @@ public class FileService {
     return path;
   }
 
+  /**
+   * Gets the file directory path based on the provided filename.
+   *
+   * @param filename the name of the file
+   * @return the directory path
+   */
   private Path getDirectoryPath(String filename) {
     Path path;
     String directory = getDirectoryString(filename);
@@ -89,10 +104,23 @@ public class FileService {
     return path;
   }
 
+  /**
+   * Saves a file.
+   *
+   * @param file the file to save
+   * @throws RuntimeException if the file fails to save
+   */
   public void save(MultipartFile file) {
     saveAs(file, file.getOriginalFilename());
   }
 
+  /**
+   * Saves a file.
+   *
+   * @param file the file to save
+   * @param filename the name to save the file as
+   * @throws RuntimeException if the file fails to save
+   */
   public void saveAs(MultipartFile file, String filename) {
     try {
       Path path = getDirectoryPath(filename);
@@ -111,6 +139,12 @@ public class FileService {
     }
   }
 
+  /**
+   * Loads a file based on the provided file name.
+   *
+   * @param filename the name of the file
+   * @throws RuntimeException if the file fails to load
+   */
   public Resource load(String filename) {
     try {
       Path path = getDirectoryPath(filename).resolve(filename);
@@ -129,6 +163,12 @@ public class FileService {
     }
   }
 
+  /**
+   * Checks if a file exists based on the provided file name.
+   *
+   * @param filename the name of the file
+   * @return true if the file exists, else false
+   */
   public boolean exists(String filename) {
     try {
       load(filename);
@@ -140,20 +180,36 @@ public class FileService {
     }
   }
 
+  /**
+   * Deletes all files in the root directory.
+   */
   public void deleteAll() {
     deleteAll(ROOT);
   }
 
+  /**
+   * Deletes all files in a directory.
+   *
+   * @param directory the name of the directory to delete files from
+   */
   public void deleteAll(String directory) {
     Path path = getDirectoryPath(directory);
     log.info("Deleting all from " + path.toString());
     FileSystemUtils.deleteRecursively(path.toFile());
   }
 
+  /**
+   * Loads all files in the root directory.
+   */
   public List<Path> loadAll() {
     return loadAll(ROOT);
   }
 
+  /**
+   * Loads all files in a directory.
+   *
+   * @param directory the name of the directory to load files from
+   */
   public List<Path> loadAll(String directory) {
     try {
       Path root = getDirectoryPath(directory);

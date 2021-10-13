@@ -8,6 +8,9 @@ import org.simplelibrary.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ * Testing class for account services.
+ */
 @Slf4j
 @SpringBootTest
 class AccountServiceTests {

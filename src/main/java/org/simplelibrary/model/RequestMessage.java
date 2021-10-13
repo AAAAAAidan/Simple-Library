@@ -4,6 +4,9 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+/**
+ * Temporary class for JSON request messages.
+ */
 @Component
 @Getter
 @NoArgsConstructor

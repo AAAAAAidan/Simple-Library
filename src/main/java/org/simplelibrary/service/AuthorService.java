@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+* Service class for the author entity.
+*/
 @Slf4j
 @Service
 public class AuthorService {
@@ -22,36 +25,80 @@ public class AuthorService {
     this.authorRepository = authorRepository;
   }
 
+  /**
+   * Saves an author.
+   *
+   * @param author the author to save
+   */
   public void save(Author author) {
     authorRepository.save(author);
   }
 
+  /**
+   * Saves all authors provided.
+   *
+   * @param authors the authors to save
+   */
   public void saveAll(List<Author> authors) {
     authorRepository.saveAll(authors);
   }
 
+  /**
+   * Checks if an author with the provided name exists.
+   *
+   * @param name the name of the author
+   * @return true if the author exists, else false
+   */
   public boolean existsByName(String name) {
     return authorRepository.existsByName(name);
   }
 
+  /**
+   * Gets a author based on the provided ID.
+   *
+   * @param id the ID of the author
+   * @return the author found
+   */
   public Author getById(Integer id) {
     return authorRepository.getById(id);
   }
 
+  /**
+   * Gets a author based on the provided name.
+   *
+   * @param name the name of the author
+   * @return the author found
+   */
   public Author getByName(String name) {
     return authorRepository.getByName(name);
   }
 
+  /**
+   * Gets a random author.
+   *
+   * @return the author found
+   */
   public Author getByRandom() {
     List<Author> authors = authorRepository.findAll();
     Random random = new Random();
     return authors.get(random.nextInt(authors.size()));
   }
 
+  /**
+   * Finds all authors.
+   *
+   * @return the authors found
+   */
   public List<Author> findAll() {
     return authorRepository.findAll();
   }
 
+  /**
+   * Adds a book to an author's list of books if not already present.
+   *
+   * @param author the author to save
+   * @param book the book to save to the author
+   */
   public void mapToBook(Author author, Book book) {
     List<Book> books = author.getBooks();
     boolean alreadyPresent = false;

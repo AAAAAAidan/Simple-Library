@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller class for index and static pages.
+ */
 @Slf4j
 @Controller
 public class HomeController extends TemplateView {

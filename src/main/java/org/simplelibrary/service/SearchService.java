@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+* Service class for working with entity search results.
+*/
 @Slf4j
 @Service
 public class SearchService {
@@ -25,6 +28,14 @@ public class SearchService {
     this.tableService = tableService;
   }
 
+  /**
+   * Gets a list of search results.
+   *
+   * @param terms the search terms to look for
+   * @param filter the name of the class to search for
+   * @param order the order for the results to be in
+   * @return a list of the search results found
+   */
   public List<?> getSearchResults(String terms, String filter, String order) {
     filter = filter.replace("list", "catalog"); // usage of "list" is for front end only
     String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
@@ -47,6 +58,13 @@ public class SearchService {
     }
   }
 
+  /**
+   * Gets the last page number of the search results.
+   *
+   * @param resultCount the total result count
+   * @param resultsPerPage the count of results per page
+   * @return the last page number
+   */
   public Integer getLastPageNumber(int resultCount, int resultsPerPage) {
     int lastPage = resultCount / resultsPerPage;
 
@@ -57,6 +75,14 @@ public class SearchService {
     return lastPage;
   }
 
+  /**
+   * Gets a list of search result page numbers.
+   *
+   * @param resultCount the total result count
+   * @param currentPage the current page number
+   * @param resultsPerPage the count of results per page
+   * @return a list of page numbers
+   */
   public List<String> getPageNumbers(int resultCount, int currentPage, int resultsPerPage) {
     List<String> resultPages = new ArrayList<>();
     int lastPage = getLastPageNumber(resultCount, resultsPerPage);
@@ -82,6 +108,14 @@ public class SearchService {
     return resultPages;
   }
 
+  /**
+   * Limits the search results to the desired length.
+   *
+   * @param results the list of search results
+   * @param page the current page number
+   * @param resultsPerPage the count of results per page
+   * @return a list of search results
+   */
   public List<?> limitResultsByPage(List<?> results, int page, int resultsPerPage) {
     if (results.isEmpty()) {
       return results;

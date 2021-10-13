@@ -30,6 +30,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Controller class for catalog related services.
+ */
 @Slf4j
 @Controller
 public class CatalogController extends TemplateView {

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * The persistent class for the authority group database table.
+ * Persistent class for the authority group database table.
  */
 @Entity
 @Getter

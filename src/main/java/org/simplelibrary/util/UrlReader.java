@@ -6,9 +6,18 @@ import javax.json.stream.JsonParser;
 import java.io.*;
 import java.net.URL;
 
-// Methods for retrieving data from URLs
+/**
+ * Utility class for retrieving data from URLs.
+ */
 public final class UrlReader {
 
+  /**
+   * Gets a byte array from a URL fetch.
+   *
+   * @param urlText the URL to fetch
+   * @return the response as a byte array
+   * @throws IOException if the input/output fails to read/write
+   */
   public static byte[] getByteArrayFromUrl(String urlText) throws IOException {
     URL url = new URL(urlText);
     ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -24,6 +33,13 @@ public final class UrlReader {
     return output.toByteArray();
   }
 
+  /**
+   * Gets a JSON object from a URL fetch.
+   *
+   * @param urlText the URL to fetch
+   * @return the response as a JSON object
+   * @throws IOException if the input/output fails to read/write
+   */
   public static JsonObject getJsonObjectFromUrl(String urlText) throws IOException {
     URL url = new URL(urlText);
     InputStream input = url.openStream();

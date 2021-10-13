@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Controller class for error pages.
+ */
 @Slf4j
 @Controller
 public class AppErrorController extends TemplateView implements ErrorController {

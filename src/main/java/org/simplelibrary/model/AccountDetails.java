@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+/**
+ * Authentication class for user details.
+ */
 public class AccountDetails implements UserDetails {
 
   private final Account account;
