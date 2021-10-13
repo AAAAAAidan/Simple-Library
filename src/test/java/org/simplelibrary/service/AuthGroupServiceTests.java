@@ -8,6 +8,9 @@ import org.simplelibrary.model.AuthGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ * Testing class for authority group services.
+ */
 @Slf4j
 @SpringBootTest
 class AuthGroupServiceTests {

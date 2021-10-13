@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * The persistent class for the catalog item database table.
+ * Persistent class for the catalog item database table.
  */
 @Entity
 @Getter

@@ -10,6 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
+/**
+ * Exception handler class for files.
+ */
 @ControllerAdvice
 public class FileExceptionHandler extends ResponseEntityExceptionHandler {
 

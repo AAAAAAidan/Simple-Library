@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * The persistent class for the subject database table.
+ * Persistent class for the subject database table.
  */
 @Entity
 @Getter

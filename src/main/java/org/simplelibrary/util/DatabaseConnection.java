@@ -8,6 +8,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.Properties;
 
+/**
+ * Utility class for connecting JPQL to the database.
+ */
 public abstract class DatabaseConnection {
 
   protected EntityManagerFactory entityManagerFactory;
@@ -16,7 +19,9 @@ public abstract class DatabaseConnection {
   @Autowired
   DatabaseService databaseService;
 
-  // Connect to the database
+  /**
+   * Connects to the database.
+   */
   public void connect() {
     String database = databaseService.getDatabase();
     Properties properties = databaseService.getProperties();
@@ -24,7 +29,9 @@ public abstract class DatabaseConnection {
     entityManager = entityManagerFactory.createEntityManager();
   }
 
-  // Disconnect from the database
+  /**
+   * Disconnects from the database.
+   */
   public void disconnect() {
     if (entityManager != null) {
       entityManager.close();
@@ -35,19 +42,27 @@ public abstract class DatabaseConnection {
     }
   }
 
-  // Connect and begin transaction
+  /**
+   * Connects and begins database transaction.
+   */
   public void begin() {
     this.connect();
     entityManager.getTransaction().begin();
   }
 
-  // Commit transaction and disconnect
+  /**
+   * Commits database transaction and disconnects.
+   */
   public void commit() {
     entityManager.getTransaction().commit();
     this.disconnect();
   }
 
-  // Persist an object to the database
+  /**
+   * Persists an object to the database.
+   *
+   * @param object the object to persist
+   */
   public void persist(Object object) {
     entityManager.persist(object);
   }

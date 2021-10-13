@@ -11,6 +11,9 @@ import org.simplelibrary.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ * Testing class for table services.
+ */
 @Slf4j
 @SpringBootTest
 class TableServiceTests {

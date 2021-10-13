@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
+/**
+ * Controller class for file related services.
+ */
 @RestController
 public class FileController {
 

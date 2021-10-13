@@ -8,6 +8,9 @@
 // Classes //
 /////////////
 
+/**
+ * JSON object for use with POST requests.
+ */
 class RequestMessage {
   constructor(id, value) {
     this.id = id;
@@ -19,6 +22,14 @@ class RequestMessage {
 // Utilities //
 ///////////////
 
+/**
+ * Fetches a URL and parses the JSON response.
+ *
+ * @param {String} url The URL path
+ * @param {String} method The URL method
+ * @param {Object} data The JSON request object
+ * @returns {Object} Returns the JSON response
+ */
 async function fetchResponseData(url, method, data) {
   if (!url.includes("http")) {
     var currentUrl = window.location.toString();
@@ -61,6 +72,12 @@ async function fetchResponseData(url, method, data) {
 var itemSourceId;
 var itemSourceFilter;
 
+/**
+ * Opens the pop-up menu.
+ *
+ * @param {String} id The list item ID
+ * @param {String} filter The list item class filter
+ */
 function openListPopup(id, filter) {
   document.getElementById("listOverlay").style.display = "block";
   document.getElementById("listOverlay").addEventListener('click', function(e){checkForOverlayClick(e)});
@@ -83,6 +100,9 @@ function openListPopup(id, filter) {
   }
 }
 
+/**
+ * Checks if the area outside of the pop-up is clicked.
+ */
 function checkForOverlayClick(click) {
   if (!document.getElementById('listPopup').contains(click.target)) {
     itemSourceId = null;
@@ -91,10 +111,20 @@ function checkForOverlayClick(click) {
   }
 }
 
+/**
+ * Closes the pop-up menu.
+ *
+ * @param {String} method The URL method
+ */
 function closeListPopup() {
   document.getElementById("listOverlay").style.display = "none";
 }
 
+/**
+ * Updates a list, either adding or deleting an item.
+ *
+ * @param {String} listId The list ID
+ */
 function updateList(listId) {
   var boxElementId = "box" + listId;
 
@@ -106,6 +136,9 @@ function updateList(listId) {
   }
 }
 
+/**
+ * Saves a new list.
+ */
 function saveList() {
   var newListName = document.getElementById("newListName").value;
   var url = "lists/save";
@@ -134,7 +167,12 @@ function saveList() {
   });
 }
 
-function saveToList(listId,) {
+/**
+ * Saves a new list item.
+ *
+ * @param {String} listId The list ID
+ */
+function saveToList(listId) {
   var url = "lists/" + listId + "/save";
   var method = "POST";
   var data = new RequestMessage(itemSourceId, itemSourceFilter);
@@ -156,6 +194,11 @@ function saveToList(listId,) {
   });
 }
 
+/**
+ * Deletes a list.
+ *
+ * @param {String} listId The list ID
+ */
 function deleteList(listId) {
   var url = "lists/" + listId;
   var method = "DELETE";
@@ -172,6 +215,11 @@ function deleteList(listId) {
   });
 }
 
+/**
+ * Deletes a list item.
+ *
+ * @param {Integer} listId The list ID
+ */
 function deleteFromList(listId) {
   listElementId = "list" + listId;
   var itemElementClassName = itemSourceFilter + itemSourceId;
@@ -202,7 +250,9 @@ if (document.location.pathname.match("search")) {
   document.addEventListener('click', checkResultsPerPageSelection);
 }
 
-// Check for changes to the results per page selection
+/**
+ * Checks for changes to the results per page selection element.
+ */
 function checkResultsPerPageSelection() {
   var oldSelection = document.getElementById("resultsPerPage").value;
   var newSelection = document.getElementById("resultsPerPageSelector").value;

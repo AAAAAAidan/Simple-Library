@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+/**
+ * Testing class for search services.
+ */
 @Slf4j
 @SpringBootTest
 class SearchServiceTests {

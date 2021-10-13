@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+* Service class for user details authentication.
+*/
 @Service
 @Slf4j
 public class AccountDetailsService implements UserDetailsService {
@@ -22,6 +25,13 @@ public class AccountDetailsService implements UserDetailsService {
     this.accountRepository = accountRepository;
   }
 
+  /**
+   * Loads user details based on the provided email.
+   *
+   * @param email the email of the desired user
+   * @return the user details found
+   * @throws UsernameNotFoundException if no user is found
+   */
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     Account account = accountRepository.getByEmail(email);

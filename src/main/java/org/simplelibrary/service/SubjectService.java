@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+* Service class for the subject entity.
+*/
 @Slf4j
 @Service
 public class SubjectService {
@@ -22,36 +25,80 @@ public class SubjectService {
     this.subjectRepository = subjectRepository;
   }
 
+  /**
+   * Saves a subject.
+   *
+   * @param subject the subject to save
+   */
   public void save(Subject subject) {
     subjectRepository.save(subject);
   }
 
+  /**
+   * Saves all subjects provided.
+   *
+   * @param subjects the subjects to save
+   */
   public void saveAll(List<Subject> subjects) {
     subjectRepository.saveAll(subjects);
   }
 
+  /**
+   * Checks if an subject with the provided name exists.
+   *
+   * @param name the name of the subject
+   * @return true if the subject exists, else false
+   */
   public boolean existsByName(String name) {
     return subjectRepository.existsByName(name);
   }
 
+  /**
+   * Gets a subject based on the provided ID.
+   *
+   * @param id the ID of the subject
+   * @return the subject found
+   */
   public Subject getById(Integer id) {
     return subjectRepository.getById(id);
   }
 
+  /**
+   * Gets a subject based on the provided name.
+   *
+   * @param name the name of the subject
+   * @return the subject found
+   */
   public Subject getByName(String name) {
     return subjectRepository.getByName(name);
   }
 
+  /**
+   * Gets a random subject.
+   *
+   * @return the subject found
+   */
   public Subject getByRandom() {
     List<Subject> subjects = subjectRepository.findAll();
     Random random = new Random();
     return subjects.get(random.nextInt(subjects.size()));
   }
 
+  /**
+   * Finds all subjects.
+   *
+   * @return the subjects found
+   */
   public List<Subject> findAll() {
     return subjectRepository.findAll();
   }
 
+  /**
+   * Adds a book to a subject's list of books if not already present.
+   *
+   * @param subject the subject to save
+   * @param book the book to save to the subject
+   */
   public void mapToBook(Subject subject, Book book) {
     List<Book> books = subject.getBooks();
     boolean alreadyPresent = false;

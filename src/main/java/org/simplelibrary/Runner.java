@@ -1,6 +1,3 @@
-// // This code is purely used to initialize the database and files
-// // It will enventually be moved into an admin page
-//
 // package org.simplelibrary;
 //
 // import lombok.extern.slf4j.Slf4j;
@@ -18,6 +15,10 @@
 // import javax.json.JsonArray;
 // import javax.json.JsonObject;
 //
+// /**
+//  * Runner class for initializing the database and files.
+//  * This class will enventually be moved to an admin page.
+//  */
 // @Slf4j
 // @Component
 // @Transactional

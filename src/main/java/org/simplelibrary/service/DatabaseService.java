@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.Properties;
 
+/**
+* Service class for initializing the persistence.xml database connection.
+*/
 @Slf4j
 @Service
 public class DatabaseService {
@@ -33,11 +36,21 @@ public class DatabaseService {
     properties.setProperty("javax.persistence.jdbc.password", password);
   }
 
+  /**
+   * Gets the database name.
+   *
+   * @return the database name
+   */
   public String getDatabase() {
     this.init();
     return database;
   }
 
+  /**
+   * Gets the database properties.
+   *
+   * @return the database properties
+   */
   public Properties getProperties() {
     this.init();
     return properties;
