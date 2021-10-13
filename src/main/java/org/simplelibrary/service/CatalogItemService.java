@@ -17,7 +17,7 @@ public class CatalogItemService {
 
   @Autowired
   public CatalogItemService(CatalogItemRepository catalogItemRepository) {
-    this.CatalogItemRepository = catalogItemRepository;
+    this.catalogItemRepository = catalogItemRepository;
   }
 
   /**
@@ -27,7 +27,7 @@ public class CatalogItemService {
    * @return the saved catalog item
    */
   public CatalogItem saveAndFlush(CatalogItem catalogItem) {
-    return CatalogItemRepository.saveAndFlush(catalogItem);
+    return catalogItemRepository.saveAndFlush(catalogItem);
   }
 
   /**
@@ -37,7 +37,7 @@ public class CatalogItemService {
    * @return the catalog item found
    */
   public CatalogItem getById(Integer id) {
-    return CatalogItemRepository.getById(id);
+    return catalogItemRepository.getById(id);
   }
 
   /**
@@ -46,7 +46,7 @@ public class CatalogItemService {
    * @param id the ID of the catalog item
    */
   public void deleteById(Integer id) {
-    CatalogItemRepository.deleteById(id);
+    catalogItemRepository.deleteById(id);
   }
 
 }
