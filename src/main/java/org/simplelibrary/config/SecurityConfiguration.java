@@ -49,20 +49,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
       // Paths restricted to admin users
       .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+      .antMatchers("/api/**").hasAuthority("ROLE_ADMIN")
       .antMatchers("/files/**").hasAuthority("ROLE_ADMIN")
-
-      // API paths restricted to admin users
-      .antMatchers("/api/accounts/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers("/api/authGroups/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers("/api/catalogs/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers("/api/catalogItems/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers("/api/profile/**").hasAuthority("ROLE_ADMIN")
-
-      // API methods restricted to admin users
-      .antMatchers(HttpMethod.POST, "/api/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers(HttpMethod.PUT, "/api/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers(HttpMethod.PATCH, "/api/**").hasAuthority("ROLE_ADMIN")
-      .antMatchers(HttpMethod.DELETE, "/api/**").hasAuthority("ROLE_ADMIN")
 
     // Logging in
     .and()
