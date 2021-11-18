@@ -42,8 +42,7 @@ public class Account implements Serializable {
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp addDate;
 
-  @Column(name="account_status", nullable=false,
-          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  @Column(name="account_status", length=12, nullable=false)
   private String status = "ACTIVE";
 
   // Bi-directional many-to-one association to Catalog
@@ -51,7 +50,7 @@ public class Account implements Serializable {
   private List<Catalog> catalogs;
 
   // Bi-directional many-to-many association to AuthGroup
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch=FetchType.EAGER)
   @JoinTable(
     name="account_auth_group_map",
     joinColumns={ @JoinColumn(name="account_id") },

@@ -40,8 +40,7 @@ public class Book implements Serializable {
           columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp addDate;
 
-  @Column(name="book_status", nullable=false,
-          columnDefinition="ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE'")
+  @Column(name="book_status", length=12, nullable=false)
   private String status = "ACTIVE";
 
   // Bi-directional many-to-many association to Author

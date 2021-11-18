@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org</groupId>
   <artifactId>simplelibrary</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <name>simplelibrary</name>
   <description>Digital book library project built with Spring Boot</description>
 
@@ -76,10 +76,10 @@
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
-    <!-- MySQL -->
+    <!-- PostgreSQL -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
 
@@ -108,7 +108,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
-      <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
+      <artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>

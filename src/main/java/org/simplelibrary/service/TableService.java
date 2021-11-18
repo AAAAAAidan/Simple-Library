@@ -164,7 +164,7 @@ public class TableService extends DatabaseConnection {
         }
         else if (filter.contains("contains")) {
           String column = filter.split("contains")[0].trim();
-          sql += String.format("t.%s like ?%s AND ", column, ++paramCount);
+          sql += String.format("t.%s ilike ?%s AND ", column, ++paramCount);
         }
       }
 
