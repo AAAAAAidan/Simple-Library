@@ -306,8 +306,15 @@ public class TableService extends DatabaseConnection {
 
         if (filter.contains("=")) {
           String value = filter.split("=")[1].trim();
-          query.setParameter(++paramCount, value);
-        } else if (filter.contains("contains")) {
+
+          if (Pattern.matches("^-?\\d+$", value)) {
+            query.setParameter(++paramCount, Integer.parseInt(value));
+          }
+          else {
+            query.setParameter(++paramCount, value);
+          }
+        }
+        else if (filter.contains("contains")) {
           String value = "%" + filter.split("contains")[1].trim() + "%";
           query.setParameter(++paramCount, value);
         }

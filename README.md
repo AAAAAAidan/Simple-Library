@@ -20,7 +20,7 @@ Front-end languages: HTML, CSS, JavaScript.
 
 Back-end languages: Java, SQL, XML, Dockerfile.
 
-Back-end dependencies: Spring Boot, Spring Security, Spring Data JPA, JUnit, JSON, MySQL, Thymeleaf, Lombok, Google Cloud Secret Manager, Google Cloud MySQL, Google Cloud NIO.
+Back-end dependencies: Spring Boot, Spring Security, Spring Data JPA, JUnit, JSON, PostgreSQL, Thymeleaf, Lombok, Google Cloud Secret Manager, Google Cloud PostgreSQL, Google Cloud NIO.
 
 Cloud services: Google Cloud Run, Google Cloud Build, Google Cloud SQL, Google Cloud Storage.
 
