@@ -1,5 +1,6 @@
 package org.simplelibrary.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.service.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,10 +12,11 @@ import java.util.Properties;
 /**
  * Utility class for connecting JPQL to the database.
  */
+@Slf4j
 public abstract class DatabaseConnection {
 
-  protected EntityManagerFactory entityManagerFactory;
-  protected EntityManager entityManager;
+  protected static EntityManagerFactory entityManagerFactory;
+  protected static EntityManager entityManager;
 
   @Autowired
   DatabaseService databaseService;
@@ -23,22 +25,31 @@ public abstract class DatabaseConnection {
    * Connects to the database.
    */
   public void connect() {
-    String database = databaseService.getDatabase();
-    Properties properties = databaseService.getProperties();
-    entityManagerFactory = Persistence.createEntityManagerFactory(database, properties);
-    entityManager = entityManagerFactory.createEntityManager();
+    if (entityManagerFactory == null || !entityManagerFactory.isOpen()) {
+      String database = databaseService.getDatabase();
+      Properties properties = databaseService.getProperties();
+      entityManagerFactory = Persistence.createEntityManagerFactory(database, properties);
+      log.info("Opened entity manager factory");
+    }
+
+    if (entityManager == null || !entityManager.isOpen()) {
+      entityManager = entityManagerFactory.createEntityManager();
+      log.info("Opened entity manager " + entityManagerFactory.isOpen() + " " + entityManager.isOpen());
+    }
   }
 
   /**
    * Disconnects from the database.
    */
   public void disconnect() {
-    if (entityManager != null) {
+    if (entityManager.isOpen()) {
       entityManager.close();
+      log.info("Closed entity manager factory");
     }
 
-    if (entityManagerFactory != null) {
+    if (entityManagerFactory.isOpen()) {
       entityManagerFactory.close();
+      log.info("Closed entity manager");
     }
   }
 
