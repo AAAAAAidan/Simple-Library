@@ -17,7 +17,7 @@
 //
 // /**
 //  * Runner class for initializing the database and files.
-//  * This class will enventually be moved to an admin page.
+//  * This class will eventually be moved to an admin page.
 //  */
 // @Slf4j
 // @Component

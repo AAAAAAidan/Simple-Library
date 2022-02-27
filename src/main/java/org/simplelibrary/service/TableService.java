@@ -11,10 +11,12 @@ import java.util.regex.Pattern;
 import javax.persistence.Query;
 
 /**
-* Experimental JPQL service class for querying and updating tables.
-*/
+ * Experimental JPQL service class for querying and updating tables.
+ * @deprecated due to unresolved issues with entity managers.
+ */
 @Slf4j
 @Service
+@Deprecated(since="02/26/2022")
 public class TableService extends DatabaseConnection {
 
   //////////////////
@@ -70,7 +72,7 @@ public class TableService extends DatabaseConnection {
   /**
    * Set the sort column.
    *
-   * @param sortColumn the sort column to save
+   * @param sortColumns the sort column to save
    */
   public void setSortColumn(String sortColumns) {
     this.sortColumns = new String[] {sortColumns};
@@ -414,8 +416,8 @@ public class TableService extends DatabaseConnection {
    * Updates multiple columns in a table.
    *
    * @param tableClass the JPA entity entity table to update
-   * @param column the column to update
-   * @param value the value to save in the update
+   * @param columns the column to update
+   * @param values the value to save in the update
    * @return the number of rows updated
    */
   public <T> int update(Class<T> tableClass, String[] columns, String[] values) {
@@ -452,7 +454,7 @@ public class TableService extends DatabaseConnection {
   /**
    * Deletes rows from a table.
    *
-   * @param tableClass the JPA entity entity table to delete from
+   * @param tableName the JPA entity entity table to delete from
    * @return the number of rows deleted
    */
   public <T> int delete(Class<T> tableName) {
@@ -547,7 +549,8 @@ public class TableService extends DatabaseConnection {
   /**
    * Returns a table service with an updated range.
    *
-   * @param range the range to save
+   * @param start the start of the range to save
+   * @param end the end of the range to save
    * @return the updated table service
    */
   public TableService inRange(Integer start, Integer end) {

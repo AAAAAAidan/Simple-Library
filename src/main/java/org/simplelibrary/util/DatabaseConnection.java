@@ -11,8 +11,10 @@ import java.util.Properties;
 
 /**
  * Utility class for connecting JPQL to the database.
+ * @deprecated due to unresolved issues with entity managers.
  */
 @Slf4j
+@Deprecated(since="02/26/2022")
 public abstract class DatabaseConnection {
 
   protected static EntityManagerFactory entityManagerFactory;

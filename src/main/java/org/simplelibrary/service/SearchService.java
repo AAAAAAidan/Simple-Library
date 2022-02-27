@@ -1,31 +1,38 @@
 package org.simplelibrary.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.simplelibrary.model.Author;
-import org.simplelibrary.model.Book;
 import org.simplelibrary.model.Catalog;
-import org.simplelibrary.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
-* Service class for working with entity search results.
-*/
+ * Service class for working with entity search results.
+ */
 @Slf4j
 @Service
 public class SearchService {
 
   private final AccountService accountService;
-  private final TableService tableService;
+  private final AuthorService authorService;
+  private final BookService bookService;
+  private final CatalogService catalogService;
+  private final SubjectService subjectService;
 
   @Autowired
   public SearchService(AccountService accountService,
-                       TableService tableService) {
+                       AuthorService authorService,
+                       BookService bookService,
+                       CatalogService catalogService,
+                       SubjectService subjectService) {
     this.accountService = accountService;
-    this.tableService = tableService;
+    this.authorService = authorService;
+    this.bookService = bookService;
+    this.catalogService = catalogService;
+    this.subjectService = subjectService;
   }
 
   /**
@@ -38,23 +45,22 @@ public class SearchService {
    */
   public List<?> getSearchResults(String terms, String filter, String order) {
     filter = filter.replace("list", "catalog"); // usage of "list" is for front end only
-    String column = filter.toLowerCase().replaceAll("s$", "").replaceAll("ies$", "y");
-    String sortColumn = column + "_name";
-    String termsFilter = sortColumn + " contains " + terms;
-    TableService searchTableService = tableService.filterBy(termsFilter).sortBy(sortColumn).inOrder(order);
+    Sort.Direction sortDirection = "desc".equals(order.toLowerCase()) ? Sort.Direction.DESC : Sort.Direction.ASC;
+    Sort sort = Sort.by(sortDirection, "name");
 
     switch (filter) {
       case "authors":
-        return searchTableService.select(Author.class);
+        return authorService.getAuthorsByNameIsContainingIgnoreCase(terms, sort);
       case "subjects":
-        return searchTableService.select(Subject.class);
+        return subjectService.getSubjectsByNameIsContainingIgnoreCase(terms, sort);
       case "catalogs":
-        if (!accountService.isLoggedIn()) { return new ArrayList<Catalog>(); }
-        String accountFilter = "account_id=" + accountService.getLoggedInId();
-        String[] filters = {termsFilter, accountFilter};
-        return searchTableService.filterBy(filters).select(Catalog.class);
+        if (!accountService.isLoggedIn()) {
+          return new ArrayList<Catalog>();
+        } else {
+          return catalogService.getCatalogByNameContainingIgnoreCaseAndAccount_Id(terms, sort, accountService.getLoggedInId());
+        }
       default:
-        return searchTableService.select(Book.class);
+        return bookService.getBooksByNameIsContainingIgnoreCase(terms, sort);
     }
   }
 

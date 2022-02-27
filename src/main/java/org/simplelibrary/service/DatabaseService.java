@@ -8,10 +8,12 @@ import javax.annotation.PostConstruct;
 import java.util.Properties;
 
 /**
-* Service class for initializing the persistence.xml database connection.
-*/
+ * Service class for initializing the persistence.xml database connection.
+ * @deprecated due to unresolved issues with entity managers.
+ */
 @Slf4j
 @Service
+@Deprecated(since="02/26/2022")
 public class DatabaseService {
 
   @Value("${database}")

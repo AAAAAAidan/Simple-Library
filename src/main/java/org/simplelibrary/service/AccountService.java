@@ -22,8 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-* Service class for the account entity.
-*/
+ * Service class for the account entity.
+ */
 @Slf4j
 @Service
 public class AccountService {
