@@ -25,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 // Credit to FrontBackend - https://frontbackend.com/spring-boot/spring-boot-upload-file-to-filesystem
 
 /**
-* Service class for working with files.
-*/
+ * Service class for working with files.
+ */
 @Slf4j
 @Service
 public class FileService {

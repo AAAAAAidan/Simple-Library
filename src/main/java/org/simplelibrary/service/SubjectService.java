@@ -5,6 +5,7 @@ import org.simplelibrary.model.Book;
 import org.simplelibrary.model.Subject;
 import org.simplelibrary.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
-* Service class for the subject entity.
-*/
+ * Service class for the subject entity.
+ */
 @Slf4j
 @Service
 public class SubjectService {
@@ -71,6 +72,17 @@ public class SubjectService {
    */
   public Subject getByName(String name) {
     return subjectRepository.getByName(name);
+  }
+
+  /**
+   * Gets a list of subjects based on the provided name.
+   *
+   * @param name the name to use as a search term
+   * @param sort the sort order for the results
+   * @return the subjects found
+   */
+  public List<Subject> getSubjectsByNameIsContainingIgnoreCase(String name, Sort sort) {
+    return subjectRepository.getSubjectsByNameIsContainingIgnoreCase(name, sort);
   }
 
   /**

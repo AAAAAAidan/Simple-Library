@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
-* Service class for the authority group entity.
-*/
+ * Service class for the authority group entity.
+ */
 @Slf4j
 @Service
 public class AuthGroupService {

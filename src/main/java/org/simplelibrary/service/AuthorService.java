@@ -5,6 +5,7 @@ import org.simplelibrary.model.Book;
 import org.simplelibrary.model.Author;
 import org.simplelibrary.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
-* Service class for the author entity.
-*/
+ * Service class for the author entity.
+ */
 @Slf4j
 @Service
 public class AuthorService {
@@ -71,6 +72,17 @@ public class AuthorService {
    */
   public Author getByName(String name) {
     return authorRepository.getByName(name);
+  }
+
+  /**
+   * Gets a list of authors based on the provided name.
+   *
+   * @param name the name to use as a search term
+   * @param sort the sort order for the results
+   * @return the authors found
+   */
+  public List<Author> getAuthorsByNameIsContainingIgnoreCase(String name, Sort sort) {
+    return authorRepository.getAuthorsByNameIsContainingIgnoreCase(name, sort);
   }
 
   /**

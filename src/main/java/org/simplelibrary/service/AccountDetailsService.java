@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
-* Service class for user details authentication.
-*/
+ * Service class for user details authentication.
+ */
 @Service
 @Slf4j
 public class AccountDetailsService implements UserDetailsService {

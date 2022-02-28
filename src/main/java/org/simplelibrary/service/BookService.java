@@ -4,14 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.simplelibrary.model.Book;
 import org.simplelibrary.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Random;
 
 /**
-* Service class for the book entity.
-*/
+ * Service class for the book entity.
+ */
 @Slf4j
 @Service
 public class BookService {
@@ -69,6 +70,17 @@ public class BookService {
    */
   public Book getByName(String name) {
     return bookRepository.getByName(name);
+  }
+
+  /**
+   * Gets a list of books based on the provided name.
+   *
+   * @param name the name to use as a search term
+   * @param sort the sort order for the results
+   * @return the books found
+   */
+  public List<Book> getBooksByNameIsContainingIgnoreCase(String name, Sort sort) {
+    return bookRepository.getBooksByNameIsContainingIgnoreCase(name, sort);
   }
 
   /**
